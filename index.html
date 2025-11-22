@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8" />
+  <title>Botanik Flashcards</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <h1>Botanik-træner</h1>
+      <p>Træn plantearter med flashcards</p>
+    </header>
+
+    <main class="app-main">
+        <div class="filters">
+    <div class="filter-group">
+      <label for="habitattypeFilter">Habitattype</label>
+      <select id="habitattypeFilter">
+        <option value="">Alle</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label for="familieFilter">Familie</label>
+      <select id="familieFilter">
+        <option value="">Alle</option>
+      </select>
+    </div>
+    <button id="clearFiltersBtn" class="btn-ghost small">Nulstil</button>
+  </div>
+
+      <div id="card" class="card">
+        <div class="card-label" id="field-label"></div>
+        <div class="card-content" id="field-content">
+          <p>Tryk på "Ny art" for at starte.</p>
+        </div>
+      </div>
+
+      <div class="card-controls">
+        <button id="prevFieldBtn" class="btn-secondary" disabled>◀ Forrige</button>
+        <button id="nextFieldBtn" class="btn-secondary" disabled>Næste ▶</button>
+      </div>
+    </main>
+
+    <footer class="app-footer">
+      <button id="answerBtn" class="btn-ghost" disabled>Svar</button>
+      <button id="newCardBtn" class="btn-primary">Ny art</button>
+    </footer>
+  </div>
+
+  <!-- Svar-overlay -->
+  <div id="answerModal" class="modal hidden">
+    <div class="modal-content">
+      <h2 id="answerTitle"></h2>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
