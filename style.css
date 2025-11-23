@@ -106,6 +106,17 @@ body {
   margin: 0 auto;
 }
 
+.field-nav {
+  display: flex;
+  gap: 0.75rem;      /* afstand mellem knapperne */
+  margin-top: 0.5rem;
+}
+
+#prevFieldBtn,
+#nextFieldBtn {
+  flex: 1 1 0;       /* hver knap fylder så meget den kan */
+}
+
 .app-footer {
   padding: 0.75rem 1.5rem 1rem;
   border-top: 1px solid #e5e7eb;
@@ -141,7 +152,13 @@ button:disabled {
 .btn-secondary {
   background: #e5e7eb;
   color: #111827;
+
+  /* læg disse til for at gøre dem mere tommel-venlige */
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  border-radius: 0.75rem; /* valgfrit, hvis du vil have dem lidt mere runde */
 }
+
 
 .btn-ghost {
   background: transparent;
