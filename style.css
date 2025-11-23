@@ -108,13 +108,13 @@ body {
 
 .field-nav {
   display: flex;
-  gap: 0.75rem;      /* afstand mellem knapperne */
+  width: 100%;          /* fyld hele bredden af kortet */
+  gap: 0.75rem;
   margin-top: 0.5rem;
 }
 
-#prevFieldBtn,
-#nextFieldBtn {
-  flex: 1 1 0;       /* hver knap fylder så meget den kan */
+.field-nav button {
+  flex: 1 1 0;          /* hver knap tager halvdelen af rækken */
 }
 
 .app-footer {
