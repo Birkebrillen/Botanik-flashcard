@@ -100,21 +100,15 @@ body {
 
 .card-controls {
   display: flex;
-  justify-content: space-between;
-  gap: 0.5rem;
+  width: 100%;          /* fyld hele bredden under kortet */
   max-width: 800px;
-  margin: 0 auto;
-}
-
-.field-nav {
-  display: flex;
-  width: 100%;          /* fyld hele bredden af kortet */
+  margin: 0.5rem auto 0;
   gap: 0.75rem;
-  margin-top: 0.5rem;
 }
 
-.field-nav button {
-  flex: 1 1 0;          /* hver knap tager halvdelen af rækken */
+/* alle knapper i card-controls deler bredden */
+.card-controls button {
+  flex: 1 1 0;
 }
 
 .app-footer {
