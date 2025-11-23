@@ -69,12 +69,12 @@ body {
 }
 
 .card-content {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    flex: 1 1 auto;
+    display: block;
   text-align: left;
-  overflow: hidden;
+    overflow-y: auto;
+  max-height: 45vh;    
+  padding-right: 0.5rem;
 }
 
 .card-content {
