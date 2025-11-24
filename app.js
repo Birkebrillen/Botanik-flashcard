@@ -32,8 +32,7 @@ const FIELD_ORDER = [
   { key: "Billede5", type: "image", label: "Billede 5" },
   { key: "Feltkendetegn", type: "text", label: "Feltkendetegn" },
   { key: "Habitat", type: "text", label: "Habitat" },
-  { key: "Familie", type: "text", label: "Familie" },
-  { key: "Beskrivelser", type: "text", label: "Beskrivelse" },
+    { key: "Beskrivelser", type: "text", label: "Beskrivelse" },
   { key: "Forvekslingsmuligheder", type: "text", label: "Forvekslingsmuligheder" }
 ];
 
@@ -349,7 +348,13 @@ cardEl.addEventListener("touchend", (e) => {
     nextField();
   }
 
-  touchStartX = null;
+    touchStartX = null;
+});
+
+cardEl.addEventListener("dblclick", () => {
+  if (!answerBtn.disabled) {
+    openAnswerModal();
+  }
 });
 
 // Hent data
