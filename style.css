@@ -67,28 +67,32 @@ body {
   letter-spacing: 0.06em;
   color: #6b7280;
 }
-
-.card-content {
-    flex: 1 1 auto;
-    display: block;
-  text-align: left;
-    overflow-y: auto;
-  max-height: 45vh;    
-  padding-right: 0.5rem;
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
 }
 
+.family-badge {
+  font-size: 0.8rem;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+
 .card-content {
+  flex: 1 1 auto;
+  display: block;
+  text-align: left;
   margin-top: 0.25rem;
   font-size: 0.95rem;
   line-height: 1.5;
 
-  /* det nye: scroll inde i boksen */
+  /* scroll inde i boksen, samme højde uanset tekstmængde */
   overflow-y: auto;
-  max-height: 45vh;     /* prøv evt. 50vh hvis du vil have mere tekst på én gang */
-  padding-right: 0.5rem; /* lidt luft så scrollbaren ikke klemmer teksten */
+  padding-right: 0.5rem;
 }
-
-
 .card-content img {
   max-width: 100%;
   max-height: 100%;
@@ -119,6 +123,11 @@ body {
   gap: 0.5rem;
   background: #f9fafb;
 }
+.footer-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
 
 button {
   border: none;
@@ -176,6 +185,10 @@ button:disabled {
 .modal.hidden {
   display: none;
 }
+.hidden {
+  display: none !important;
+}
+
 
 .modal-content {
   background: #ffffff;
@@ -191,13 +204,34 @@ button:disabled {
   margin: 0;
   font-size: 1.4rem;
 }
+
+.filter-panel {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 4.5rem; /* lige over footer */
+  z-index: 30;
+  display: none;
+}
+
+.filter-panel-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0.75rem 1.5rem;
+  background: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+  border-radius: 1rem 1rem 0 0;
+  box-shadow: 0 -10px 25px rgba(15, 23, 42, 0.15);
+}
+
+/* genbrug samme layout for .filters, men uden ekstra margin-top */
 .filters {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
   gap: 0.75rem;
   max-width: 800px;
-  margin: 0 auto 0.5rem auto;
+  margin: 0;
 }
 
 .filter-group {

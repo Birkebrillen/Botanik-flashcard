@@ -16,10 +16,12 @@ const answerBtn = document.getElementById("answerBtn");
 const answerModal = document.getElementById("answerModal");
 const answerTitleEl = document.getElementById("answerTitle");
 const cardEl = document.getElementById("card");
+const familyBadgeEl = document.getElementById("familyBadge");
 const habitattypeFilterEl = document.getElementById("habitattypeFilter");
 const familieFilterEl = document.getElementById("familieFilter");
 const clearFiltersBtn = document.getElementById("clearFiltersBtn");
-
+const filterToggleBtn = document.getElementById("filterToggleBtn");
+const filterPanelEl = document.getElementById("filterPanel");
 
 // R�kkef�lgen: B, C, D, E, F, G, H, I, J, L
 const FIELD_ORDER = [
@@ -50,6 +52,14 @@ function getActiveCardList() {
   // ellers alle cards
   return filteredCards.length ? filteredCards : cards;
 }
+function updateFamilyBadge() {
+  if (!familyBadgeEl) return;
+  const fam = currentCard && currentCard.Familie
+    ? String(currentCard.Familie).trim()
+    : "";
+  familyBadgeEl.textContent = fam || "";
+}
+
 
 
 // Hj�lpefunktion: lav billedfilnavn ud fra JSON-string i Billede-feltet
@@ -232,6 +242,7 @@ function pickRandomCard() {
     prevFieldBtn.disabled = true;
     nextFieldBtn.disabled = true;
     answerBtn.disabled = true;
+    if (familyBadgeEl) familyBadgeEl.textContent = "";
     return;
   }
 
@@ -251,8 +262,10 @@ function pickRandomCard() {
   }
 
   currentFieldIndex = 0;
+  updateFamilyBadge();
   renderCurrentField();
 }
+
 
 
 // N�ste/forrige felt (cirkul�rt)
@@ -303,6 +316,18 @@ clearFiltersBtn.addEventListener("click", () => {
   applyFilters();
   pickRandomCard();
 });
+
+if (filterToggleBtn && filterPanelEl) {
+  filterToggleBtn.addEventListener("click", () => {
+    const isHidden = filterPanelEl.classList.contains("hidden");
+    if (isHidden) {
+      filterPanelEl.classList.remove("hidden");
+    } else {
+      filterPanelEl.classList.add("hidden");
+    }
+  });
+}
+
 
 // Simpel swipe p� touch
 let touchStartX = null;
