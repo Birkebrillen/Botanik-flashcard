@@ -14,39 +14,52 @@
     </header>
 
     <main class="app-main">
-        <div class="filters">
-    <div class="filter-group">
-      <label for="habitattypeFilter">Habitattype</label>
-      <select id="habitattypeFilter">
-        <option value="">Alle</option>
-      </select>
-    </div>
-    <div class="filter-group">
-      <label for="familieFilter">Familie</label>
-      <select id="familieFilter">
-        <option value="">Alle</option>
-      </select>
-    </div>
-    <button id="clearFiltersBtn" class="btn-ghost small">Nulstil</button>
-  </div>
-
       <div id="card" class="card">
-        <div class="card-label" id="field-label"></div>
+        <div class="card-header">
+          <div class="card-label" id="field-label"></div>
+          <div class="family-badge" id="familyBadge"></div>
+        </div>
         <div class="card-content" id="field-content">
           <p>Tryk på "Ny art" for at starte.</p>
         </div>
       </div>
 
       <div class="card-controls">
-        <button id="prevFieldBtn" class="btn-secondary" disabled>◀ Forrige</button>
-        <button id="nextFieldBtn" class="btn-secondary" disabled>Næste ▶</button>
+        <div class="field-nav">
+          <button id="prevFieldBtn" class="btn-secondary" disabled>◀ Forrige</button>
+          <button id="nextFieldBtn" class="btn-secondary" disabled>Næste ▶</button>
+        </div>
       </div>
     </main>
 
     <footer class="app-footer">
-      <button id="answerBtn" class="btn-ghost" disabled>Svar</button>
-      <button id="newCardBtn" class="btn-primary">Ny art</button>
+      <button id="filterToggleBtn" class="btn-ghost small">Filter</button>
+      <div class="footer-actions">
+        <button id="answerBtn" class="btn-ghost" disabled>Svar</button>
+        <button id="newCardBtn" class="btn-primary">Ny art</button>
+      </div>
     </footer>
+
+    <div id="filterPanel" class="filter-panel hidden">
+      <div class="filter-panel-inner">
+      <div class="filters">
+          <div class="filter-group">
+            <label for="habitattypeFilter">Habitattype</label>
+            <select id="habitattypeFilter">
+              <option value="">Alle</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="familieFilter">Familie</label>
+            <select id="familieFilter">
+              <option value="">Alle</option>
+            </select>
+          </div>
+          <button id="clearFiltersBtn" class="btn-ghost small">Nulstil</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- Svar-overlay -->
