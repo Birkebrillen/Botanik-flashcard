@@ -96,7 +96,6 @@ body {
   overflow-y: auto;
   padding-right: 0.5rem;
 }
-
 .card-content img {
   max-width: 100%;
   max-height: 100%;
@@ -215,8 +214,8 @@ button:disabled {
   right: 0;
   bottom: 4.5rem; /* lige over footer */
   z-index: 30;
+  display: none;
 }
-
 
 .filter-panel-inner {
   max-width: 800px;
