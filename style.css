@@ -214,8 +214,8 @@ button:disabled {
   right: 0;
   bottom: 4.5rem; /* lige over footer */
   z-index: 30;
-  display: none;
 }
+
 
 .filter-panel-inner {
   max-width: 800px;
