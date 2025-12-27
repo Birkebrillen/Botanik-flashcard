@@ -222,7 +222,7 @@ function buildFieldsForCard(card) {
 // Vis aktuelt felt
 function renderCurrentField() {
   if (!currentFields.length) {
-    fieldLabelEl.textContent = "";
+    fieldLabelEl.textContent = `${field.label} (${currentFieldIndex + 1}/${currentFields.length})`;
     fieldContentEl.innerHTML = "<p>Ingen data til denne art.</p>";
     return;
   }
