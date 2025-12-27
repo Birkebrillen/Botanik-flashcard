@@ -4,13 +4,16 @@
   <meta charset="utf-8" />
   <title>Botanik Flashcards</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.updated.css" />
 </head>
 <body>
   <div class="app">
     <header class="app-header">
-      <h1>Botanik-træner</h1>
-      <p>Træn plantearter med flashcards</p>
+      <div class="header-row">
+        <h1>Botanik-træner</h1>
+        <button id="filterToggleBtn" class="btn-ghost small header-filter">Filter</button>
+      </div>
+      <p>Swipe venstre/højre for felter • swipe op for ny art • dobbeltklik for svar</p>
     </header>
 
     <main class="app-main">
@@ -20,29 +23,14 @@
           <div class="family-badge" id="familyBadge"></div>
         </div>
         <div class="card-content" id="field-content">
-          <p>Tryk på "Ny art" for at starte.</p>
-        </div>
-      </div>
-
-      <div class="card-controls">
-        <div class="field-nav">
-          <button id="prevFieldBtn" class="btn-secondary" disabled>◀ Forrige</button>
-          <button id="nextFieldBtn" class="btn-secondary" disabled>Næste ▶</button>
+          <p>Swipe op (eller klik på kortet) for at starte.</p>
         </div>
       </div>
     </main>
 
-    <footer class="app-footer">
-      <button id="filterToggleBtn" class="btn-ghost small">Filter</button>
-      <div class="footer-actions">
-        <button id="answerBtn" class="btn-ghost" disabled>Svar</button>
-        <button id="newCardBtn" class="btn-primary">Ny art</button>
-      </div>
-    </footer>
-
     <div id="filterPanel" class="filter-panel hidden">
       <div class="filter-panel-inner">
-      <div class="filters">
+        <div class="filters">
           <div class="filter-group">
             <label for="habitattypeFilter">Habitattype</label>
             <select id="habitattypeFilter">
@@ -69,6 +57,6 @@
     </div>
   </div>
 
-  <script src="app.js"></script>
+  <script src="app.updated.js"></script>
 </body>
 </html>

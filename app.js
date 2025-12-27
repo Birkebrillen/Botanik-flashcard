@@ -9,10 +9,6 @@ let filteredCards = [];
 // Elementer
 const fieldLabelEl = document.getElementById("field-label");
 const fieldContentEl = document.getElementById("field-content");
-const prevFieldBtn = document.getElementById("prevFieldBtn");
-const nextFieldBtn = document.getElementById("nextFieldBtn");
-const newCardBtn = document.getElementById("newCardBtn");
-const answerBtn = document.getElementById("answerBtn");
 const answerModal = document.getElementById("answerModal");
 const answerTitleEl = document.getElementById("answerTitle");
 const cardEl = document.getElementById("card");
@@ -23,7 +19,7 @@ const clearFiltersBtn = document.getElementById("clearFiltersBtn");
 const filterToggleBtn = document.getElementById("filterToggleBtn");
 const filterPanelEl = document.getElementById("filterPanel");
 
-// R�kkef�lgen: B, C, D, E, F, G, H, I, J, L
+// Rækkefølgen: B, C, D, E, F, G, H, I, J, L
 const FIELD_ORDER = [
   { key: "Billede", type: "image", label: "Billede 1" },
   { key: "Billede2", type: "image", label: "Billede 2" },
@@ -166,9 +162,6 @@ function onFilterChange() {
     currentFields = [];
     fieldLabelEl.textContent = "";
     fieldContentEl.innerHTML = "<p>Ingen kort matcher de valgte filtre.</p>";
-    prevFieldBtn.disabled = true;
-    nextFieldBtn.disabled = true;
-    answerBtn.disabled = true;
     return;
   }
 
@@ -209,9 +202,6 @@ function renderCurrentField() {
   if (!currentFields.length) {
     fieldLabelEl.textContent = "";
     fieldContentEl.innerHTML = "<p>Ingen data til denne art.</p>";
-    prevFieldBtn.disabled = true;
-    nextFieldBtn.disabled = true;
-    answerBtn.disabled = !currentCard;
     return;
   }
 
@@ -225,9 +215,6 @@ function renderCurrentField() {
     fieldContentEl.innerHTML = `<p>${field.text}</p>`;
   }
 
-  prevFieldBtn.disabled = currentFields.length <= 1;
-  nextFieldBtn.disabled = currentFields.length <= 1;
-  answerBtn.disabled = !currentCard;
 }
 
 // Ny tilf�ldig art
@@ -238,9 +225,6 @@ function pickRandomCard() {
     currentFields = [];
     fieldLabelEl.textContent = "";
     fieldContentEl.innerHTML = "<p>Ingen kort at vise. Tjek evt. filtre.</p>";
-    prevFieldBtn.disabled = true;
-    nextFieldBtn.disabled = true;
-    answerBtn.disabled = true;
     if (familyBadgeEl) familyBadgeEl.textContent = "";
     return;
   }
@@ -298,14 +282,6 @@ answerModal.addEventListener("click", (event) => {
   }
 });
 
-// Knapper
-newCardBtn.addEventListener("click", () => {
-  pickRandomCard();
-});
-
-nextFieldBtn.addEventListener("click", nextField);
-prevFieldBtn.addEventListener("click", prevField);
-answerBtn.addEventListener("click", openAnswerModal);
 habitattypeFilterEl.addEventListener("change", onFilterChange);
 familieFilterEl.addEventListener("change", onFilterChange);
 
@@ -328,35 +304,64 @@ if (filterToggleBtn && filterPanelEl) {
 }
 
 
-// Simpel swipe p� touch
+// Simpel swipe på touch (venstre/højre = felter, op = ny art)
 let touchStartX = null;
+let touchStartY = null;
 
 cardEl.addEventListener("touchstart", (e) => {
   if (e.touches.length === 1) {
     touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
   }
 });
 
 cardEl.addEventListener("touchend", (e) => {
-  if (touchStartX === null) return;
-  const dx = e.changedTouches[0].clientX - touchStartX;
-  const threshold = 40;
+  if (touchStartX === null || touchStartY === null) return;
 
-  if (dx > threshold) {
-    prevField();
-  } else if (dx < -threshold) {
-    nextField();
+  const endX = e.changedTouches[0].clientX;
+  const endY = e.changedTouches[0].clientY;
+
+  const dx = endX - touchStartX;
+  const dy = endY - touchStartY;
+
+  const thresholdX = 40;
+  const thresholdY = 50;
+
+  const absDx = Math.abs(dx);
+  const absDy = Math.abs(dy);
+
+  // Lodret swipe: swipe op = ny art
+  if (absDy > absDx && dy < -thresholdY) {
+    // Undgå konflikt med scroll: kun når indholdet er ved toppen
+    if (fieldContentEl.scrollTop === 0) {
+      pickRandomCard();
+    }
   }
 
-    touchStartX = null;
+  // Vandret swipe: venstre/højre = felter
+  if (absDx > absDy && absDx > thresholdX) {
+    if (dx > 0) {
+      prevField();
+    } else {
+      nextField();
+    }
+  }
+
+  touchStartX = null;
+  touchStartY = null;
+});
+
+cardEl.addEventListener("click", () => {
+  if (!currentCard) {
+    pickRandomCard();
+  }
 });
 
 cardEl.addEventListener("dblclick", () => {
-  if (!answerBtn.disabled) {
+  if (currentCard) {
     openAnswerModal();
   }
 });
-
 // Hent data
 async function loadData() {
   try {
