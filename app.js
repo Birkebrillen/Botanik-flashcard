@@ -407,8 +407,8 @@ function onTouchEnd(e) {
   const isLandscape = window.innerWidth > window.innerHeight;
 
   const thresholdX = 40;
-  const thresholdY = isLandscape ? 140 : 70;   // meget sværere at trigge i landscape
-  const maxSideDriftForUpSwipe = 35;           // undgå at en skrå bevægelse tæller som "op"
+  const thresholdY = 140;   // meget sværere at trigge
+  const maxSideDriftForUpSwipe = 35;   // undgå at en skrå bevægelse tæller som "op"
 
   const absDx = Math.abs(dx);
   const absDy = Math.abs(dy);
