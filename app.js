@@ -21,17 +21,25 @@ const clearFiltersBtn = document.getElementById("clearFiltersBtn");
 const filterToggleBtn = document.getElementById("filterToggleBtn");
 const filterPanelEl = document.getElementById("filterPanel");
 
-// Rækkefølgen: B, C, D, E, F, G, H, I, J, L
+// Rækkefølgen (hierarki): billeder -> feltkendetegn -> habitat (bog->naturbasen) -> beskrivelse (bog->naturbasen)
+// -> hvornår ses den? -> variation -> forvekslingsmuligheder (bog->naturbasen)
 const FIELD_ORDER = [
   { key: "Billede", type: "image", label: "Billede 1" },
   { key: "Billede2", type: "image", label: "Billede 2" },
   { key: "Billede3", type: "image", label: "Billede 3" },
   { key: "Billede4", type: "image", label: "Billede 4" },
   { key: "Billede5", type: "image", label: "Billede 5" },
+
   { key: "Feltkendetegn", type: "text", label: "Feltkendetegn" },
-  { key: "Habitat", type: "text", label: "Habitat" },
-  { key: "Beskrivelser", type: "text", label: "Beskrivelse" },
-  { key: "Forvekslingsmuligheder", type: "text", label: "Forvekslingsmuligheder" }
+
+  // Prioritér Bog_* hvis der findes data, ellers brug Naturbasen_*
+  { keys: ["Bog_Habitat", "Naturbasen_Habitat"], type: "priority_text", label: "Habitat" },
+  { keys: ["Bog_Beskrivelse", "Naturbasen_Kendetegn"], type: "priority_text", label: "Beskrivelse" },
+
+  { key: "Naturbasen_Hvornår ses den?", type: "text", label: "Hvornår ses den?" },
+  { key: "Naturbasen_Variation", type: "text", label: "Variation" },
+
+  { keys: ["Bog_Forvekslingsmuligheder", "Naturbasen_Forvekslingsmuligheder"], type: "priority_text", label: "Forvekslingsmuligheder" }
 ];
 
 // Del Habitattype op i "små enkeltværdier" som Eng, Mose, Overdrev osv.
@@ -41,6 +49,17 @@ function splitHabitattypeValues(ht) {
     .split(/[;,/]/) // del ved ; , eller /
     .map((s) => s.trim())
     .filter(Boolean);
+}
+
+// Find første ikke-tomme værdi i en prioriteret liste af kolonner
+function getFirstNonEmpty(card, keys) {
+  for (const k of keys) {
+    const v = card[k];
+    if (v !== null && v !== undefined && String(v).trim() !== "") {
+      return String(v).trim();
+    }
+  }
+  return null;
 }
 
 function getActiveCardList() {
@@ -160,9 +179,8 @@ function buildFieldsForCard(card) {
   const fields = [];
 
   FIELD_ORDER.forEach((spec) => {
-    const rawValue = card[spec.key];
-
     if (spec.type === "image") {
+      const rawValue = card[spec.key];
       const fileName = extractImageFileName(rawValue);
       if (!fileName) return;
 
@@ -171,18 +189,35 @@ function buildFieldsForCard(card) {
         label: spec.label,
         src: "images/" + fileName
       });
-    } else {
-      if (!rawValue || String(rawValue).trim() === "") return;
+      return;
+    }
+
+    if (spec.type === "priority_text") {
+      const text = getFirstNonEmpty(card, spec.keys);
+      if (!text) return;
+
       fields.push({
         type: "text",
         label: spec.label,
-        text: String(rawValue).trim()
+        text
       });
+      return;
     }
+
+    // normal tekstfelt
+    const rawValue = card[spec.key];
+    if (!rawValue || String(rawValue).trim() === "") return;
+
+    fields.push({
+      type: "text",
+      label: spec.label,
+      text: String(rawValue).trim()
+    });
   });
 
   return fields;
 }
+
 
 // Vis aktuelt felt
 function renderCurrentField() {
@@ -250,7 +285,7 @@ function prevField() {
 // Svar-overlay
 function openAnswerModal() {
   if (!currentCard) return;
-  answerTitleEl.textContent = currentCard.Title || "Ukendt art";
+  answerTitleEl.textContent = (currentCard.Title ? String(currentCard.Title).trim() : "") || "Ukendt art";
   answerModal.classList.remove("hidden");
 }
 
