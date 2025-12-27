@@ -13,9 +13,11 @@ const answerModal = document.getElementById("answerModal");
 const answerTitleEl = document.getElementById("answerTitle");
 const cardEl = document.getElementById("card");
 const familyBadgeEl = document.getElementById("familyBadge");
+
 const habitattypeFilterEl = document.getElementById("habitattypeFilter");
 const familieFilterEl = document.getElementById("familieFilter");
 const clearFiltersBtn = document.getElementById("clearFiltersBtn");
+
 const filterToggleBtn = document.getElementById("filterToggleBtn");
 const filterPanelEl = document.getElementById("filterPanel");
 
@@ -28,7 +30,7 @@ const FIELD_ORDER = [
   { key: "Billede5", type: "image", label: "Billede 5" },
   { key: "Feltkendetegn", type: "text", label: "Feltkendetegn" },
   { key: "Habitat", type: "text", label: "Habitat" },
-    { key: "Beskrivelser", type: "text", label: "Beskrivelse" },
+  { key: "Beskrivelser", type: "text", label: "Beskrivelse" },
   { key: "Forvekslingsmuligheder", type: "text", label: "Forvekslingsmuligheder" }
 ];
 
@@ -36,28 +38,24 @@ const FIELD_ORDER = [
 function splitHabitattypeValues(ht) {
   if (!ht) return [];
   return String(ht)
-    .split(/[;,/]/)      // del ved ; , eller /
+    .split(/[;,/]/) // del ved ; , eller /
     .map((s) => s.trim())
     .filter(Boolean);
 }
 
-
 function getActiveCardList() {
-  // Hvis der er et aktivt filter, bruger vi filteredCards,
-  // ellers alle cards
+  // Hvis der er et aktivt filter, bruger vi filteredCards, ellers alle cards
   return filteredCards.length ? filteredCards : cards;
 }
+
 function updateFamilyBadge() {
   if (!familyBadgeEl) return;
-  const fam = currentCard && currentCard.Familie
-    ? String(currentCard.Familie).trim()
-    : "";
+  const fam =
+    currentCard && currentCard.Familie ? String(currentCard.Familie).trim() : "";
   familyBadgeEl.textContent = fam || "";
 }
 
-
-
-// Hj�lpefunktion: lav billedfilnavn ud fra JSON-string i Billede-feltet
+// Hjælpefunktion: lav billedfilnavn ud fra JSON-string i Billede-feltet
 function extractImageFileName(cellValue) {
   if (!cellValue || typeof cellValue !== "string") return null;
 
@@ -85,18 +83,12 @@ function buildFilterOptions() {
     const ht = card.Habitattype ? String(card.Habitattype).trim() : "";
     const fam = card.Familie ? String(card.Familie).trim() : "";
 
-    // Habitattype: split lange værdier op i fx "Eng", "Mose", "Overdrev"
     if (ht) {
-      splitHabitattypeValues(ht).forEach((part) => {
-        habitattypeSet.add(part);
-      });
+      splitHabitattypeValues(ht).forEach((part) => habitattypeSet.add(part));
     }
-
-    // Familie: vi bruger stadig hele familienavnet
     if (fam) familieSet.add(fam);
   });
 
-  // Fyld Habitattype-select
   habitattypeFilterEl.innerHTML = '<option value="">Alle</option>';
   Array.from(habitattypeSet)
     .sort((a, b) => a.localeCompare(b, "da"))
@@ -107,7 +99,6 @@ function buildFilterOptions() {
       habitattypeFilterEl.appendChild(opt);
     });
 
-  // Fyld Familie-select
   familieFilterEl.innerHTML = '<option value="">Alle</option>';
   Array.from(familieSet)
     .sort((a, b) => a.localeCompare(b, "da"))
@@ -118,7 +109,6 @@ function buildFilterOptions() {
       familieFilterEl.appendChild(opt);
     });
 }
-
 
 // Anvend filtre på kortlisten
 function applyFilters() {
@@ -135,14 +125,11 @@ function applyFilters() {
     const ht = card.Habitattype ? String(card.Habitattype).trim() : "";
     const fam = card.Familie ? String(card.Familie).trim() : "";
 
-    // Habitattype: match hvis den valgte tekst indgår i hele feltet (case-insensitive)
     let matchHt = true;
     if (selectedHabitattype) {
-      matchHt =
-        ht.toLowerCase().includes(selectedHabitattype.toLowerCase());
+      matchHt = ht.toLowerCase().includes(selectedHabitattype.toLowerCase());
     }
 
-    // Familie: stadig præcist match
     let matchFam = true;
     if (selectedFamilie) {
       matchFam = fam === selectedFamilie;
@@ -152,7 +139,6 @@ function applyFilters() {
   });
 }
 
-// Når et filter ændres
 function onFilterChange() {
   applyFilters();
 
@@ -162,6 +148,7 @@ function onFilterChange() {
     currentFields = [];
     fieldLabelEl.textContent = "";
     fieldContentEl.innerHTML = "<p>Ingen kort matcher de valgte filtre.</p>";
+    if (familyBadgeEl) familyBadgeEl.textContent = "";
     return;
   }
 
@@ -206,18 +193,17 @@ function renderCurrentField() {
   }
 
   const field = currentFields[currentFieldIndex];
-
   fieldLabelEl.textContent = field.label;
 
   if (field.type === "image") {
-    fieldContentEl.innerHTML = `<img src="${field.src}" alt="${currentCard.Title || "Billede"}" />`;
+    const altText = (currentCard && currentCard.Title) ? currentCard.Title : "Billede";
+    fieldContentEl.innerHTML = `<img src="${field.src}" alt="${altText}" />`;
   } else {
     fieldContentEl.innerHTML = `<p>${field.text}</p>`;
   }
-
 }
 
-// Ny tilf�ldig art
+// Ny tilfældig art
 function pickRandomCard() {
   const list = getActiveCardList();
   if (!list.length) {
@@ -231,7 +217,6 @@ function pickRandomCard() {
 
   const index = Math.floor(Math.random() * list.length);
   currentCard = list[index];
-
   currentFields = buildFieldsForCard(currentCard);
 
   if (!currentFields.length) {
@@ -249,9 +234,7 @@ function pickRandomCard() {
   renderCurrentField();
 }
 
-
-
-// N�ste/forrige felt (cirkul�rt)
+// Næste/forrige felt (cirkulært)
 function nextField() {
   if (!currentFields.length) return;
   currentFieldIndex = (currentFieldIndex + 1) % currentFields.length;
@@ -277,9 +260,38 @@ function closeAnswerModal() {
 
 // Klik udenfor boksen lukker overlay
 answerModal.addEventListener("click", (event) => {
-  if (event.target === answerModal) {
-    closeAnswerModal();
-  }
+  if (event.target === answerModal) closeAnswerModal();
+});
+
+// --- Filtre (under Filter-knappen) ---
+function isFilterPanelOpen() {
+  return !filterPanelEl.classList.contains("hidden");
+}
+
+function openFilterPanel() {
+  filterPanelEl.classList.remove("hidden");
+  filterToggleBtn.setAttribute("aria-expanded", "true");
+}
+
+function closeFilterPanel() {
+  filterPanelEl.classList.add("hidden");
+  filterToggleBtn.setAttribute("aria-expanded", "false");
+}
+
+filterToggleBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  if (isFilterPanelOpen()) closeFilterPanel();
+  else openFilterPanel();
+});
+
+filterPanelEl.addEventListener("click", (e) => {
+  // klik inde i panelet skal ikke lukke det
+  e.stopPropagation();
+});
+
+// klik udenfor lukker filterpanelet
+document.addEventListener("click", () => {
+  if (isFilterPanelOpen()) closeFilterPanel();
 });
 
 habitattypeFilterEl.addEventListener("change", onFilterChange);
@@ -292,51 +304,7 @@ clearFiltersBtn.addEventListener("click", () => {
   pickRandomCard();
 });
 
-
-function positionFilterPanel() {
-  if (!filterToggleBtn || !filterPanelEl) return;
-
-  const rect = filterToggleBtn.getBoundingClientRect();
-  const margin = 8;
-
-  // Læg panelet lige under knappen
-  filterPanelEl.style.top = `${rect.bottom + margin}px`;
-
-  // Align til højre kant af knappen (med lidt minimum-padding)
-  const right = window.innerWidth - rect.right;
-  filterPanelEl.style.right = `${Math.max(16, right)}px`;
-
-  filterPanelEl.style.left = "auto";
-  filterPanelEl.style.bottom = "auto";
-}
-
-
-if (filterToggleBtn && filterPanelEl) {
-  filterToggleBtn.addEventListener("click", () => {
-    const isHidden = filterPanelEl.classList.contains("hidden");
-
-    if (isHidden) {
-      filterPanelEl.classList.remove("hidden");
-      positionFilterPanel();
-    } else {
-      filterPanelEl.classList.add("hidden");
-    }
-  });
-
-  window.addEventListener("resize", () => {
-    if (!filterPanelEl.classList.contains("hidden")) {
-      positionFilterPanel();
-    }
-  });
-
-  window.addEventListener("scroll", () => {
-    if (!filterPanelEl.classList.contains("hidden")) {
-      positionFilterPanel();
-    }
-  }, { passive: true });
-}
-
-
+// --- Gestures ---
 // Simpel swipe på touch (venstre/højre = felter, op = ny art)
 let touchStartX = null;
 let touchStartY = null;
@@ -346,7 +314,7 @@ cardEl.addEventListener("touchstart", (e) => {
     touchStartX = e.touches[0].clientX;
     touchStartY = e.touches[0].clientY;
   }
-});
+}, { passive: true });
 
 cardEl.addEventListener("touchend", (e) => {
   if (touchStartX === null || touchStartY === null) return;
@@ -373,40 +341,32 @@ cardEl.addEventListener("touchend", (e) => {
 
   // Vandret swipe: venstre/højre = felter
   if (absDx > absDy && absDx > thresholdX) {
-    if (dx > 0) {
-      prevField();
-    } else {
-      nextField();
-    }
+    if (dx > 0) prevField();
+    else nextField();
   }
 
   touchStartX = null;
   touchStartY = null;
-});
+}, { passive: true });
 
 cardEl.addEventListener("click", () => {
-  if (!currentCard) {
-    pickRandomCard();
-  }
+  if (!currentCard) pickRandomCard();
 });
 
 cardEl.addEventListener("dblclick", () => {
-  if (currentCard) {
-    openAnswerModal();
-  }
+  if (currentCard) openAnswerModal();
 });
+
 // Hent data
 async function loadData() {
   try {
     const res = await fetch(DATA_URL);
-    if (!res.ok) {
-      throw new Error("Kunne ikke hente data: " + res.status);
-    }
+    if (!res.ok) throw new Error("Kunne ikke hente data: " + res.status);
+
     const json = await res.json();
     cards = Array.isArray(json) ? json : [];
 
     buildFilterOptions();
-    // ingen filtre valgt i starten, så filteredCards er tom => vi bruger alle cards
   } catch (err) {
     console.error(err);
     fieldContentEl.innerHTML = "<p>Kunne ikke indlæse data (tjek data/botanik.json).</p>";
@@ -414,4 +374,3 @@ async function loadData() {
 }
 
 loadData();
-

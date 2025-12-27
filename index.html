@@ -4,18 +4,46 @@
   <meta charset="utf-8" />
   <title>Botanik Flashcards</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="style.updated.css" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="app">
     <header class="app-header">
       <div class="header-row">
         <h1>Botanik-træner</h1>
-        <button id="filterToggleBtn" class="btn-ghost small header-filter">Filter</button>
+
+        <div class="header-actions">
+          <button id="filterToggleBtn" class="btn-ghost small header-filter" type="button" aria-haspopup="true" aria-expanded="false">
+            Filter
+          </button>
+
+          <!-- Filter dropdown (ankret under knappen) -->
+          <div id="filterPanel" class="filter-panel hidden" role="dialog" aria-label="Filtre">
+            <div class="filter-panel-inner">
+              <div class="filters">
+                <div class="filter-group">
+                  <label for="habitattypeFilter">Habitattype</label>
+                  <select id="habitattypeFilter">
+                    <option value="">Alle</option>
+                  </select>
+                </div>
+
+                <div class="filter-group">
+                  <label for="familieFilter">Familie</label>
+                  <select id="familieFilter">
+                    <option value="">Alle</option>
+                  </select>
+                </div>
+
+                <button id="clearFiltersBtn" class="btn-ghost small" type="button">Nulstil</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+
       <p>Træn plantearter med flashcards</p>
     </header>
-
 
     <main class="app-main">
       <div id="card" class="card">
@@ -23,32 +51,12 @@
           <div class="card-label" id="field-label"></div>
           <div class="family-badge" id="familyBadge"></div>
         </div>
+
         <div class="card-content" id="field-content">
           <p>Swipe op (eller klik på kortet) for at starte.</p>
         </div>
       </div>
     </main>
-
-    <div id="filterPanel" class="filter-panel hidden">
-      <div class="filter-panel-inner">
-        <div class="filters">
-          <div class="filter-group">
-            <label for="habitattypeFilter">Habitattype</label>
-            <select id="habitattypeFilter">
-              <option value="">Alle</option>
-            </select>
-          </div>
-          <div class="filter-group">
-            <label for="familieFilter">Familie</label>
-            <select id="familieFilter">
-              <option value="">Alle</option>
-            </select>
-          </div>
-          <button id="clearFiltersBtn" class="btn-ghost small">Nulstil</button>
-        </div>
-      </div>
-    </div>
-
   </div>
 
   <!-- Svar-overlay -->
@@ -58,6 +66,6 @@
     </div>
   </div>
 
-  <script src="app.updated.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
