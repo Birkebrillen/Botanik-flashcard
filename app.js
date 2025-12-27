@@ -1,3 +1,5 @@
+console.log("APP VERSION:", "2025-12-27 15:xx (R2 images)");
+
 const DATA_URL = "data/botanik.json";
 const IMAGE_MANIFEST_URL = "data/image_manifest.json";
 const IMAGES_BASE_URL = "https://pub-9b629f8090a54a769ad120596348dde3.r2.dev";
