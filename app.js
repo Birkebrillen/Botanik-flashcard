@@ -292,15 +292,48 @@ clearFiltersBtn.addEventListener("click", () => {
   pickRandomCard();
 });
 
+
+function positionFilterPanel() {
+  if (!filterToggleBtn || !filterPanelEl) return;
+
+  const rect = filterToggleBtn.getBoundingClientRect();
+  const margin = 8;
+
+  // Læg panelet lige under knappen
+  filterPanelEl.style.top = `${rect.bottom + margin}px`;
+
+  // Align til højre kant af knappen (med lidt minimum-padding)
+  const right = window.innerWidth - rect.right;
+  filterPanelEl.style.right = `${Math.max(16, right)}px`;
+
+  filterPanelEl.style.left = "auto";
+  filterPanelEl.style.bottom = "auto";
+}
+
+
 if (filterToggleBtn && filterPanelEl) {
   filterToggleBtn.addEventListener("click", () => {
     const isHidden = filterPanelEl.classList.contains("hidden");
+
     if (isHidden) {
       filterPanelEl.classList.remove("hidden");
+      positionFilterPanel();
     } else {
       filterPanelEl.classList.add("hidden");
     }
   });
+
+  window.addEventListener("resize", () => {
+    if (!filterPanelEl.classList.contains("hidden")) {
+      positionFilterPanel();
+    }
+  });
+
+  window.addEventListener("scroll", () => {
+    if (!filterPanelEl.classList.contains("hidden")) {
+      positionFilterPanel();
+    }
+  }, { passive: true });
 }
 
 
