@@ -112,10 +112,18 @@ body {
 }
 
 .card-content img {
-  max-width: 100%;
-  max-height: 100%;
+  width: 100%;
+  height: auto;
+  max-height: 55vh;        
+  object-fit: cover;     
   border-radius: 0.75rem;
   display: block;
+}
+
+@media (orientation: landscape) {
+  .card-content img {
+    max-height: 82vh;      /* udnytter pladsen i landscape */
+  }
 }
 
 /* Buttons */

@@ -1,5 +1,3 @@
-console.log("APP VERSION:", "2025-12-27 15:xx (R2 images)");
-
 const DATA_URL = "data/botanik.json";
 const IMAGE_MANIFEST_URL = "data/image_manifest.json";
 const IMAGES_BASE_URL = "https://pub-9b629f8090a54a769ad120596348dde3.r2.dev";
@@ -406,19 +404,25 @@ function onTouchEnd(e) {
   const dx = endX - touchStartX;
   const dy = endY - touchStartY;
 
+  const isLandscape = window.innerWidth > window.innerHeight;
+
   const thresholdX = 40;
-  const thresholdY = 50;
+  const thresholdY = isLandscape ? 140 : 70;   // meget sværere at trigge i landscape
+  const maxSideDriftForUpSwipe = 35;           // undgå at en skrå bevægelse tæller som "op"
 
   const absDx = Math.abs(dx);
   const absDy = Math.abs(dy);
 
-  // Lodret swipe: swipe op = ny art
-  if (absDy > absDx && dy < -thresholdY) {
-    // Undgå konflikt med scroll: kun når indholdet er ved toppen
-    if (fieldContentEl.scrollTop === 0) {
-      pickRandomCard();
-    }
+// Lodret swipe: swipe op = ny art (strammere krav)
+if (
+  dy < -thresholdY &&
+  absDy > absDx * 1.3 &&               // skal være tydeligt mere lodret end vandret
+  absDx < maxSideDriftForUpSwipe       // må ikke være for skrå
+) {
+  if (fieldContentEl.scrollTop === 0) {
+    pickRandomCard();
   }
+}
 
   // Vandret swipe: venstre/højre = felter
   if (absDx > absDy && absDx > thresholdX) {
