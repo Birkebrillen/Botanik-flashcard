@@ -36,7 +36,7 @@ const FIELD_ORDER = [
   { keys: ["Bog_Habitat", "Naturbasen_Habitat"], type: "priority_text", label: "Habitat" },
   { keys: ["Bog_Beskrivelse", "Naturbasen_Kendetegn"], type: "priority_text", label: "Beskrivelse" },
 
-  { key: "Naturbasen_Hvornår ses den?", type: "text", label: "Hvornår ses den?" },
+  { key: "Naturbasen_blomstring", type: "text", label: "Hvornår ses den?" },
   { key: "Naturbasen_Variation", type: "text", label: "Variation" },
 
   { keys: ["Bog_Forvekslingsmuligheder", "Naturbasen_Forvekslingsmuligheder"], type: "priority_text", label: "Forvekslingsmuligheder" }
