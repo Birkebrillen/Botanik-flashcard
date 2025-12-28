@@ -44,6 +44,38 @@ body {
   gap: 0.5rem;
 }
 
+/* Header status (kolonnenavn + familie) */
+.header-status {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.6rem;
+
+  /* så den ikke sprænger layoutet */
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+/* Gør teksten lys i headeren */
+.app-header .header-status .card-label,
+.app-header .header-status .family-badge {
+  color: #f9fafb;
+  opacity: 0.85;
+}
+
+/* Landscape: ekstra kompakt status-linje */
+@media (orientation: landscape) {
+  .header-status {
+    font-size: 0.75rem;
+    gap: 0.45rem;
+  }
+}
+
+
 .app-header .header-filter {
   color: #f9fafb;
   border-color: rgba(249, 250, 251, 0.35);
@@ -70,13 +102,6 @@ body {
   max-width: 800px;
   width: 100%;
   margin: 0 auto;
-}
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 0.5rem;
 }
 
 .card-label {

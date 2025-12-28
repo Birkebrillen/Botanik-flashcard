@@ -12,6 +12,12 @@
       <div class="header-row">
         <h1>Botanik-træner</h1>
 
+        <!-- Flyttet fra card-header -->
+        <div class="header-status">
+          <span class="card-label" id="field-label"></span>
+          <span class="family-badge" id="familyBadge"></span>
+        </div>
+
         <div class="header-actions">
           <button id="filterToggleBtn" class="btn-ghost small header-filter" type="button" aria-haspopup="true" aria-expanded="false">
             Filter
@@ -41,16 +47,10 @@
           </div>
         </div>
       </div>
-
     </header>
 
     <main class="app-main">
       <div id="card" class="card">
-        <div class="card-header">
-          <div class="card-label" id="field-label"></div>
-          <div class="family-badge" id="familyBadge"></div>
-        </div>
-
         <div class="card-content" id="field-content">
           <p>Swipe op (eller klik på kortet) for at starte.</p>
         </div>
@@ -65,7 +65,6 @@
     </div>
   </div>
 
-<script src="app.js"></script>
-
+  <script src="app.js"></script>
 </body>
 </html>
