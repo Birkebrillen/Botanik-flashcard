@@ -40,7 +40,7 @@ const FIELD_ORDER = [
 
   { key: "Naturbasen_Variation", type: "text", label: "Variation" },
 
-  { keys: ["Bog_Forvekslingsmuligheder", "Naturbasen_Forvekslingsmuligheder"], type: "priority_text", label: "Forvekslingsmuligheder" }
+  { keys: ["Bog_Forvekslingsmuligheder", "Naturbasen_Forvekslingsmuligheder"], type: "priority_text", label: "Forveksling" }
 ];
 
 // Del Habitattype op i "små enkeltværdier" som Eng, Mose, Overdrev osv.
@@ -381,55 +381,98 @@ clearFiltersBtn.addEventListener("click", () => {
 });
 
 // --- Gestures ---
-// Simpel swipe på touch (venstre/højre = felter, op = ny art)
+// Swipe venstre/højre = felter
+// Swipe op fra bunden = ny art
+// Multi-touch (pinch-zoom) annullerer swipe, så zoom ikke misforstås.
+
 let touchStartX = null;
 let touchStartY = null;
 let touchStartInBottomZone = false; // TRUE hvis swipe starter i bunden (til ny art)
+let gestureCancelled = false;       // TRUE hvis der er/har været multi-touch (pinch)
+let touchId = null;                 // finger-id vi startede med
 
 // Lyt både på kortet og på indholdet (så scroll ikke stjæler swipes)
 const swipeTargets = [cardEl, fieldContentEl].filter(Boolean);
 
-function onTouchStart(e) {
-  if (e.touches.length === 1) {
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
-
-    // Bottom-zone: sidste 15% af skærmens højde (minimum 90px)
-    const bottomZonePx = Math.max(90, window.innerHeight * 0.15);
-    touchStartInBottomZone = touchStartY > (window.innerHeight - bottomZonePx);
-  }
+function resetGestureState() {
+  touchStartX = null;
+  touchStartY = null;
+  touchStartInBottomZone = false;
+  gestureCancelled = false;
+  touchId = null;
 }
 
+function onTouchStart(e) {
+  // Hvis der er flere fingre: pinch => annullér swipe
+  if (e.touches.length !== 1) {
+    gestureCancelled = true;
+    touchStartX = null;
+    touchStartY = null;
+    touchStartInBottomZone = false;
+    touchId = null;
+    return;
+  }
+
+  gestureCancelled = false;
+
+  const t = e.touches[0];
+  touchId = t.identifier;
+  touchStartX = t.clientX;
+  touchStartY = t.clientY;
+
+  // Bottom-zone: sidste 15% af skærmens højde (minimum 90px)
+  const bottomZonePx = Math.max(90, window.innerHeight * 0.15);
+  touchStartInBottomZone = touchStartY > (window.innerHeight - bottomZonePx);
+}
+
+function onTouchMove(e) {
+  // Hvis der kommer en ekstra finger undervejs => pinch => annullér swipe
+  if (e.touches.length > 1) {
+    gestureCancelled = true;
+  }
+}
 
 function onTouchEnd(e) {
   if (touchStartX === null || touchStartY === null) return;
 
-  const endX = e.changedTouches[0].clientX;
-  const endY = e.changedTouches[0].clientY;
+  // Hvis der har været multi-touch (pinch), så gør ingenting
+  if (gestureCancelled) {
+    resetGestureState();
+    return;
+  }
+
+  // Find den touch der matcher den finger vi startede med
+  const t =
+    Array.from(e.changedTouches).find((tt) => tt.identifier === touchId) ||
+    e.changedTouches[0];
+
+  const endX = t.clientX;
+  const endY = t.clientY;
 
   const dx = endX - touchStartX;
   const dy = endY - touchStartY;
 
   const thresholdX = 40;
-  const thresholdY = 70;   // meget sværere at trigge
-  const maxSideDriftForUpSwipe = 35;   // undgå at en skrå bevægelse tæller som "op"
+  const thresholdY = 70;
+  const maxSideDriftForUpSwipe = 35;
 
   const absDx = Math.abs(dx);
   const absDy = Math.abs(dy);
 
-// Lodret swipe: swipe op = ny art (strammere krav)
-// Swipe op = ny art (kun hvis swipe starter i bunden)
-if (
-  touchStartInBottomZone &&
-  dy < -thresholdY &&
-  absDy > absDx * 1.2 &&               // tydeligt mere lodret end vandret
-  absDx < maxSideDriftForUpSwipe       // Må ikke være for skrå
-) {
-  // Undgå konflikt med scroll: kun når indholdet er ved toppen
-  if (fieldContentEl.scrollTop === 0) {
-    pickRandomCard();
+  // Swipe op = ny art (kun hvis swipe starter i bunden)
+  if (
+    touchStartInBottomZone &&
+    dy < -thresholdY &&
+    absDy > absDx * 1.2 &&               // tydeligt mere lodret end vandret
+    absDx < maxSideDriftForUpSwipe       // må ikke være for skrå
+  ) {
+    // Undgå konflikt med scroll: kun når indholdet er ved toppen
+    if (fieldContentEl.scrollTop === 0) {
+      pickRandomCard();
+      resetGestureState();
+      return;
+    }
   }
-}
 
   // Vandret swipe: venstre/højre = felter
   if (absDx > absDy && absDx > thresholdX) {
@@ -437,14 +480,18 @@ if (
     else nextField();
   }
 
-  touchStartX = null;
-  touchStartY = null;
-  touchStartInBottomZone = false;
+  resetGestureState();
+}
+
+function onTouchCancel() {
+  resetGestureState();
 }
 
 swipeTargets.forEach((el) => {
   el.addEventListener("touchstart", onTouchStart, { passive: true });
+  el.addEventListener("touchmove", onTouchMove, { passive: true });
   el.addEventListener("touchend", onTouchEnd, { passive: true });
+  el.addEventListener("touchcancel", onTouchCancel, { passive: true });
 });
 
 cardEl.addEventListener("click", () => {
