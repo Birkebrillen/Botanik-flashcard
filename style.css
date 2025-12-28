@@ -30,12 +30,6 @@ body {
   font-size: 1.4rem;
 }
 
-.app-header p {
-  margin: 0.25rem 0 0;
-  font-size: 0.9rem;
-  opacity: 0.85;
-}
-
 .header-row {
   display: flex;
   align-items: center;
@@ -260,5 +254,35 @@ button {
 
   .filter-panel {
     width: calc(100vw - 2rem);
+  }
+}
+
+/* Landscape: gør headeren kompakt så kortet/billedet får plads */
+@media (orientation: landscape) {
+  .app-header {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .app-header h1 {
+    font-size: 1.05rem;
+    line-height: 1.1;
+  }
+
+  .header-row {
+    gap: 0.5rem;
+  }
+
+  .header-actions {
+    gap: 0.35rem;
+  }
+
+  .btn-ghost.small {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.75rem;
+  }
+
+  /* Giv også main lidt mindre top-padding i landscape */
+  .app-main {
+    padding-top: 0.5rem;
   }
 }

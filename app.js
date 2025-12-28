@@ -394,8 +394,8 @@ function onTouchStart(e) {
     touchStartX = e.touches[0].clientX;
     touchStartY = e.touches[0].clientY;
 
-    // Bottom-zone: sidste 25% af skærmens højde (minimum 90px)
-    const bottomZonePx = Math.max(90, window.innerHeight * 0.25);
+    // Bottom-zone: sidste 15% af skærmens højde (minimum 90px)
+    const bottomZonePx = Math.max(90, window.innerHeight * 0.15);
     touchStartInBottomZone = touchStartY > (window.innerHeight - bottomZonePx);
   }
 }
