@@ -311,3 +311,13 @@ button {
     padding-top: 0.5rem;
   }
 }
+  /* Ryk billeder i toppen i landscape*/
+@media (orientation: landscape) {
+  .card-content {
+    margin-top: 0;
+  }
+
+  .card-content img {
+    margin-top: 0;
+  }
+}
