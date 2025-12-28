@@ -384,6 +384,7 @@ clearFiltersBtn.addEventListener("click", () => {
 // Simpel swipe på touch (venstre/højre = felter, op = ny art)
 let touchStartX = null;
 let touchStartY = null;
+let touchStartInBottomZone = false; // TRUE hvis swipe starter i bunden (til ny art)
 
 // Lyt både på kortet og på indholdet (så scroll ikke stjæler swipes)
 const swipeTargets = [cardEl, fieldContentEl].filter(Boolean);
@@ -392,8 +393,13 @@ function onTouchStart(e) {
   if (e.touches.length === 1) {
     touchStartX = e.touches[0].clientX;
     touchStartY = e.touches[0].clientY;
+
+    // Bottom-zone: sidste 25% af skærmens højde (minimum 90px)
+    const bottomZonePx = Math.max(90, window.innerHeight * 0.25);
+    touchStartInBottomZone = touchStartY > (window.innerHeight - bottomZonePx);
   }
 }
+
 
 function onTouchEnd(e) {
   if (touchStartX === null || touchStartY === null) return;
@@ -404,21 +410,22 @@ function onTouchEnd(e) {
   const dx = endX - touchStartX;
   const dy = endY - touchStartY;
 
-  const isLandscape = window.innerWidth > window.innerHeight;
-
   const thresholdX = 40;
-  const thresholdY = 140;   // meget sværere at trigge
+  const thresholdY = 70;   // meget sværere at trigge
   const maxSideDriftForUpSwipe = 35;   // undgå at en skrå bevægelse tæller som "op"
 
   const absDx = Math.abs(dx);
   const absDy = Math.abs(dy);
 
 // Lodret swipe: swipe op = ny art (strammere krav)
+// Swipe op = ny art (kun hvis swipe starter i bunden)
 if (
+  touchStartInBottomZone &&
   dy < -thresholdY &&
-  absDy > absDx * 1.3 &&               // skal være tydeligt mere lodret end vandret
-  absDx < maxSideDriftForUpSwipe       // må ikke være for skrå
+  absDy > absDx * 1.2 &&               // tydeligt mere lodret end vandret
+  absDx < maxSideDriftForUpSwipe       // Må ikke være for skrå
 ) {
+  // Undgå konflikt med scroll: kun når indholdet er ved toppen
   if (fieldContentEl.scrollTop === 0) {
     pickRandomCard();
   }
@@ -432,6 +439,7 @@ if (
 
   touchStartX = null;
   touchStartY = null;
+  touchStartInBottomZone = false;
 }
 
 swipeTargets.forEach((el) => {
