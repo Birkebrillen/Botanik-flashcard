@@ -11,6 +11,10 @@ let filteredCards = [];
 // image manifest: artKey -> [filnavne]
 let imageIndex = {};
 
+// Score
+let scoreCorrect = 0;
+let scoreTotal = 0;
+
 // Elementer
 const fieldLabelEl = document.getElementById("field-label");
 const fieldContentEl = document.getElementById("field-content");
@@ -18,6 +22,7 @@ const answerModal = document.getElementById("answerModal");
 const answerTitleEl = document.getElementById("answerTitle");
 const cardEl = document.getElementById("card");
 const familyBadgeEl = document.getElementById("familyBadge");
+const scoreBadgeEl = document.getElementById("scoreBadge");
 
 const habitattypeFilterEl = document.getElementById("habitattypeFilter");
 const familieFilterEl = document.getElementById("familieFilter");
@@ -31,11 +36,9 @@ const filterPanelEl = document.getElementById("filterPanel");
 const FIELD_ORDER = [
   { key: "Feltkendetegn", type: "text", label: "Feltkendetegn" },
 
-  // Prioritér Bog_* hvis der findes data, ellers brug Naturbasen_*
   { keys: ["Bog_Habitat", "Naturbasen_Habitat"], type: "priority_text", label: "Habitat" },
   { keys: ["Bog_Beskrivelse", "Naturbasen_Kendetegn"], type: "priority_text", label: "Beskrivelse" },
 
-  // Du har omdøbt kolonnen til Naturbasen_blomstring (vi supporterer stadig den gamle key som fallback)
   { keys: ["Naturbasen_blomstring", "Naturbasen_Hvornår ses den?"], type: "priority_text", label: "Blomstring" },
 
   { key: "Naturbasen_Variation", type: "text", label: "Variation" },
@@ -47,7 +50,7 @@ const FIELD_ORDER = [
 function splitHabitattypeValues(ht) {
   if (!ht) return [];
   return String(ht)
-    .split(/[;,/]/) // del ved ; , eller /
+    .split(/[;,/]/)
     .map((s) => s.trim())
     .filter(Boolean);
 }
@@ -79,15 +82,46 @@ function getFirstNonEmpty(card, keys) {
 }
 
 function getActiveCardList() {
-  // Hvis der er et aktivt filter, bruger vi filteredCards, ellers alle cards
   return filteredCards.length ? filteredCards : cards;
 }
 
 function updateFamilyBadge() {
   if (!familyBadgeEl) return;
-  const fam =
-    currentCard && currentCard.Familie ? String(currentCard.Familie).trim() : "";
+  const fam = currentCard && currentCard.Familie ? String(currentCard.Familie).trim() : "";
   familyBadgeEl.textContent = fam || "";
+}
+
+function updateScoreUI() {
+  if (!scoreBadgeEl) return;
+
+  scoreBadgeEl.textContent = `${scoreCorrect}/${scoreTotal}`;
+
+  // Ryd classes
+  scoreBadgeEl.classList.remove("score-good", "score-bad", "score-neutral");
+
+  if (scoreTotal === 0) {
+    scoreBadgeEl.classList.add("score-neutral");
+    return;
+  }
+
+  if (scoreCorrect > scoreTotal / 2) scoreBadgeEl.classList.add("score-good");
+  else if (scoreCorrect < scoreTotal / 2) scoreBadgeEl.classList.add("score-bad");
+  else scoreBadgeEl.classList.add("score-neutral");
+}
+
+// Registrér svar og gå videre
+function registerAnswer(isCorrect) {
+  // Hvis der ikke er en aktiv art endnu, så tæller vi ikke – vi starter bare
+  if (!currentCard) {
+    pickRandomCard();
+    return;
+  }
+
+  scoreTotal += 1;
+  if (isCorrect) scoreCorrect += 1;
+
+  updateScoreUI();
+  pickRandomCard();
 }
 
 /**
@@ -105,19 +139,17 @@ function getImageKeyCandidates(card) {
   const variants = [];
   for (const s of base) {
     variants.push(s);
-    variants.push(s.replace(/\s+/g, "-"));     // "Akselblomstret Star" -> "Akselblomstret-Star"
-    variants.push(s.replace(/\s+/g, ""));      // "AkselblomstretStar"
-    variants.push(s.replace(/\s+/g, "_"));     // "Akselblomstret_Star"
+    variants.push(s.replace(/\s+/g, "-"));
+    variants.push(s.replace(/\s+/g, ""));
+    variants.push(s.replace(/\s+/g, "_"));
   }
 
-  // unique
   return Array.from(new Set(variants));
 }
 
 function pickRandomFromArray(arr, count) {
   if (!Array.isArray(arr) || !arr.length) return [];
   const copy = arr.slice();
-
   for (let i = copy.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [copy[i], copy[j]] = [copy[j], copy[i]];
@@ -146,9 +178,7 @@ function buildFilterOptions() {
     const ht = card.Habitattype ? String(card.Habitattype).trim() : "";
     const fam = card.Familie ? String(card.Familie).trim() : "";
 
-    if (ht) {
-      splitHabitattypeValues(ht).forEach((part) => habitattypeSet.add(part));
-    }
+    if (ht) splitHabitattypeValues(ht).forEach((part) => habitattypeSet.add(part));
     if (fam) familieSet.add(fam);
   });
 
@@ -178,7 +208,6 @@ function applyFilters() {
   const selectedHabitattype = habitattypeFilterEl.value;
   const selectedFamilie = familieFilterEl.value;
 
-  // Ingen filtre => brug alle kort
   if (!selectedHabitattype && !selectedFamilie) {
     filteredCards = [];
     return;
@@ -189,14 +218,10 @@ function applyFilters() {
     const fam = card.Familie ? String(card.Familie).trim() : "";
 
     let matchHt = true;
-    if (selectedHabitattype) {
-      matchHt = ht.toLowerCase().includes(selectedHabitattype.toLowerCase());
-    }
+    if (selectedHabitattype) matchHt = ht.toLowerCase().includes(selectedHabitattype.toLowerCase());
 
     let matchFam = true;
-    if (selectedFamilie) {
-      matchFam = fam === selectedFamilie;
-    }
+    if (selectedFamilie) matchFam = fam === selectedFamilie;
 
     return matchHt && matchFam;
   });
@@ -237,16 +262,10 @@ function buildFieldsForCard(card) {
     if (spec.type === "priority_text") {
       const text = getFirstNonEmpty(card, spec.keys);
       if (!text) return;
-
-      fields.push({
-        type: "text",
-        label: spec.label,
-        text
-      });
+      fields.push({ type: "text", label: spec.label, text });
       return;
     }
 
-    // normal tekstfelt
     const rawValue = getCardValue(card, spec.key);
     if (!rawValue || String(rawValue).trim() === "") return;
 
@@ -269,10 +288,12 @@ function renderCurrentField() {
   }
 
   const field = currentFields[currentFieldIndex];
-  fieldLabelEl.textContent = `${field.label} (${currentFieldIndex + 1}/${currentFields.length})`;
+
+  // Felt-label viser kun navnet (ikke x/x længere)
+  fieldLabelEl.textContent = field.label;
 
   if (field.type === "image") {
-    const altText = (currentCard && currentCard.Title) ? String(currentCard.Title).trim() : "Billede";
+    const altText = currentCard?.Title ? String(currentCard.Title).trim() : "Billede";
     fieldContentEl.innerHTML = `<img loading="lazy" decoding="async" src="${field.src}" alt="${altText}" />`;
   } else {
     fieldContentEl.innerHTML = `<p>${field.text}</p>`;
@@ -296,13 +317,7 @@ function pickRandomCard() {
   currentFields = buildFieldsForCard(currentCard);
 
   if (!currentFields.length) {
-    currentFields = [
-      {
-        type: "text",
-        label: "Info",
-        text: "Denne art har ingen viste felter (billeder/tekst)."
-      }
-    ];
+    currentFields = [{ type: "text", label: "Info", text: "Denne art har ingen viste felter (billeder/tekst)." }];
   }
 
   currentFieldIndex = 0;
@@ -334,7 +349,6 @@ function closeAnswerModal() {
   answerModal.classList.add("hidden");
 }
 
-// Klik udenfor boksen lukker overlay
 answerModal.addEventListener("click", (event) => {
   if (event.target === answerModal) closeAnswerModal();
 });
@@ -361,11 +375,9 @@ filterToggleBtn.addEventListener("click", (e) => {
 });
 
 filterPanelEl.addEventListener("click", (e) => {
-  // klik inde i panelet skal ikke lukke det
   e.stopPropagation();
 });
 
-// klik udenfor lukker filterpanelet
 document.addEventListener("click", () => {
   if (isFilterPanelOpen()) closeFilterPanel();
 });
@@ -382,14 +394,16 @@ clearFiltersBtn.addEventListener("click", () => {
 
 // --- Gestures ---
 // Swipe venstre/højre = felter
-// Swipe op fra bunden = ny art
-// Multi-touch (pinch-zoom) annullerer swipe, så zoom ikke misforstås.
+// Swipe op fra bunden = RIGTIGT svar + ny art
+// Swipe ned fra toppen = FORKERT svar + ny art
+// Multi-touch (pinch-zoom) annullerer swipe.
 
 let touchStartX = null;
 let touchStartY = null;
-let touchStartInBottomZone = false; // TRUE hvis swipe starter i bunden (til ny art)
-let gestureCancelled = false;       // TRUE hvis der er/har været multi-touch (pinch)
-let touchId = null;                 // finger-id vi startede med
+let touchStartInBottomZone = false;
+let touchStartInTopZone = false;
+let gestureCancelled = false;
+let touchId = null;
 
 // Lyt både på kortet og på indholdet (så scroll ikke stjæler swipes)
 const swipeTargets = [cardEl, fieldContentEl].filter(Boolean);
@@ -398,17 +412,18 @@ function resetGestureState() {
   touchStartX = null;
   touchStartY = null;
   touchStartInBottomZone = false;
+  touchStartInTopZone = false;
   gestureCancelled = false;
   touchId = null;
 }
 
 function onTouchStart(e) {
-  // Hvis der er flere fingre: pinch => annullér swipe
   if (e.touches.length !== 1) {
     gestureCancelled = true;
     touchStartX = null;
     touchStartY = null;
     touchStartInBottomZone = false;
+    touchStartInTopZone = false;
     touchId = null;
     return;
   }
@@ -420,28 +435,25 @@ function onTouchStart(e) {
   touchStartX = t.clientX;
   touchStartY = t.clientY;
 
-  // Bottom-zone: sidste 15% af skærmens højde (minimum 90px)
-  const bottomZonePx = Math.max(90, window.innerHeight * 0.15);
-  touchStartInBottomZone = touchStartY > (window.innerHeight - bottomZonePx);
+  // zoner: 15% af skærmen (min 90px)
+  const zonePx = Math.max(90, window.innerHeight * 0.15);
+
+  touchStartInTopZone = touchStartY < zonePx;
+  touchStartInBottomZone = touchStartY > (window.innerHeight - zonePx);
 }
 
 function onTouchMove(e) {
-  // Hvis der kommer en ekstra finger undervejs => pinch => annullér swipe
-  if (e.touches.length > 1) {
-    gestureCancelled = true;
-  }
+  if (e.touches.length > 1) gestureCancelled = true;
 }
 
 function onTouchEnd(e) {
   if (touchStartX === null || touchStartY === null) return;
 
-  // Hvis der har været multi-touch (pinch), så gør ingenting
   if (gestureCancelled) {
     resetGestureState();
     return;
   }
 
-  // Find den touch der matcher den finger vi startede med
   const t =
     Array.from(e.changedTouches).find((tt) => tt.identifier === touchId) ||
     e.changedTouches[0];
@@ -454,27 +466,40 @@ function onTouchEnd(e) {
 
   const thresholdX = 40;
   const thresholdY = 70;
-  const maxSideDriftForUpSwipe = 35;
+  const maxSideDrift = 35;
 
   const absDx = Math.abs(dx);
   const absDy = Math.abs(dy);
 
-  // Swipe op = ny art (kun hvis swipe starter i bunden)
+  // RIGTIGT: swipe op fra bunden
   if (
     touchStartInBottomZone &&
     dy < -thresholdY &&
-    absDy > absDx * 1.2 &&               // tydeligt mere lodret end vandret
-    absDx < maxSideDriftForUpSwipe       // må ikke være for skrå
+    absDy > absDx * 1.2 &&
+    absDx < maxSideDrift
   ) {
-    // Undgå konflikt med scroll: kun når indholdet er ved toppen
     if (fieldContentEl.scrollTop === 0) {
-      pickRandomCard();
+      registerAnswer(true);
       resetGestureState();
       return;
     }
   }
 
-  // Vandret swipe: venstre/højre = felter
+  // FORKERT: swipe ned fra toppen
+  if (
+    touchStartInTopZone &&
+    dy > thresholdY &&
+    absDy > absDx * 1.2 &&
+    absDx < maxSideDrift
+  ) {
+    if (fieldContentEl.scrollTop === 0) {
+      registerAnswer(false);
+      resetGestureState();
+      return;
+    }
+  }
+
+  // Felter: venstre/højre
   if (absDx > absDy && absDx > thresholdX) {
     if (dx > 0) prevField();
     else nextField();
@@ -506,7 +531,6 @@ cardEl.addEventListener("dblclick", () => {
 async function loadImageManifest() {
   try {
     const res = await fetch(IMAGE_MANIFEST_URL);
-    const IMAGES_BASE_URL = "https://pub-9b629f8090a54a769ad120596348dde3.r2.dev";
     if (!res.ok) throw new Error("Kunne ikke hente image manifest: " + res.status);
     const json = await res.json();
     imageIndex = (json && typeof json === "object") ? json : {};
@@ -527,6 +551,7 @@ async function loadData() {
     cards = Array.isArray(json) ? json : [];
 
     buildFilterOptions();
+    updateScoreUI(); // init score UI (0/0)
   } catch (err) {
     console.error(err);
     fieldContentEl.innerHTML = "<p>Kunne ikke indlæse data (tjek data/botanik.json).</p>";
