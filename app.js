@@ -397,6 +397,9 @@ clearFiltersBtn.addEventListener("click", () => {
 // Swipe op fra bunden = RIGTIGT svar + ny art
 // Swipe ned fra toppen = FORKERT svar + ny art
 // Multi-touch (pinch-zoom) annullerer swipe.
+const thresholdX = 40;
+const thresholdY = 70;
+const maxSideDrift = 35;
 
 let touchStartX = null;
 let touchStartY = null;
@@ -443,7 +446,36 @@ function onTouchStart(e) {
 }
 
 function onTouchMove(e) {
-  if (e.touches.length > 1) gestureCancelled = true;
+  // Multi-touch => pinch => annullér
+  if (e.touches.length > 1) {
+    gestureCancelled = true;
+    return;
+  }
+  if (gestureCancelled) return;
+  if (touchStartX === null || touchStartY === null) return;
+
+  // Find den aktive finger
+  const t =
+    Array.from(e.touches).find((tt) => tt.identifier === touchId) ||
+    e.touches[0];
+
+  const dx = t.clientX - touchStartX;
+  const dy = t.clientY - touchStartY;
+
+  const absDx = Math.abs(dx);
+  const absDy = Math.abs(dy);
+
+  // Hvis det ligner "swipe ned fra top-zone" og vi står ved toppen,
+  // så forhindrer vi browserens pull-to-refresh.
+  if (
+    touchStartInTopZone &&
+    dy > 0 &&
+    absDy > absDx * 1.2 &&
+    absDx < maxSideDrift &&
+    fieldContentEl.scrollTop === 0
+  ) {
+    e.preventDefault();
+  }
 }
 
 function onTouchEnd(e) {
@@ -463,10 +495,6 @@ function onTouchEnd(e) {
 
   const dx = endX - touchStartX;
   const dy = endY - touchStartY;
-
-  const thresholdX = 40;
-  const thresholdY = 70;
-  const maxSideDrift = 35;
 
   const absDx = Math.abs(dx);
   const absDy = Math.abs(dy);
@@ -514,7 +542,7 @@ function onTouchCancel() {
 
 swipeTargets.forEach((el) => {
   el.addEventListener("touchstart", onTouchStart, { passive: true });
-  el.addEventListener("touchmove", onTouchMove, { passive: true });
+  el.addEventListener("touchmove", onTouchMove, { passive: false });
   el.addEventListener("touchend", onTouchEnd, { passive: true });
   el.addEventListener("touchcancel", onTouchCancel, { passive: true });
 });
