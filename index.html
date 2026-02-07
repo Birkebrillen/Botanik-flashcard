@@ -26,6 +26,16 @@
           <div id="filterPanel" class="filter-panel hidden" role="dialog" aria-label="Filtre">
             <div class="filter-panel-inner">
               <div class="filters">
+
+                <!-- NY: Spiltype -->
+                <div class="filter-group">
+                  <label for="gameTypeFilter">Spiltype</label>
+                  <select id="gameTypeFilter">
+                    <option value="arter">Arter</option>
+                    <option value="feltkendetegn">Feltkendetegn</option>
+                  </select>
+                </div>
+
                 <div class="filter-group">
                   <label for="habitattypeFilter">Habitattype</label>
                   <select id="habitattypeFilter">
@@ -58,15 +68,14 @@
       </div>
     </main>
 
-
-  <!-- Svar-overlay -->
-  <div id="answerModal" class="modal hidden">
-    <div class="modal-content">
-      <h2 id="answerTitle"></h2>
-      <p id="answerFamily" class="answer-family hidden"></p>
+    <!-- Svar-overlay -->
+    <div id="answerModal" class="modal hidden">
+      <div class="modal-content">
+        <h2 id="answerTitle"></h2>
+        <p id="answerFamily" class="answer-family hidden"></p>
+      </div>
     </div>
   </div>
-
 
   <script src="app.js"></script>
 </body>

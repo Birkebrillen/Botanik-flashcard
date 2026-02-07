@@ -7,6 +7,8 @@ let currentCard = null;
 let currentFields = [];
 let currentFieldIndex = 0;
 let filteredCards = [];
+let gameType = "arter"; // "arter" | "feltkendetegn"
+
 
 // image manifest: artKey -> [filnavne]
 let imageIndex = {};
@@ -27,6 +29,7 @@ const scoreBadgeEl = document.getElementById("scoreBadge");
 
 const habitattypeFilterEl = document.getElementById("habitattypeFilter");
 const familieFilterEl = document.getElementById("familieFilter");
+const gameTypeFilterEl = document.getElementById("gameTypeFilter");
 const clearFiltersBtn = document.getElementById("clearFiltersBtn");
 
 const filterToggleBtn = document.getElementById("filterToggleBtn");
@@ -83,7 +86,17 @@ function getFirstNonEmpty(card, keys) {
 }
 
 function getActiveCardList() {
-  return filteredCards.length ? filteredCards : cards;
+  const base = filteredCards.length ? filteredCards : cards;
+
+  // I "Feltkendetegn"-mode: kun kort der faktisk har en værdi i Feltkendetegn
+  if (gameType === "feltkendetegn") {
+    return base.filter((card) => {
+      const v = getCardValue(card, "Feltkendetegn");
+      return v !== null && v !== undefined && String(v).trim() !== "";
+    });
+  }
+
+  return base;
 }
 
 function updateFamilyBadge() {
@@ -248,6 +261,19 @@ function onFilterChange() {
 function buildFieldsForCard(card) {
   const fields = [];
 
+    // "Feltkendetegn"-mode: vis KUN Feltkendetegn, og ingen billeder
+    if (gameType === "feltkendetegn") {
+      const rawValue = getCardValue(card, "Feltkendetegn");
+      if (rawValue && String(rawValue).trim() !== "") {
+        fields.push({
+          type: "text",
+          label: "Feltkendetegn",
+          text: String(rawValue).trim()
+        });
+      }
+      return fields;
+    }
+
   // 1) Fem tilfældige billeder (hvis de findes)
   const pics = pickRandomImagesForCard(card, 5);
   pics.forEach((file, idx) => {
@@ -405,6 +431,12 @@ document.addEventListener("click", () => {
 
 habitattypeFilterEl.addEventListener("change", onFilterChange);
 familieFilterEl.addEventListener("change", onFilterChange);
+if (gameTypeFilterEl) {
+  gameTypeFilterEl.addEventListener("change", () => {
+    gameType = gameTypeFilterEl.value || "arter";
+    onFilterChange(); // genbruger eksisterende flow inkl. "Ingen kort matcher..."
+  });
+}
 
 clearFiltersBtn.addEventListener("click", () => {
   habitattypeFilterEl.value = "";
