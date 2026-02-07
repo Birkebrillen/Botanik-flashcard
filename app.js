@@ -357,6 +357,14 @@ function renderCurrentField() {
   // Felt-label viser kun navnet
   fieldLabelEl.textContent = field.label;
 
+  // Nulstil special layout hver gang
+  fieldContentEl.classList.remove("big-center");
+
+  // I "Husk feltkendetegn": gør Artsnavn stort og centreret
+  if (gameType === "husk_feltkendetegn" && field.type === "text" && field.label === "Artsnavn") {
+    fieldContentEl.classList.add("big-center");
+  }
+
   if (field.type === "image") {
     const altText = currentCard?.Title ? String(currentCard.Title).trim() : "Billede";
     fieldContentEl.innerHTML = `<img loading="lazy" decoding="async" src="${field.src}" alt="${altText}" />`;
@@ -364,6 +372,7 @@ function renderCurrentField() {
     fieldContentEl.innerHTML = `<p>${field.text}</p>`;
   }
 }
+
 
 // Ny tilfældig art
 function pickRandomCard() {
