@@ -7,8 +7,7 @@ let currentCard = null;
 let currentFields = [];
 let currentFieldIndex = 0;
 let filteredCards = [];
-let gameType = "arter"; // "arter" | "feltkendetegn"
-
+let gameType = "arter"; // "arter" | "feltkendetegn" | "husk_feltkendetegn"
 
 // image manifest: artKey -> [filnavne]
 let imageIndex = {};
@@ -85,15 +84,17 @@ function getFirstNonEmpty(card, keys) {
   return null;
 }
 
+function hasNonEmptyFeltkendetegn(card) {
+  const v = getCardValue(card, "Feltkendetegn");
+  return v !== null && v !== undefined && String(v).trim() !== "";
+}
+
 function getActiveCardList() {
   const base = filteredCards.length ? filteredCards : cards;
 
-  // I "Feltkendetegn"-mode: kun kort der faktisk har en værdi i Feltkendetegn
-  if (gameType === "feltkendetegn") {
-    return base.filter((card) => {
-      const v = getCardValue(card, "Feltkendetegn");
-      return v !== null && v !== undefined && String(v).trim() !== "";
-    });
+  // I de to feltkendetegn-modes: kun kort der har Feltkendetegn-værdi
+  if (gameType === "feltkendetegn" || gameType === "husk_feltkendetegn") {
+    return base.filter(hasNonEmptyFeltkendetegn);
   }
 
   return base;
@@ -171,7 +172,7 @@ function pickRandomFromArray(arr, count) {
   return copy.slice(0, Math.min(count, copy.length));
 }
 
-/** Returnér op til 5 tilfældige billeder for arten (baseret på manifestet). */
+/** Returnér op til N tilfældige billeder for arten (baseret på manifestet). */
 function pickRandomImagesForCard(card, count = 5) {
   const candidates = getImageKeyCandidates(card);
   for (const key of candidates) {
@@ -261,18 +262,55 @@ function onFilterChange() {
 function buildFieldsForCard(card) {
   const fields = [];
 
-    // "Feltkendetegn"-mode: vis KUN Feltkendetegn, og ingen billeder
-    if (gameType === "feltkendetegn") {
-      const rawValue = getCardValue(card, "Feltkendetegn");
-      if (rawValue && String(rawValue).trim() !== "") {
+  // MODE: Feltkendetegn (kun Feltkendetegn + 1 hint-billede)
+  if (gameType === "feltkendetegn") {
+    const rawValue = getCardValue(card, "Feltkendetegn");
+    if (rawValue && String(rawValue).trim() !== "") {
+      // 1) Tekst først
+      fields.push({
+        type: "text",
+        label: "Feltkendetegn",
+        text: String(rawValue).trim()
+      });
+
+      // 2) Ét billede som hint (hvis arten har billeder)
+      const pics = pickRandomImagesForCard(card, 1);
+      if (pics.length) {
         fields.push({
-          type: "text",
-          label: "Feltkendetegn",
-          text: String(rawValue).trim()
+          type: "image",
+          label: "Billede",
+          src: `${IMAGES_BASE_URL}/${encodeURIComponent(pics[0])}`
         });
       }
-      return fields;
     }
+    return fields;
+  }
+
+  // MODE: Husk feltkendetegn (Artsnavn først + 1 hint-billede)
+  if (gameType === "husk_feltkendetegn") {
+    const title = (card?.Title ? String(card.Title).trim() : "") || "Ukendt art";
+
+    // 1) Artsnavn først
+    fields.push({
+      type: "text",
+      label: "Artsnavn",
+      text: title
+    });
+
+    // 2) Ét billede som hint (hvis arten har billeder)
+    const pics = pickRandomImagesForCard(card, 1);
+    if (pics.length) {
+      fields.push({
+        type: "image",
+        label: "Billede",
+        src: `${IMAGES_BASE_URL}/${encodeURIComponent(pics[0])}`
+      });
+    }
+
+    return fields;
+  }
+
+  // MODE: Arter (som før)
 
   // 1) Fem tilfældige billeder (hvis de findes)
   const pics = pickRandomImagesForCard(card, 5);
@@ -316,7 +354,7 @@ function renderCurrentField() {
 
   const field = currentFields[currentFieldIndex];
 
-  // Felt-label viser kun navnet (ikke x/x længere)
+  // Felt-label viser kun navnet
   fieldLabelEl.textContent = field.label;
 
   if (field.type === "image") {
@@ -369,18 +407,29 @@ function prevField() {
 function openAnswerModal() {
   if (!currentCard) return;
 
+  // I "Husk feltkendetegn": svaret er Feltkendetegn-teksten (kun den)
+  if (gameType === "husk_feltkendetegn") {
+    const fk = getCardValue(currentCard, "Feltkendetegn");
+    const text = fk !== null && fk !== undefined ? String(fk).trim() : "";
+    answerTitleEl.textContent = text || "Ingen Feltkendetegn.";
+
+    if (answerFamilyEl) {
+      answerFamilyEl.textContent = "";
+      answerFamilyEl.classList.add("hidden");
+    }
+
+    answerModal.classList.remove("hidden");
+    return;
+  }
+
+  // Ellers: som før (Artsnavn + familie under)
   const title = (currentCard.Title ? String(currentCard.Title).trim() : "") || "Ukendt art";
   answerTitleEl.textContent = title;
 
   const family = currentCard.Familie ? String(currentCard.Familie).trim() : "";
-
   if (answerFamilyEl) {
     if (family) {
-      // Vælg ÉN af de to linjer herunder:
-
-      answerFamilyEl.textContent = family;              // (1) kun familienavn
-      // answerFamilyEl.textContent = `Familie: ${family}`; // (2) med label
-
+      answerFamilyEl.textContent = family; // kun familienavn
       answerFamilyEl.classList.remove("hidden");
     } else {
       answerFamilyEl.textContent = "";
@@ -390,7 +439,6 @@ function openAnswerModal() {
 
   answerModal.classList.remove("hidden");
 }
-
 
 function closeAnswerModal() {
   answerModal.classList.add("hidden");
@@ -431,10 +479,11 @@ document.addEventListener("click", () => {
 
 habitattypeFilterEl.addEventListener("change", onFilterChange);
 familieFilterEl.addEventListener("change", onFilterChange);
+
 if (gameTypeFilterEl) {
   gameTypeFilterEl.addEventListener("change", () => {
     gameType = gameTypeFilterEl.value || "arter";
-    onFilterChange(); // genbruger eksisterende flow inkl. "Ingen kort matcher..."
+    onFilterChange();
   });
 }
 
