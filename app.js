@@ -20,6 +20,7 @@ const fieldLabelEl = document.getElementById("field-label");
 const fieldContentEl = document.getElementById("field-content");
 const answerModal = document.getElementById("answerModal");
 const answerTitleEl = document.getElementById("answerTitle");
+const answerFamilyEl = document.getElementById("answerFamily");
 const cardEl = document.getElementById("card");
 const familyBadgeEl = document.getElementById("familyBadge");
 const scoreBadgeEl = document.getElementById("scoreBadge");
@@ -341,9 +342,29 @@ function prevField() {
 // Svar-overlay
 function openAnswerModal() {
   if (!currentCard) return;
-  answerTitleEl.textContent = (currentCard.Title ? String(currentCard.Title).trim() : "") || "Ukendt art";
+
+  const title = (currentCard.Title ? String(currentCard.Title).trim() : "") || "Ukendt art";
+  answerTitleEl.textContent = title;
+
+  const family = currentCard.Familie ? String(currentCard.Familie).trim() : "";
+
+  if (answerFamilyEl) {
+    if (family) {
+      // Vælg ÉN af de to linjer herunder:
+
+      answerFamilyEl.textContent = family;              // (1) kun familienavn
+      // answerFamilyEl.textContent = `Familie: ${family}`; // (2) med label
+
+      answerFamilyEl.classList.remove("hidden");
+    } else {
+      answerFamilyEl.textContent = "";
+      answerFamilyEl.classList.add("hidden");
+    }
+  }
+
   answerModal.classList.remove("hidden");
 }
+
 
 function closeAnswerModal() {
   answerModal.classList.add("hidden");

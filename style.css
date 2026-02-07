@@ -229,6 +229,12 @@ button {
   font-size: 1.4rem;
 }
 
+.answer-family {
+  margin: 0.35rem 0 0;
+  font-size: 0.95rem;
+  opacity: 0.75;
+}
+
 /* Utilities */
 .hidden {
   display: none !important;
