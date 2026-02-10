@@ -11,12 +11,16 @@ let gameType = "arter"; // "arter" | "feltkendetegn" | "husk_feltkendetegn" | *_
 
 // 20-pulje
 const ROUND_POOL_SIZE = 20;
-let roundPool = []; // queue: [næste, ... resten]
+let roundPool = [];               // queue: [næste, ... resten]
+let roundSize = 0;                // faktisk puljestørrelse (min(20, eligible))
+let roundTransitioning = false;   // kort “20/20”-visning ved rundens slut
+let roundTransitionTimeoutId = null;
+const ROUND_COMPLETE_DELAY_MS = 350;
 
 // image manifest: artKey -> [filnavne]
 let imageIndex = {};
 
-// Score
+// Score (global historik)
 let scoreCorrect = 0;
 let scoreTotal = 0;
 
@@ -161,10 +165,20 @@ function getEligibleListForCurrentMode() {
   return base;
 }
 
+function cancelRoundTransition() {
+  if (roundTransitionTimeoutId !== null) {
+    clearTimeout(roundTransitionTimeoutId);
+    roundTransitionTimeoutId = null;
+  }
+  roundTransitioning = false;
+}
+
 // Byg/forny puljen på 20 (styret af filtre + base mode)
 function rebuildRoundPool() {
+  cancelRoundTransition();
   const eligible = getEligibleListForCurrentMode();
   roundPool = pickRandomFromArray(eligible, ROUND_POOL_SIZE);
+  roundSize = roundPool.length;
 }
 
 function getActiveCardList() {
@@ -181,17 +195,29 @@ function updateFamilyBadge() {
 function updateScoreUI() {
   if (!scoreBadgeEl) return;
 
-  scoreBadgeEl.textContent = `${scoreCorrect}/${scoreTotal}`;
+  let shownCorrect = scoreCorrect;
+  let shownTotal = scoreTotal;
 
+  if (isRoundMode()) {
+    const denom = roundSize || 0;
+    const correct = denom ? (denom - roundPool.length) : 0;
+    shownCorrect = correct;
+    shownTotal = denom;
+    scoreBadgeEl.textContent = `${shownCorrect}/${shownTotal}`;
+  } else {
+    scoreBadgeEl.textContent = `${shownCorrect}/${shownTotal}`;
+  }
+
+  // Ryd classes
   scoreBadgeEl.classList.remove("score-good", "score-bad", "score-neutral");
 
-  if (scoreTotal === 0) {
+  if (shownTotal === 0) {
     scoreBadgeEl.classList.add("score-neutral");
     return;
   }
 
-  if (scoreCorrect > scoreTotal / 2) scoreBadgeEl.classList.add("score-good");
-  else if (scoreCorrect < scoreTotal / 2) scoreBadgeEl.classList.add("score-bad");
+  if (shownCorrect > shownTotal / 2) scoreBadgeEl.classList.add("score-good");
+  else if (shownCorrect < shownTotal / 2) scoreBadgeEl.classList.add("score-bad");
   else scoreBadgeEl.classList.add("score-neutral");
 }
 
@@ -202,6 +228,7 @@ function registerAnswer(isCorrect) {
     return;
   }
 
+  // Global historik (uændret)
   scoreTotal += 1;
   if (isCorrect) scoreCorrect += 1;
 
@@ -210,13 +237,12 @@ function registerAnswer(isCorrect) {
     // korrekt: fjern fra puljen
     // forkert: flyt til slutningen
     const first = roundPool[0];
+
     if (first === currentCard) {
       roundPool.shift();
-      if (!isCorrect) {
-        roundPool.push(currentCard);
-      }
+      if (!isCorrect) roundPool.push(currentCard);
     } else {
-      // fallback hvis noget er ude af sync: find og håndter alligevel
+      // fallback hvis noget er ude af sync
       const idx = roundPool.indexOf(currentCard);
       if (idx >= 0) {
         roundPool.splice(idx, 1);
@@ -224,12 +250,37 @@ function registerAnswer(isCorrect) {
       }
     }
 
-    // Når puljen er tom: ny omgang med nye 20 (samme filtre + base mode)
-    if (roundPool.length === 0) {
-      rebuildRoundPool();
+    // Opdatér UI som runde-score (x/20)
+    updateScoreUI();
+
+    // Runde færdig: vis 20/20 kort og start ny pulje automatisk
+    if (roundPool.length === 0 && roundSize > 0) {
+      roundTransitioning = true;
+
+      currentCard = null;
+      currentFields = [];
+      currentFieldIndex = 0;
+      fieldLabelEl.textContent = "";
+      fieldContentEl.innerHTML = `<p>${roundSize}/${roundSize} – ny pulje…</p>`;
+      if (familyBadgeEl) familyBadgeEl.textContent = "";
+
+      roundTransitionTimeoutId = setTimeout(() => {
+        roundTransitionTimeoutId = null;
+        roundTransitioning = false;
+        rebuildRoundPool();
+        updateScoreUI();
+        pickRandomCard();
+      }, ROUND_COMPLETE_DELAY_MS);
+
+      return;
     }
+
+    // Ikke færdig endnu
+    pickRandomCard();
+    return;
   }
 
+  // Ikke round-mode
   updateScoreUI();
   pickRandomCard();
 }
@@ -320,6 +371,7 @@ function applyFilters() {
 }
 
 function onFilterChange() {
+  cancelRoundTransition();
   applyFilters();
 
   if (isRoundMode()) {
@@ -333,9 +385,11 @@ function onFilterChange() {
     fieldLabelEl.textContent = "";
     fieldContentEl.innerHTML = "<p>Ingen kort matcher de valgte filtre.</p>";
     if (familyBadgeEl) familyBadgeEl.textContent = "";
+    updateScoreUI();
     return;
   }
 
+  updateScoreUI();
   pickRandomCard();
 }
 
@@ -447,9 +501,14 @@ function renderCurrentField() {
 
 // Ny art
 function pickRandomCard() {
+  if (isRoundMode() && roundTransitioning) {
+    return; // lad “20/20 – ny pulje…” gennemføre
+  }
+
   // Round-mode: sørg for at puljen er bygget
   if (isRoundMode() && (!roundPool || roundPool.length === 0)) {
     rebuildRoundPool();
+    updateScoreUI();
   }
 
   const list = getActiveCardList();
@@ -459,6 +518,7 @@ function pickRandomCard() {
     fieldLabelEl.textContent = "";
     fieldContentEl.innerHTML = "<p>Ingen kort at vise. Tjek evt. filtre.</p>";
     if (familyBadgeEl) familyBadgeEl.textContent = "";
+    updateScoreUI();
     return;
   }
 
@@ -576,17 +636,21 @@ familieFilterEl.addEventListener("change", onFilterChange);
 
 if (gameTypeFilterEl) {
   gameTypeFilterEl.addEventListener("change", () => {
+    cancelRoundTransition();
     gameType = gameTypeFilterEl.value || "arter";
 
     if (isRoundMode()) {
       rebuildRoundPool();
     }
 
+    updateScoreUI();
     onFilterChange();
   });
 }
 
 clearFiltersBtn.addEventListener("click", () => {
+  cancelRoundTransition();
+
   // Nulstil KUN Habitattype/Familie (ikke spiltype)
   clearChecked(habitattypeFilterEl);
   clearChecked(familieFilterEl);
@@ -597,6 +661,7 @@ clearFiltersBtn.addEventListener("click", () => {
     rebuildRoundPool();
   }
 
+  updateScoreUI();
   pickRandomCard();
 });
 
