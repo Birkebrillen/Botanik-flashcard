@@ -7,7 +7,11 @@ let currentCard = null;
 let currentFields = [];
 let currentFieldIndex = 0;
 let filteredCards = [];
-let gameType = "arter"; // "arter" | "feltkendetegn" | "husk_feltkendetegn"
+let gameType = "arter"; // "arter" | "feltkendetegn" | "husk_feltkendetegn" | *_20
+
+// 20-pulje
+const ROUND_POOL_SIZE = 20;
+let roundPool = []; // queue: [næste, ... resten]
 
 // image manifest: artKey -> [filnavne]
 let imageIndex = {};
@@ -26,6 +30,7 @@ const cardEl = document.getElementById("card");
 const familyBadgeEl = document.getElementById("familyBadge");
 const scoreBadgeEl = document.getElementById("scoreBadge");
 
+// NB: habitattypeFilterEl / familieFilterEl er nu DIV-containere til checkboxes
 const habitattypeFilterEl = document.getElementById("habitattypeFilter");
 const familieFilterEl = document.getElementById("familieFilter");
 const gameTypeFilterEl = document.getElementById("gameTypeFilter");
@@ -34,8 +39,7 @@ const clearFiltersBtn = document.getElementById("clearFiltersBtn");
 const filterToggleBtn = document.getElementById("filterToggleBtn");
 const filterPanelEl = document.getElementById("filterPanel");
 
-// Rækkefølgen (hierarki): feltkendetegn -> habitat (bog->naturbasen) -> beskrivelse (bog->naturbasen)
-// -> blomstring -> variation -> forvekslingsmuligheder (bog->naturbasen)
+// Rækkefølgen (hierarki)
 const FIELD_ORDER = [
   { key: "Feltkendetegn", type: "text", label: "Feltkendetegn" },
 
@@ -49,7 +53,7 @@ const FIELD_ORDER = [
   { keys: ["Bog_Forvekslingsmuligheder", "Naturbasen_Forvekslingsmuligheder"], type: "priority_text", label: "Forveksling" }
 ];
 
-// Del Habitattype op i "små enkeltværdier" som Eng, Mose, Overdrev osv.
+// Del Habitattype op i "små enkeltværdier"
 function splitHabitattypeValues(ht) {
   if (!ht) return [];
   return String(ht)
@@ -58,7 +62,7 @@ function splitHabitattypeValues(ht) {
     .filter(Boolean);
 }
 
-// Robust key-lookup (fixer små Unicode/whitespace forskelle i kolonnenavne)
+// Robust key-lookup
 function getCardValue(card, key) {
   if (!card || !key) return undefined;
 
@@ -73,7 +77,7 @@ function getCardValue(card, key) {
   return undefined;
 }
 
-// Find første ikke-tomme værdi i en prioriteret liste af kolonner
+// Find første ikke-tomme værdi i en prioriteret liste
 function getFirstNonEmpty(card, keys) {
   for (const k of keys) {
     const v = getCardValue(card, k);
@@ -89,15 +93,83 @@ function hasNonEmptyFeltkendetegn(card) {
   return v !== null && v !== undefined && String(v).trim() !== "";
 }
 
-function getActiveCardList() {
-  const base = filteredCards.length ? filteredCards : cards;
+// ---- Modes ----
+function isRoundMode() {
+  return String(gameType).endsWith("_20");
+}
 
-  // I de to feltkendetegn-modes: kun kort der har Feltkendetegn-værdi
-  if (gameType === "feltkendetegn" || gameType === "husk_feltkendetegn") {
+function getBaseGameType() {
+  return isRoundMode() ? String(gameType).replace(/_20$/, "") : gameType;
+}
+
+// ---- Checkbox filter helpers ----
+function getCheckedValues(containerEl) {
+  if (!containerEl) return [];
+  return Array.from(containerEl.querySelectorAll('input[type="checkbox"]:checked'))
+    .map((el) => String(el.value || "").trim())
+    .filter(Boolean);
+}
+
+function clearChecked(containerEl) {
+  if (!containerEl) return;
+  containerEl.querySelectorAll('input[type="checkbox"]').forEach((cb) => { cb.checked = false; });
+}
+
+function renderCheckboxList(containerEl, values, idPrefix) {
+  containerEl.innerHTML = "";
+  values.forEach((val, idx) => {
+    const label = document.createElement("label");
+    label.className = "checkbox-item";
+
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.value = val;
+    input.id = `${idPrefix}-${idx}`;
+
+    const span = document.createElement("span");
+    span.textContent = val;
+
+    label.appendChild(input);
+    label.appendChild(span);
+    containerEl.appendChild(label);
+  });
+}
+
+// ---- Random helpers ----
+function pickRandomFromArray(arr, count) {
+  if (!Array.isArray(arr) || !arr.length) return [];
+  const copy = arr.slice();
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy.slice(0, Math.min(count, copy.length));
+}
+
+// ---- Liste-udvælgelse (filtre + base mode) ----
+function getFilteredBaseList() {
+  return filteredCards.length ? filteredCards : cards;
+}
+
+function getEligibleListForCurrentMode() {
+  const base = getFilteredBaseList();
+  const mode = getBaseGameType();
+
+  if (mode === "feltkendetegn" || mode === "husk_feltkendetegn") {
     return base.filter(hasNonEmptyFeltkendetegn);
   }
-
   return base;
+}
+
+// Byg/forny puljen på 20 (styret af filtre + base mode)
+function rebuildRoundPool() {
+  const eligible = getEligibleListForCurrentMode();
+  roundPool = pickRandomFromArray(eligible, ROUND_POOL_SIZE);
+}
+
+function getActiveCardList() {
+  if (isRoundMode()) return roundPool;
+  return getEligibleListForCurrentMode();
 }
 
 function updateFamilyBadge() {
@@ -111,7 +183,6 @@ function updateScoreUI() {
 
   scoreBadgeEl.textContent = `${scoreCorrect}/${scoreTotal}`;
 
-  // Ryd classes
   scoreBadgeEl.classList.remove("score-good", "score-bad", "score-neutral");
 
   if (scoreTotal === 0) {
@@ -126,7 +197,6 @@ function updateScoreUI() {
 
 // Registrér svar og gå videre
 function registerAnswer(isCorrect) {
-  // Hvis der ikke er en aktiv art endnu, så tæller vi ikke – vi starter bare
   if (!currentCard) {
     pickRandomCard();
     return;
@@ -135,14 +205,37 @@ function registerAnswer(isCorrect) {
   scoreTotal += 1;
   if (isCorrect) scoreCorrect += 1;
 
+  if (isRoundMode()) {
+    // Queue-logik:
+    // korrekt: fjern fra puljen
+    // forkert: flyt til slutningen
+    const first = roundPool[0];
+    if (first === currentCard) {
+      roundPool.shift();
+      if (!isCorrect) {
+        roundPool.push(currentCard);
+      }
+    } else {
+      // fallback hvis noget er ude af sync: find og håndter alligevel
+      const idx = roundPool.indexOf(currentCard);
+      if (idx >= 0) {
+        roundPool.splice(idx, 1);
+        if (!isCorrect) roundPool.push(currentCard);
+      }
+    }
+
+    // Når puljen er tom: ny omgang med nye 20 (samme filtre + base mode)
+    if (roundPool.length === 0) {
+      rebuildRoundPool();
+    }
+  }
+
   updateScoreUI();
   pickRandomCard();
 }
 
 /**
- * Find billed-key for en art.
- * Vi prøver flere varianter så det virker hvis dine filnavne bruger bindestreger i stedet for mellemrum.
- * Manifestet er bygget ud fra filnavne (alt før sidste underscore).
+ * Find billed-key for en art (manifestet er bygget ud fra filnavne)
  */
 function getImageKeyCandidates(card) {
   const title = card?.Title ? String(card.Title).trim() : "";
@@ -162,16 +255,6 @@ function getImageKeyCandidates(card) {
   return Array.from(new Set(variants));
 }
 
-function pickRandomFromArray(arr, count) {
-  if (!Array.isArray(arr) || !arr.length) return [];
-  const copy = arr.slice();
-  for (let i = copy.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  return copy.slice(0, Math.min(count, copy.length));
-}
-
 /** Returnér op til N tilfældige billeder for arten (baseret på manifestet). */
 function pickRandomImagesForCard(card, count = 5) {
   const candidates = getImageKeyCandidates(card);
@@ -184,7 +267,7 @@ function pickRandomImagesForCard(card, count = 5) {
   return [];
 }
 
-// Byg filterværdier til dropdowns ud fra data
+// Byg filterværdier til checkbox-lister ud fra data
 function buildFilterOptions() {
   const habitattypeSet = new Set();
   const familieSet = new Set();
@@ -197,46 +280,40 @@ function buildFilterOptions() {
     if (fam) familieSet.add(fam);
   });
 
-  habitattypeFilterEl.innerHTML = '<option value="">Alle</option>';
-  Array.from(habitattypeSet)
-    .sort((a, b) => a.localeCompare(b, "da"))
-    .forEach((val) => {
-      const opt = document.createElement("option");
-      opt.value = val;
-      opt.textContent = val;
-      habitattypeFilterEl.appendChild(opt);
-    });
+  const htValues = Array.from(habitattypeSet).sort((a, b) => a.localeCompare(b, "da"));
+  const famValues = Array.from(familieSet).sort((a, b) => a.localeCompare(b, "da"));
 
-  familieFilterEl.innerHTML = '<option value="">Alle</option>';
-  Array.from(familieSet)
-    .sort((a, b) => a.localeCompare(b, "da"))
-    .forEach((val) => {
-      const opt = document.createElement("option");
-      opt.value = val;
-      opt.textContent = val;
-      familieFilterEl.appendChild(opt);
-    });
+  renderCheckboxList(habitattypeFilterEl, htValues, "ht");
+  renderCheckboxList(familieFilterEl, famValues, "fam");
 }
 
-// Anvend filtre på kortlisten
+// Anvend filtre på kortlisten (multi: OR indenfor hver gruppe, AND mellem grupper)
 function applyFilters() {
-  const selectedHabitattype = habitattypeFilterEl.value;
-  const selectedFamilie = familieFilterEl.value;
+  const selectedHabitats = getCheckedValues(habitattypeFilterEl);
+  const selectedFamilies = getCheckedValues(familieFilterEl);
 
-  if (!selectedHabitattype && !selectedFamilie) {
+  if (!selectedHabitats.length && !selectedFamilies.length) {
     filteredCards = [];
     return;
   }
 
+  const selectedHabitatsLower = selectedHabitats.map((s) => s.toLowerCase());
+  const selectedFamiliesLower = selectedFamilies.map((s) => s.toLowerCase());
+
   filteredCards = cards.filter((card) => {
-    const ht = card.Habitattype ? String(card.Habitattype).trim() : "";
-    const fam = card.Familie ? String(card.Familie).trim() : "";
+    const htRaw = card.Habitattype ? String(card.Habitattype).trim() : "";
+    const famRaw = card.Familie ? String(card.Familie).trim() : "";
 
     let matchHt = true;
-    if (selectedHabitattype) matchHt = ht.toLowerCase().includes(selectedHabitattype.toLowerCase());
+    if (selectedHabitatsLower.length) {
+      const partsLower = splitHabitattypeValues(htRaw).map((p) => p.toLowerCase());
+      matchHt = selectedHabitatsLower.some((sel) => partsLower.includes(sel));
+    }
 
     let matchFam = true;
-    if (selectedFamilie) matchFam = fam === selectedFamilie;
+    if (selectedFamiliesLower.length) {
+      matchFam = selectedFamiliesLower.includes(famRaw.toLowerCase());
+    }
 
     return matchHt && matchFam;
   });
@@ -244,6 +321,10 @@ function applyFilters() {
 
 function onFilterChange() {
   applyFilters();
+
+  if (isRoundMode()) {
+    rebuildRoundPool();
+  }
 
   const list = getActiveCardList();
   if (!list.length) {
@@ -258,22 +339,21 @@ function onFilterChange() {
   pickRandomCard();
 }
 
-// Byg liste over felter, tomme springes over
+// Byg liste over felter
 function buildFieldsForCard(card) {
   const fields = [];
+  const mode = getBaseGameType();
 
-  // MODE: Feltkendetegn (kun Feltkendetegn + 1 hint-billede)
-  if (gameType === "feltkendetegn") {
+  // MODE: Feltkendetegn (Feltkendetegn + 1 hint-billede)
+  if (mode === "feltkendetegn") {
     const rawValue = getCardValue(card, "Feltkendetegn");
     if (rawValue && String(rawValue).trim() !== "") {
-      // 1) Tekst først
       fields.push({
         type: "text",
         label: "Feltkendetegn",
         text: String(rawValue).trim()
       });
 
-      // 2) Ét billede som hint (hvis arten har billeder)
       const pics = pickRandomImagesForCard(card, 1);
       if (pics.length) {
         fields.push({
@@ -287,17 +367,15 @@ function buildFieldsForCard(card) {
   }
 
   // MODE: Husk feltkendetegn (Artsnavn først + 1 hint-billede)
-  if (gameType === "husk_feltkendetegn") {
+  if (mode === "husk_feltkendetegn") {
     const title = (card?.Title ? String(card.Title).trim() : "") || "Ukendt art";
 
-    // 1) Artsnavn først
     fields.push({
       type: "text",
       label: "Artsnavn",
       text: title
     });
 
-    // 2) Ét billede som hint (hvis arten har billeder)
     const pics = pickRandomImagesForCard(card, 1);
     if (pics.length) {
       fields.push({
@@ -311,8 +389,6 @@ function buildFieldsForCard(card) {
   }
 
   // MODE: Arter (som før)
-
-  // 1) Fem tilfældige billeder (hvis de findes)
   const pics = pickRandomImagesForCard(card, 5);
   pics.forEach((file, idx) => {
     fields.push({
@@ -322,7 +398,6 @@ function buildFieldsForCard(card) {
     });
   });
 
-  // 2) Tekstfelter i hierarkisk rækkefølge
   FIELD_ORDER.forEach((spec) => {
     if (spec.type === "priority_text") {
       const text = getFirstNonEmpty(card, spec.keys);
@@ -353,15 +428,12 @@ function renderCurrentField() {
   }
 
   const field = currentFields[currentFieldIndex];
+  const mode = getBaseGameType();
 
-  // Felt-label viser kun navnet
   fieldLabelEl.textContent = field.label;
 
-  // Nulstil special layout hver gang
   fieldContentEl.classList.remove("big-center");
-
-  // I "Husk feltkendetegn": gør Artsnavn stort og centreret
-  if (gameType === "husk_feltkendetegn" && field.type === "text" && field.label === "Artsnavn") {
+  if (mode === "husk_feltkendetegn" && field.type === "text" && field.label === "Artsnavn") {
     fieldContentEl.classList.add("big-center");
   }
 
@@ -373,9 +445,13 @@ function renderCurrentField() {
   }
 }
 
-
-// Ny tilfældig art
+// Ny art
 function pickRandomCard() {
+  // Round-mode: sørg for at puljen er bygget
+  if (isRoundMode() && (!roundPool || roundPool.length === 0)) {
+    rebuildRoundPool();
+  }
+
   const list = getActiveCardList();
   if (!list.length) {
     currentCard = null;
@@ -386,8 +462,14 @@ function pickRandomCard() {
     return;
   }
 
-  const index = Math.floor(Math.random() * list.length);
-  currentCard = list[index];
+  // Round-mode: tag altid næste i køen (ikke random)
+  if (isRoundMode()) {
+    currentCard = list[0];
+  } else {
+    const index = Math.floor(Math.random() * list.length);
+    currentCard = list[index];
+  }
+
   currentFields = buildFieldsForCard(currentCard);
 
   if (!currentFields.length) {
@@ -416,8 +498,10 @@ function prevField() {
 function openAnswerModal() {
   if (!currentCard) return;
 
+  const mode = getBaseGameType();
+
   // I "Husk feltkendetegn": svaret er Feltkendetegn-teksten (kun den)
-  if (gameType === "husk_feltkendetegn") {
+  if (mode === "husk_feltkendetegn") {
     const fk = getCardValue(currentCard, "Feltkendetegn");
     const text = fk !== null && fk !== undefined ? String(fk).trim() : "";
     answerTitleEl.textContent = text || "Ingen Feltkendetegn.";
@@ -431,14 +515,14 @@ function openAnswerModal() {
     return;
   }
 
-  // Ellers: som før (Artsnavn + familie under)
+  // Ellers: Artsnavn + familie under
   const title = (currentCard.Title ? String(currentCard.Title).trim() : "") || "Ukendt art";
   answerTitleEl.textContent = title;
 
   const family = currentCard.Familie ? String(currentCard.Familie).trim() : "";
   if (answerFamilyEl) {
     if (family) {
-      answerFamilyEl.textContent = family; // kun familienavn
+      answerFamilyEl.textContent = family;
       answerFamilyEl.classList.remove("hidden");
     } else {
       answerFamilyEl.textContent = "";
@@ -486,28 +570,37 @@ document.addEventListener("click", () => {
   if (isFilterPanelOpen()) closeFilterPanel();
 });
 
+// checkbox-change (bubbler til container)
 habitattypeFilterEl.addEventListener("change", onFilterChange);
 familieFilterEl.addEventListener("change", onFilterChange);
 
 if (gameTypeFilterEl) {
   gameTypeFilterEl.addEventListener("change", () => {
     gameType = gameTypeFilterEl.value || "arter";
+
+    if (isRoundMode()) {
+      rebuildRoundPool();
+    }
+
     onFilterChange();
   });
 }
 
 clearFiltersBtn.addEventListener("click", () => {
-  habitattypeFilterEl.value = "";
-  familieFilterEl.value = "";
+  // Nulstil KUN Habitattype/Familie (ikke spiltype)
+  clearChecked(habitattypeFilterEl);
+  clearChecked(familieFilterEl);
+
   applyFilters();
+
+  if (isRoundMode()) {
+    rebuildRoundPool();
+  }
+
   pickRandomCard();
 });
 
 // --- Gestures ---
-// Swipe venstre/højre = felter
-// Swipe op fra bunden = RIGTIGT svar + ny art
-// Swipe ned fra toppen = FORKERT svar + ny art
-// Multi-touch (pinch-zoom) annullerer swipe.
 const thresholdX = 40;
 const thresholdY = 70;
 const maxSideDrift = 35;
@@ -519,7 +612,6 @@ let touchStartInTopZone = false;
 let gestureCancelled = false;
 let touchId = null;
 
-// Lyt både på kortet og på indholdet (så scroll ikke stjæler swipes)
 const swipeTargets = [cardEl, fieldContentEl].filter(Boolean);
 
 function resetGestureState() {
@@ -549,7 +641,6 @@ function onTouchStart(e) {
   touchStartX = t.clientX;
   touchStartY = t.clientY;
 
-  // zoner: 15% af skærmen (min 90px)
   const zonePx = Math.max(90, window.innerHeight * 0.15);
 
   touchStartInTopZone = touchStartY < zonePx;
@@ -557,7 +648,6 @@ function onTouchStart(e) {
 }
 
 function onTouchMove(e) {
-  // Multi-touch => pinch => annullér
   if (e.touches.length > 1) {
     gestureCancelled = true;
     return;
@@ -565,7 +655,6 @@ function onTouchMove(e) {
   if (gestureCancelled) return;
   if (touchStartX === null || touchStartY === null) return;
 
-  // Find den aktive finger
   const t =
     Array.from(e.touches).find((tt) => tt.identifier === touchId) ||
     e.touches[0];
@@ -576,8 +665,6 @@ function onTouchMove(e) {
   const absDx = Math.abs(dx);
   const absDy = Math.abs(dy);
 
-  // Hvis det ligner "swipe ned fra top-zone" og vi står ved toppen,
-  // så forhindrer vi browserens pull-to-refresh.
   if (
     touchStartInTopZone &&
     dy > 0 &&
@@ -610,7 +697,6 @@ function onTouchEnd(e) {
   const absDx = Math.abs(dx);
   const absDy = Math.abs(dy);
 
-  // RIGTIGT: swipe op fra bunden
   if (
     touchStartInBottomZone &&
     dy < -thresholdY &&
@@ -624,7 +710,6 @@ function onTouchEnd(e) {
     }
   }
 
-  // FORKERT: swipe ned fra toppen
   if (
     touchStartInTopZone &&
     dy > thresholdY &&
@@ -638,7 +723,6 @@ function onTouchEnd(e) {
     }
   }
 
-  // Felter: venstre/højre
   if (absDx > absDy && absDx > thresholdX) {
     if (dx > 0) prevField();
     else nextField();
@@ -690,7 +774,7 @@ async function loadData() {
     cards = Array.isArray(json) ? json : [];
 
     buildFilterOptions();
-    updateScoreUI(); // init score UI (0/0)
+    updateScoreUI();
   } catch (err) {
     console.error(err);
     fieldContentEl.innerHTML = "<p>Kunne ikke indlæse data (tjek data/botanik.json).</p>";

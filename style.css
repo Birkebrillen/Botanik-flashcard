@@ -365,3 +365,27 @@ button {
   line-height: 1.15;
   font-weight: 700;
 }
+
+/* Checkbox-lister til multi-filter (mobilvenligt) */
+.checkbox-list {
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  background: #ffffff;
+  padding: 0.5rem;
+  max-height: 11rem;
+  overflow: auto;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
+.checkbox-item input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+}

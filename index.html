@@ -12,7 +12,6 @@
       <div class="header-row">
         <h1>Botanik</h1>
 
-        <!-- Flyttet fra card-header -->
         <div class="header-status">
           <span class="card-label" id="field-label"></span>
         </div>
@@ -22,7 +21,6 @@
             Filter
           </button>
 
-          <!-- Filter dropdown (ankret under knappen) -->
           <div id="filterPanel" class="filter-panel hidden" role="dialog" aria-label="Filtre">
             <div class="filter-panel-inner">
               <div class="filters">
@@ -34,21 +32,24 @@
                     <option value="arter">Arter</option>
                     <option value="feltkendetegn">Feltkendetegn</option>
                     <option value="husk_feltkendetegn">Husk feltkendetegn</option>
+
+                    <!-- NYE: 20-pulje varianter -->
+                    <option value="arter_20">20 arter (Arter)</option>
+                    <option value="feltkendetegn_20">20 arter (Feltkendetegn)</option>
+                    <option value="husk_feltkendetegn_20">20 arter (Husk feltkendetegn)</option>
                   </select>
                 </div>
 
+                <!-- NY: Checkbox-liste -->
                 <div class="filter-group">
-                  <label for="habitattypeFilter">Habitattype</label>
-                  <select id="habitattypeFilter">
-                    <option value="">Alle</option>
-                  </select>
+                  <label>Habitattype (vælg flere)</label>
+                  <div id="habitattypeFilter" class="checkbox-list" aria-label="Habitattype filtre"></div>
                 </div>
 
+                <!-- NY: Checkbox-liste -->
                 <div class="filter-group">
-                  <label for="familieFilter">Familie</label>
-                  <select id="familieFilter">
-                    <option value="">Alle</option>
-                  </select>
+                  <label>Familie (vælg flere)</label>
+                  <div id="familieFilter" class="checkbox-list" aria-label="Familie filtre"></div>
                 </div>
 
                 <button id="clearFiltersBtn" class="btn-ghost small" type="button">Nulstil</button>
