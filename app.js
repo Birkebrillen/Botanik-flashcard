@@ -211,6 +211,8 @@ function updateScoreUI() {
   // Ryd classes
   scoreBadgeEl.classList.remove("score-good", "score-bad", "score-neutral");
 
+  if (isRoundMode()) { scoreBadgeEl.classList.add("score-neutral"); return; }
+  
   if (shownTotal === 0) {
     scoreBadgeEl.classList.add("score-neutral");
     return;
