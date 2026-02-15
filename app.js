@@ -11,7 +11,6 @@ let gameType = "arter"; // "arter" | "feltkendetegn" | "husk_feltkendetegn" | *_
 
 // Søgning (opslagsværk)
 let searchQuery = "";
-let lookupActive = false; // når true: viser lookup-felter (Feltkendetegn/Forveksling først)
 
 // 20-pulje
 const ROUND_POOL_SIZE = 20;
@@ -44,11 +43,12 @@ const familieFilterEl = document.getElementById("familieFilter");
 const gameTypeFilterEl = document.getElementById("gameTypeFilter");
 const clearFiltersBtn = document.getElementById("clearFiltersBtn");
 
-// Søg UI (NY)
+// Søg UI
 const searchToggleBtn = document.getElementById("searchToggleBtn");
 const searchPanelEl = document.getElementById("searchPanel");
 const searchInputEl = document.getElementById("searchInput");
 
+// Filter UI
 const filterToggleBtn = document.getElementById("filterToggleBtn");
 const filterPanelEl = document.getElementById("filterPanel");
 
@@ -249,7 +249,7 @@ function getEligibleListForCurrentMode() {
   const base = getFilteredBaseList();
   const mode = getBaseGameType();
 
-  // NOTE: søgning skal IKKE filtrere flashcards længere (opslagsværk er separat)
+  // NOTE: søgning skal IKKE filtrere flashcards; den vælger kun en art når du trykker Enter
   if (mode === "feltkendetegn" || mode === "husk_feltkendetegn") {
     return base.filter(hasNonEmptyFeltkendetegn);
   }
@@ -277,55 +277,51 @@ function getActiveCardList() {
   return getEligibleListForCurrentMode();
 }
 
-// ---- Lookup (søg) visning: Feltkendetegn først, ellers Forveksling ----
-function buildLookupFieldsForCard(card) {
-  const fields = [];
-
+// ---- Prioritér første felt ved søgning ----
+function applySearchPriorityToFields(card, fields) {
   const fk = getCardValue(card, "Feltkendetegn");
-  const forv = getFirstNonEmpty(card, ["Bog_Forvekslingsmuligheder", "Naturbasen_Forvekslingsmuligheder"]);
-
   if (isNonEmpty(fk)) {
-    fields.push({ type: "text", label: "Feltkendetegn", text: String(fk).trim() });
-  } else if (isNonEmpty(forv)) {
-    fields.push({ type: "text", label: "Forveksling", text: String(forv).trim() });
-  } else {
-    fields.push({ type: "text", label: "Info", text: "Ingen Feltkendetegn eller Forveksling for denne art." });
+    return moveOrInsertTextFieldFirst(fields, "Feltkendetegn", String(fk).trim());
   }
 
-  // Ekstra nyttigt: tilføj resten af tekstfelterne bagefter (uden billeder)
-  FIELD_ORDER.forEach((spec) => {
-    if (spec.type === "priority_text") {
-      // spring den vi allerede brugte (Forveksling)
-      if (spec.label === "Forveksling" && (!isNonEmpty(fk))) return;
-      const text = getFirstNonEmpty(card, spec.keys);
-      if (!text) return;
-      if (fields[0].label === spec.label && fields[0].text === text) return;
-      fields.push({ type: "text", label: spec.label, text });
-      return;
-    }
-
-    // spring Feltkendetegn hvis det allerede ligger først
-    if (spec.label === "Feltkendetegn" && isNonEmpty(fk)) return;
-
-    const rawValue = getCardValue(card, spec.key);
-    if (!isNonEmpty(rawValue)) return;
-
-    const t = String(rawValue).trim();
-    if (fields[0].label === spec.label && fields[0].text === t) return;
-
-    fields.push({ type: "text", label: spec.label, text: t });
-  });
+  const forv = getFirstNonEmpty(card, ["Bog_Forvekslingsmuligheder", "Naturbasen_Forvekslingsmuligheder"]);
+  if (isNonEmpty(forv)) {
+    return moveOrInsertTextFieldFirst(fields, "Forveksling", String(forv).trim());
+  }
 
   return fields;
 }
 
-function showLookupCard(card) {
-  lookupActive = true;
-  currentCard = card;
-  currentFields = buildLookupFieldsForCard(card);
-  currentFieldIndex = 0;
-  updateFamilyBadge();
-  renderCurrentField();
+function moveOrInsertTextFieldFirst(fields, label, text) {
+  const copy = Array.isArray(fields) ? fields.slice() : [];
+  const idx = copy.findIndex((f) => f && f.type === "text" && f.label === label && isNonEmpty(f.text));
+  if (idx >= 0) {
+    const [f] = copy.splice(idx, 1);
+    copy.unshift(f);
+    return copy;
+  }
+  copy.unshift({ type: "text", label, text });
+  return copy;
+}
+
+function ensureHintImageSecond(card, fields) {
+  const copy = Array.isArray(fields) ? fields.slice() : [];
+  const hasImg = copy.some((f) => f && f.type === "image");
+  if (hasImg) return copy;
+
+  const pics = pickRandomImagesForCard(card, 1);
+  if (!pics.length) return copy;
+
+  const imgField = {
+    type: "image",
+    label: "Billede",
+    src: `${IMAGES_BASE_URL}/${encodeURIComponent(pics[0])}`
+  };
+
+  if (copy.length >= 1) copy.splice(1, 0, imgField);
+  else copy.push(imgField);
+
+  return copy;
 }
 
 // ---- UI helpers ----
@@ -370,9 +366,6 @@ function registerAnswer(isCorrect) {
     pickRandomCard();
     return;
   }
-
-  // hvis vi er i lookup-visning, så “slukker” vi lookup når man går videre
-  lookupActive = false;
 
   scoreTotal += 1;
   if (isCorrect) scoreCorrect += 1;
@@ -508,7 +501,6 @@ function applyFilters() {
 
 function onFilterChange() {
   cancelRoundTransition();
-  lookupActive = false; // hvis man ændrer filtre, er vi tilbage i normal visning
   applyFilters();
 
   if (isRoundMode()) rebuildRoundPool();
@@ -530,11 +522,6 @@ function onFilterChange() {
 
 // Byg liste over felter (flashcards)
 function buildFieldsForCard(card) {
-  // Hvis vi viser lookup (søg), så overstyr vi alt andet
-  if (lookupActive && !isRoundMode()) {
-    return buildLookupFieldsForCard(card);
-  }
-
   const fields = [];
   const mode = getBaseGameType();
 
@@ -643,9 +630,6 @@ function renderCurrentField() {
 function pickRandomCard() {
   if (isRoundMode() && roundTransitioning) return;
 
-  // Når vi vælger en ny random art, så er vi ikke i lookup-visning længere
-  lookupActive = false;
-
   if (isRoundMode() && (!roundPool || roundPool.length === 0)) {
     rebuildRoundPool();
     updateScoreUI();
@@ -740,11 +724,11 @@ answerModal.addEventListener("click", (event) => {
 
 // --- Filter panel ---
 function isFilterPanelOpen() {
-  return !filterPanelEl.classList.contains("hidden");
+  return filterPanelEl && !filterPanelEl.classList.contains("hidden");
 }
 
 function openFilterPanel() {
-  closeSearchPanel(); // vigtig: kun ét panel åbent
+  closeSearchPanel();
   filterPanelEl.classList.remove("hidden");
   filterToggleBtn.setAttribute("aria-expanded", "true");
 }
@@ -754,14 +738,14 @@ function closeFilterPanel() {
   filterToggleBtn.setAttribute("aria-expanded", "false");
 }
 
-// --- Search panel (NY) ---
+// --- Search panel ---
 function isSearchPanelOpen() {
   return searchPanelEl && !searchPanelEl.classList.contains("hidden");
 }
 
 function openSearchPanel() {
   if (!searchPanelEl) return;
-  closeFilterPanel(); // vigtig: kun ét panel åbent
+  closeFilterPanel();
   searchPanelEl.classList.remove("hidden");
   if (searchToggleBtn) searchToggleBtn.setAttribute("aria-expanded", "true");
   if (searchInputEl && !searchInputEl.disabled) {
@@ -794,12 +778,8 @@ if (searchToggleBtn) {
 }
 
 // Stop click bubbling inside panels
-if (filterPanelEl) {
-  filterPanelEl.addEventListener("click", (e) => e.stopPropagation());
-}
-if (searchPanelEl) {
-  searchPanelEl.addEventListener("click", (e) => e.stopPropagation());
-}
+if (filterPanelEl) filterPanelEl.addEventListener("click", (e) => e.stopPropagation());
+if (searchPanelEl) searchPanelEl.addEventListener("click", (e) => e.stopPropagation());
 
 // Click outside closes both
 document.addEventListener("click", () => {
@@ -811,29 +791,48 @@ document.addEventListener("click", () => {
 habitattypeFilterEl.addEventListener("change", onFilterChange);
 familieFilterEl.addEventListener("change", onFilterChange);
 
-// Search behavior (kun almindelig mode; auto-luk efter match)
+// ---- Søg: kun Enter/Go udfører søgning ----
 function clearSearchState() {
   searchQuery = "";
   if (searchInputEl) searchInputEl.value = "";
 }
 
-function runSearchNow(autoClose = true) {
+function runSearchNow() {
   if (isRoundMode()) return;
-  const q = searchQuery.trim();
+
+  const q = (searchQuery || "").trim();
   if (!q) return;
 
-  // Søg kun indenfor filtreret liste (og respekter base mode-regler)
-  const list = getEligibleListForCurrentMode();
+  // søg i filtreret base (så Habitat/Familie kan afgrænse opslagsværket)
+  const list = getFilteredBaseList();
   const best = getBestMatchCard(list, q);
-
   if (!best) return;
 
-  showLookupCard(best);
+  // Byg "normale" felter for aktiv mode (inkl. billeder),
+  // men flyt/indsæt Feltkendetegn/Forveksling som første felt
+  currentCard = best;
 
-  if (autoClose) {
-    closeSearchPanel();
-    clearSearchState();
+  let fields = buildFieldsForCard(best);
+  fields = applySearchPriorityToFields(best, fields);
+
+  // hvis feltkendetegn-mode gav tom (fx ingen Feltkendetegn),
+  // så tilføj et hint-billede som i mode (hvis muligt)
+  if (getBaseGameType() === "feltkendetegn") {
+    fields = ensureHintImageSecond(best, fields);
   }
+
+  if (!fields.length) {
+    fields = [{ type: "text", label: "Info", text: "Ingen viste felter for denne art." }];
+  }
+
+  currentFields = fields;
+  currentFieldIndex = 0;
+  updateFamilyBadge();
+  renderCurrentField();
+
+  // auto-luk søgningen efter et match
+  closeSearchPanel();
+  clearSearchState();
 }
 
 if (searchInputEl) {
@@ -842,16 +841,17 @@ if (searchInputEl) {
   searchInputEl.disabled = round;
   if (searchToggleBtn) searchToggleBtn.disabled = round;
 
+  // Skrivning må aldrig auto-søge / auto-lukke - den gemmer kun teksten
   searchInputEl.addEventListener("input", () => {
     if (isRoundMode()) return;
     searchQuery = searchInputEl.value || "";
   });
 
-  // Enter = søg med det samme
+  // Enter/Go = søg
   searchInputEl.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      runSearchNow(true);
+      runSearchNow();
     }
   });
 }
@@ -861,7 +861,7 @@ if (gameTypeFilterEl) {
     cancelRoundTransition();
     gameType = gameTypeFilterEl.value || "arter";
 
-    // Søg skal være “separat værktøj” => slå fra i 20-mode
+    // Søg er slået fra i 20-mode
     if (searchInputEl) {
       const round = isRoundMode();
       searchInputEl.disabled = round;
@@ -991,6 +991,7 @@ function onTouchEnd(e) {
   const absDx = Math.abs(dx);
   const absDy = Math.abs(dy);
 
+  // RIGTIGT: swipe op fra bunden
   if (
     touchStartInBottomZone &&
     dy < -thresholdY &&
@@ -1004,6 +1005,7 @@ function onTouchEnd(e) {
     }
   }
 
+  // FORKERT: swipe ned fra toppen
   if (
     touchStartInTopZone &&
     dy > thresholdY &&
@@ -1017,6 +1019,7 @@ function onTouchEnd(e) {
     }
   }
 
+  // Felter: venstre/højre
   if (absDx > absDy && absDx > thresholdX) {
     if (dx > 0) prevField();
     else nextField();
