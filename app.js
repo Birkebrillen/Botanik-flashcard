@@ -11,7 +11,6 @@ let gameType = "arter"; // "arter" | "feltkendetegn" | "husk_feltkendetegn" | *_
 
 // Søgning (opslagsværk)
 let searchQuery = "";
-let searchDebounceId = null;
 let lookupActive = false; // når true: viser lookup-felter (Feltkendetegn/Forveksling først)
 
 // 20-pulje
@@ -845,31 +844,13 @@ if (searchInputEl) {
 
   searchInputEl.addEventListener("input", () => {
     if (isRoundMode()) return;
-
     searchQuery = searchInputEl.value || "";
-
-    // debounce, så man kan nå at skrive uden at den lukker for tidligt
-    if (searchDebounceId !== null) clearTimeout(searchDebounceId);
-
-    searchDebounceId = setTimeout(() => {
-      searchDebounceId = null;
-
-      // kræv lidt “substans”, så den ikke lukker på 1 bogstav
-      const q = searchQuery.trim();
-      if (q.length < 2) return;
-
-      runSearchNow(true); // autoClose
-    }, 350);
   });
 
   // Enter = søg med det samme
   searchInputEl.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      if (searchDebounceId !== null) {
-        clearTimeout(searchDebounceId);
-        searchDebounceId = null;
-      }
       runSearchNow(true);
     }
   });
