@@ -8,6 +8,8 @@ let currentFields = [];
 let currentFieldIndex = 0;
 let filteredCards = [];
 let gameType = "arter"; // "arter" | "feltkendetegn" | "husk_feltkendetegn" | *_20
+let searchQuery = "";
+
 
 // 20-pulje
 const ROUND_POOL_SIZE = 20;
@@ -39,6 +41,7 @@ const habitattypeFilterEl = document.getElementById("habitattypeFilter");
 const familieFilterEl = document.getElementById("familieFilter");
 const gameTypeFilterEl = document.getElementById("gameTypeFilter");
 const clearFiltersBtn = document.getElementById("clearFiltersBtn");
+const searchInputEl = document.getElementById("searchInput");
 
 const filterToggleBtn = document.getElementById("filterToggleBtn");
 const filterPanelEl = document.getElementById("filterPanel");
@@ -149,6 +152,98 @@ function pickRandomFromArray(arr, count) {
   }
   return copy.slice(0, Math.min(count, copy.length));
 }
+// ---- Søger helpers ----
+function normalizeText(s) {
+  if (s === null || s === undefined) return "";
+  return String(s)
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")  // fjern diakritik
+    .replace(/[^a-z0-9\s]/g, " ")     // fjern tegnsætning
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function tokenize(s) {
+  const t = normalizeText(s);
+  return t ? t.split(" ") : [];
+}
+
+// Score: høj score hvis alle query-tokens matcher starten af et eller flere title-tokens
+function scoreTitleMatch(query, title) {
+  const qTokens = tokenize(query);
+  const tTokens = tokenize(title);
+
+  if (!qTokens.length || !tTokens.length) return 0;
+
+  let score = 0;
+  let lastMatchIndex = -1;
+
+  for (const q of qTokens) {
+    let bestIndex = -1;
+    let bestTokenScore = 0;
+
+    for (let i = 0; i < tTokens.length; i++) {
+      const tt = tTokens[i];
+
+      if (tt === q) {
+        bestIndex = i;
+        bestTokenScore = Math.max(bestTokenScore, 30);
+      } else if (tt.startsWith(q)) {
+        // jo længere query-token ift. title-token, jo bedre
+        const ratio = q.length / Math.max(1, tt.length);
+        bestIndex = i;
+        bestTokenScore = Math.max(bestTokenScore, 20 + Math.round(ratio * 10));
+      } else if (tt.includes(q) && q.length >= 3) {
+        bestIndex = i;
+        bestTokenScore = Math.max(bestTokenScore, 8);
+      }
+    }
+
+    if (bestIndex === -1) return 0; // kræv at ALLE query tokens matcher noget
+
+    // bonus hvis token matches i samme rækkefølge
+    if (bestIndex >= lastMatchIndex) score += 5;
+    lastMatchIndex = bestIndex;
+
+    score += bestTokenScore;
+  }
+
+  // bonus hvis hele query forekommer som substring i den normaliserede titel
+  const qNorm = normalizeText(query);
+  const tNorm = normalizeText(title);
+  if (qNorm && tNorm.includes(qNorm)) score += 10;
+
+  return score;
+}
+
+function filterCardsBySearch(cardsList, query) {
+  const q = normalizeText(query);
+  if (!q) return cardsList;
+
+  return cardsList.filter((card) => {
+    const title = card?.Title ? String(card.Title) : "";
+    return scoreTitleMatch(q, title) > 0;
+  });
+}
+
+function getBestMatchCard(cardsList, query) {
+  const q = normalizeText(query);
+  if (!q) return null;
+
+  let best = null;
+  let bestScore = 0;
+
+  for (const card of cardsList) {
+    const title = card?.Title ? String(card.Title) : "";
+    const s = scoreTitleMatch(q, title);
+    if (s > bestScore) {
+      bestScore = s;
+      best = card;
+    }
+  }
+  return best;
+}
 
 // ---- Liste-udvælgelse (filtre + base mode) ----
 function getFilteredBaseList() {
@@ -159,10 +254,17 @@ function getEligibleListForCurrentMode() {
   const base = getFilteredBaseList();
   const mode = getBaseGameType();
 
+  let list = base;
   if (mode === "feltkendetegn" || mode === "husk_feltkendetegn") {
-    return base.filter(hasNonEmptyFeltkendetegn);
+    list = list.filter(hasNonEmptyFeltkendetegn);
   }
-  return base;
+
+  // NYT: søgning som ekstra filter
+  if (!isRoundMode() && searchQuery && searchQuery.trim() !== "") {
+  list = filterCardsBySearch(list, searchQuery);
+  }
+
+  return list;
 }
 
 function cancelRoundTransition() {
@@ -527,10 +629,16 @@ function pickRandomCard() {
   // Round-mode: tag altid næste i køen (ikke random)
   if (isRoundMode()) {
     currentCard = list[0];
+} else {
+  const q = searchQuery ? searchQuery.trim() : "";
+  if (q) {
+    const best = getBestMatchCard(list, q);
+    currentCard = best || list[Math.floor(Math.random() * list.length)];
   } else {
     const index = Math.floor(Math.random() * list.length);
     currentCard = list[index];
   }
+}
 
   currentFields = buildFieldsForCard(currentCard);
 
@@ -636,10 +744,28 @@ document.addEventListener("click", () => {
 habitattypeFilterEl.addEventListener("change", onFilterChange);
 familieFilterEl.addEventListener("change", onFilterChange);
 
+if (searchInputEl) {
+  searchInputEl.addEventListener("input", () => {
+    if (isRoundMode()) return;       // ignorér søgning i 20-mode
+    searchQuery = searchInputEl.value || "";
+    onFilterChange();
+  });
+
+}
+
 if (gameTypeFilterEl) {
   gameTypeFilterEl.addEventListener("change", () => {
     cancelRoundTransition();
     gameType = gameTypeFilterEl.value || "arter";
+
+    if (searchInputEl) {
+  const round = isRoundMode();
+  searchInputEl.disabled = round;
+  if (round) {
+    searchInputEl.value = "";
+    searchQuery = "";
+  }
+}
 
     if (isRoundMode()) {
       rebuildRoundPool();
