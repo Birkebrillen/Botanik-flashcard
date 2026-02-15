@@ -17,10 +17,30 @@
         </div>
 
         <div class="header-actions">
+
+          <!-- NY: Søg-knap -->
+          <button id="searchToggleBtn" class="btn-ghost small header-filter" type="button" aria-haspopup="true" aria-expanded="false">
+            Søg
+          </button>
+
+          <!-- NY: Søg dropdown (ankret under knappen) -->
+          <div id="searchPanel" class="filter-panel hidden" role="dialog" aria-label="Søg">
+            <div class="filter-panel-inner">
+              <div class="filters">
+                <div class="filter-group">
+                  <label for="searchInput">Søg art</label>
+                  <input id="searchInput" type="text" placeholder="fx: sk krans" autocomplete="off" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filter-knap -->
           <button id="filterToggleBtn" class="btn-ghost small header-filter" type="button" aria-haspopup="true" aria-expanded="false">
             Filter
           </button>
 
+          <!-- Filter dropdown (ankret under knappen) -->
           <div id="filterPanel" class="filter-panel hidden" role="dialog" aria-label="Filtre">
             <div class="filter-panel-inner">
               <div class="filters">
@@ -33,26 +53,20 @@
                     <option value="feltkendetegn">Feltkendetegn</option>
                     <option value="husk_feltkendetegn">Husk feltkendetegn</option>
 
-                    <!-- NYE: 20-pulje varianter -->
+                    <!-- 20-pulje varianter -->
                     <option value="arter_20">20 arter (Arter)</option>
                     <option value="feltkendetegn_20">20 arter (Feltkendetegn)</option>
                     <option value="husk_feltkendetegn_20">20 arter (Husk feltkendetegn)</option>
                   </select>
                 </div>
-                
-                <!-- Søg på art -->
-                <div class="filter-group">
-                  <label for="searchInput">Søg art</label>
-                  <input id="searchInput" type="text" placeholder="fx: sk krans" autocomplete="off" />
-                </div>
 
-                <!-- NY: Checkbox-liste -->
+                <!-- Checkbox-liste -->
                 <div class="filter-group">
                   <label>Habitattype (vælg flere)</label>
                   <div id="habitattypeFilter" class="checkbox-list" aria-label="Habitattype filtre"></div>
                 </div>
 
-                <!-- NY: Checkbox-liste -->
+                <!-- Checkbox-liste -->
                 <div class="filter-group">
                   <label>Familie (vælg flere)</label>
                   <div id="familieFilter" class="checkbox-list" aria-label="Familie filtre"></div>
@@ -62,6 +76,7 @@
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </header>

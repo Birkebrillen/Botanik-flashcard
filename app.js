@@ -8,8 +8,11 @@ let currentFields = [];
 let currentFieldIndex = 0;
 let filteredCards = [];
 let gameType = "arter"; // "arter" | "feltkendetegn" | "husk_feltkendetegn" | *_20
-let searchQuery = "";
 
+// Søgning (opslagsværk)
+let searchQuery = "";
+let searchDebounceId = null;
+let lookupActive = false; // når true: viser lookup-felter (Feltkendetegn/Forveksling først)
 
 // 20-pulje
 const ROUND_POOL_SIZE = 20;
@@ -36,11 +39,15 @@ const cardEl = document.getElementById("card");
 const familyBadgeEl = document.getElementById("familyBadge");
 const scoreBadgeEl = document.getElementById("scoreBadge");
 
-// NB: habitattypeFilterEl / familieFilterEl er nu DIV-containere til checkboxes
+// Filtre / UI
 const habitattypeFilterEl = document.getElementById("habitattypeFilter");
 const familieFilterEl = document.getElementById("familieFilter");
 const gameTypeFilterEl = document.getElementById("gameTypeFilter");
 const clearFiltersBtn = document.getElementById("clearFiltersBtn");
+
+// Søg UI (NY)
+const searchToggleBtn = document.getElementById("searchToggleBtn");
+const searchPanelEl = document.getElementById("searchPanel");
 const searchInputEl = document.getElementById("searchInput");
 
 const filterToggleBtn = document.getElementById("filterToggleBtn");
@@ -84,20 +91,22 @@ function getCardValue(card, key) {
   return undefined;
 }
 
+function isNonEmpty(v) {
+  return v !== null && v !== undefined && String(v).trim() !== "";
+}
+
 // Find første ikke-tomme værdi i en prioriteret liste
 function getFirstNonEmpty(card, keys) {
   for (const k of keys) {
     const v = getCardValue(card, k);
-    if (v !== null && v !== undefined && String(v).trim() !== "") {
-      return String(v).trim();
-    }
+    if (isNonEmpty(v)) return String(v).trim();
   }
   return null;
 }
 
 function hasNonEmptyFeltkendetegn(card) {
   const v = getCardValue(card, "Feltkendetegn");
-  return v !== null && v !== undefined && String(v).trim() !== "";
+  return isNonEmpty(v);
 }
 
 // ---- Modes ----
@@ -152,7 +161,8 @@ function pickRandomFromArray(arr, count) {
   }
   return copy.slice(0, Math.min(count, copy.length));
 }
-// ---- Søger helpers ----
+
+// ---- Søg helpers (bedste match på Title) ----
 function normalizeText(s) {
   if (s === null || s === undefined) return "";
   return String(s)
@@ -169,7 +179,6 @@ function tokenize(s) {
   return t ? t.split(" ") : [];
 }
 
-// Score: høj score hvis alle query-tokens matcher starten af et eller flere title-tokens
 function scoreTitleMatch(query, title) {
   const qTokens = tokenize(query);
   const tTokens = tokenize(title);
@@ -190,7 +199,6 @@ function scoreTitleMatch(query, title) {
         bestIndex = i;
         bestTokenScore = Math.max(bestTokenScore, 30);
       } else if (tt.startsWith(q)) {
-        // jo længere query-token ift. title-token, jo bedre
         const ratio = q.length / Math.max(1, tt.length);
         bestIndex = i;
         bestTokenScore = Math.max(bestTokenScore, 20 + Math.round(ratio * 10));
@@ -200,31 +208,19 @@ function scoreTitleMatch(query, title) {
       }
     }
 
-    if (bestIndex === -1) return 0; // kræv at ALLE query tokens matcher noget
+    if (bestIndex === -1) return 0;
 
-    // bonus hvis token matches i samme rækkefølge
     if (bestIndex >= lastMatchIndex) score += 5;
     lastMatchIndex = bestIndex;
 
     score += bestTokenScore;
   }
 
-  // bonus hvis hele query forekommer som substring i den normaliserede titel
   const qNorm = normalizeText(query);
   const tNorm = normalizeText(title);
   if (qNorm && tNorm.includes(qNorm)) score += 10;
 
   return score;
-}
-
-function filterCardsBySearch(cardsList, query) {
-  const q = normalizeText(query);
-  if (!q) return cardsList;
-
-  return cardsList.filter((card) => {
-    const title = card?.Title ? String(card.Title) : "";
-    return scoreTitleMatch(q, title) > 0;
-  });
 }
 
 function getBestMatchCard(cardsList, query) {
@@ -254,19 +250,14 @@ function getEligibleListForCurrentMode() {
   const base = getFilteredBaseList();
   const mode = getBaseGameType();
 
-  let list = base;
+  // NOTE: søgning skal IKKE filtrere flashcards længere (opslagsværk er separat)
   if (mode === "feltkendetegn" || mode === "husk_feltkendetegn") {
-    list = list.filter(hasNonEmptyFeltkendetegn);
+    return base.filter(hasNonEmptyFeltkendetegn);
   }
-
-  // NYT: søgning som ekstra filter
-  if (!isRoundMode() && searchQuery && searchQuery.trim() !== "") {
-  list = filterCardsBySearch(list, searchQuery);
-  }
-
-  return list;
+  return base;
 }
 
+// ---- 20-runde helpers ----
 function cancelRoundTransition() {
   if (roundTransitionTimeoutId !== null) {
     clearTimeout(roundTransitionTimeoutId);
@@ -275,7 +266,6 @@ function cancelRoundTransition() {
   roundTransitioning = false;
 }
 
-// Byg/forny puljen på 20 (styret af filtre + base mode)
 function rebuildRoundPool() {
   cancelRoundTransition();
   const eligible = getEligibleListForCurrentMode();
@@ -288,6 +278,58 @@ function getActiveCardList() {
   return getEligibleListForCurrentMode();
 }
 
+// ---- Lookup (søg) visning: Feltkendetegn først, ellers Forveksling ----
+function buildLookupFieldsForCard(card) {
+  const fields = [];
+
+  const fk = getCardValue(card, "Feltkendetegn");
+  const forv = getFirstNonEmpty(card, ["Bog_Forvekslingsmuligheder", "Naturbasen_Forvekslingsmuligheder"]);
+
+  if (isNonEmpty(fk)) {
+    fields.push({ type: "text", label: "Feltkendetegn", text: String(fk).trim() });
+  } else if (isNonEmpty(forv)) {
+    fields.push({ type: "text", label: "Forveksling", text: String(forv).trim() });
+  } else {
+    fields.push({ type: "text", label: "Info", text: "Ingen Feltkendetegn eller Forveksling for denne art." });
+  }
+
+  // Ekstra nyttigt: tilføj resten af tekstfelterne bagefter (uden billeder)
+  FIELD_ORDER.forEach((spec) => {
+    if (spec.type === "priority_text") {
+      // spring den vi allerede brugte (Forveksling)
+      if (spec.label === "Forveksling" && (!isNonEmpty(fk))) return;
+      const text = getFirstNonEmpty(card, spec.keys);
+      if (!text) return;
+      if (fields[0].label === spec.label && fields[0].text === text) return;
+      fields.push({ type: "text", label: spec.label, text });
+      return;
+    }
+
+    // spring Feltkendetegn hvis det allerede ligger først
+    if (spec.label === "Feltkendetegn" && isNonEmpty(fk)) return;
+
+    const rawValue = getCardValue(card, spec.key);
+    if (!isNonEmpty(rawValue)) return;
+
+    const t = String(rawValue).trim();
+    if (fields[0].label === spec.label && fields[0].text === t) return;
+
+    fields.push({ type: "text", label: spec.label, text: t });
+  });
+
+  return fields;
+}
+
+function showLookupCard(card) {
+  lookupActive = true;
+  currentCard = card;
+  currentFields = buildLookupFieldsForCard(card);
+  currentFieldIndex = 0;
+  updateFamilyBadge();
+  renderCurrentField();
+}
+
+// ---- UI helpers ----
 function updateFamilyBadge() {
   if (!familyBadgeEl) return;
   const fam = currentCard && currentCard.Familie ? String(currentCard.Familie).trim() : "";
@@ -310,11 +352,9 @@ function updateScoreUI() {
     scoreBadgeEl.textContent = `${shownCorrect}/${shownTotal}`;
   }
 
-  // Ryd classes
   scoreBadgeEl.classList.remove("score-good", "score-bad", "score-neutral");
-
   if (isRoundMode()) { scoreBadgeEl.classList.add("score-neutral"); return; }
-  
+
   if (shownTotal === 0) {
     scoreBadgeEl.classList.add("score-neutral");
     return;
@@ -332,21 +372,19 @@ function registerAnswer(isCorrect) {
     return;
   }
 
-  // Global historik (uændret)
+  // hvis vi er i lookup-visning, så “slukker” vi lookup når man går videre
+  lookupActive = false;
+
   scoreTotal += 1;
   if (isCorrect) scoreCorrect += 1;
 
   if (isRoundMode()) {
-    // Queue-logik:
-    // korrekt: fjern fra puljen
-    // forkert: flyt til slutningen
     const first = roundPool[0];
 
     if (first === currentCard) {
       roundPool.shift();
       if (!isCorrect) roundPool.push(currentCard);
     } else {
-      // fallback hvis noget er ude af sync
       const idx = roundPool.indexOf(currentCard);
       if (idx >= 0) {
         roundPool.splice(idx, 1);
@@ -354,10 +392,8 @@ function registerAnswer(isCorrect) {
       }
     }
 
-    // Opdatér UI som runde-score (x/20)
     updateScoreUI();
 
-    // Runde færdig: vis 20/20 kort og start ny pulje automatisk
     if (roundPool.length === 0 && roundSize > 0) {
       roundTransitioning = true;
 
@@ -379,12 +415,10 @@ function registerAnswer(isCorrect) {
       return;
     }
 
-    // Ikke færdig endnu
     pickRandomCard();
     return;
   }
 
-  // Ikke round-mode
   updateScoreUI();
   pickRandomCard();
 }
@@ -410,7 +444,6 @@ function getImageKeyCandidates(card) {
   return Array.from(new Set(variants));
 }
 
-/** Returnér op til N tilfældige billeder for arten (baseret på manifestet). */
 function pickRandomImagesForCard(card, count = 5) {
   const candidates = getImageKeyCandidates(card);
   for (const key of candidates) {
@@ -476,11 +509,10 @@ function applyFilters() {
 
 function onFilterChange() {
   cancelRoundTransition();
+  lookupActive = false; // hvis man ændrer filtre, er vi tilbage i normal visning
   applyFilters();
 
-  if (isRoundMode()) {
-    rebuildRoundPool();
-  }
+  if (isRoundMode()) rebuildRoundPool();
 
   const list = getActiveCardList();
   if (!list.length) {
@@ -497,15 +529,20 @@ function onFilterChange() {
   pickRandomCard();
 }
 
-// Byg liste over felter
+// Byg liste over felter (flashcards)
 function buildFieldsForCard(card) {
+  // Hvis vi viser lookup (søg), så overstyr vi alt andet
+  if (lookupActive && !isRoundMode()) {
+    return buildLookupFieldsForCard(card);
+  }
+
   const fields = [];
   const mode = getBaseGameType();
 
   // MODE: Feltkendetegn (Feltkendetegn + 1 hint-billede)
   if (mode === "feltkendetegn") {
     const rawValue = getCardValue(card, "Feltkendetegn");
-    if (rawValue && String(rawValue).trim() !== "") {
+    if (isNonEmpty(rawValue)) {
       fields.push({
         type: "text",
         label: "Feltkendetegn",
@@ -565,7 +602,7 @@ function buildFieldsForCard(card) {
     }
 
     const rawValue = getCardValue(card, spec.key);
-    if (!rawValue || String(rawValue).trim() === "") return;
+    if (!isNonEmpty(rawValue)) return;
 
     fields.push({
       type: "text",
@@ -605,11 +642,11 @@ function renderCurrentField() {
 
 // Ny art
 function pickRandomCard() {
-  if (isRoundMode() && roundTransitioning) {
-    return; // lad “20/20 – ny pulje…” gennemføre
-  }
+  if (isRoundMode() && roundTransitioning) return;
 
-  // Round-mode: sørg for at puljen er bygget
+  // Når vi vælger en ny random art, så er vi ikke i lookup-visning længere
+  lookupActive = false;
+
   if (isRoundMode() && (!roundPool || roundPool.length === 0)) {
     rebuildRoundPool();
     updateScoreUI();
@@ -626,19 +663,12 @@ function pickRandomCard() {
     return;
   }
 
-  // Round-mode: tag altid næste i køen (ikke random)
   if (isRoundMode()) {
     currentCard = list[0];
-} else {
-  const q = searchQuery ? searchQuery.trim() : "";
-  if (q) {
-    const best = getBestMatchCard(list, q);
-    currentCard = best || list[Math.floor(Math.random() * list.length)];
   } else {
     const index = Math.floor(Math.random() * list.length);
     currentCard = list[index];
   }
-}
 
   currentFields = buildFieldsForCard(currentCard);
 
@@ -670,10 +700,9 @@ function openAnswerModal() {
 
   const mode = getBaseGameType();
 
-  // I "Husk feltkendetegn": svaret er Feltkendetegn-teksten (kun den)
   if (mode === "husk_feltkendetegn") {
     const fk = getCardValue(currentCard, "Feltkendetegn");
-    const text = fk !== null && fk !== undefined ? String(fk).trim() : "";
+    const text = isNonEmpty(fk) ? String(fk).trim() : "";
     answerTitleEl.textContent = text || "Ingen Feltkendetegn.";
 
     if (answerFamilyEl) {
@@ -685,7 +714,6 @@ function openAnswerModal() {
     return;
   }
 
-  // Ellers: Artsnavn + familie under
   const title = (currentCard.Title ? String(currentCard.Title).trim() : "") || "Ukendt art";
   answerTitleEl.textContent = title;
 
@@ -711,12 +739,13 @@ answerModal.addEventListener("click", (event) => {
   if (event.target === answerModal) closeAnswerModal();
 });
 
-// --- Filtre (under Filter-knappen) ---
+// --- Filter panel ---
 function isFilterPanelOpen() {
   return !filterPanelEl.classList.contains("hidden");
 }
 
 function openFilterPanel() {
+  closeSearchPanel(); // vigtig: kun ét panel åbent
   filterPanelEl.classList.remove("hidden");
   filterToggleBtn.setAttribute("aria-expanded", "true");
 }
@@ -726,31 +755,124 @@ function closeFilterPanel() {
   filterToggleBtn.setAttribute("aria-expanded", "false");
 }
 
-filterToggleBtn.addEventListener("click", (e) => {
-  e.stopPropagation();
-  if (isFilterPanelOpen()) closeFilterPanel();
-  else openFilterPanel();
-});
+// --- Search panel (NY) ---
+function isSearchPanelOpen() {
+  return searchPanelEl && !searchPanelEl.classList.contains("hidden");
+}
 
-filterPanelEl.addEventListener("click", (e) => {
-  e.stopPropagation();
-});
+function openSearchPanel() {
+  if (!searchPanelEl) return;
+  closeFilterPanel(); // vigtig: kun ét panel åbent
+  searchPanelEl.classList.remove("hidden");
+  if (searchToggleBtn) searchToggleBtn.setAttribute("aria-expanded", "true");
+  if (searchInputEl && !searchInputEl.disabled) {
+    searchInputEl.focus();
+    searchInputEl.select();
+  }
+}
 
+function closeSearchPanel() {
+  if (!searchPanelEl) return;
+  searchPanelEl.classList.add("hidden");
+  if (searchToggleBtn) searchToggleBtn.setAttribute("aria-expanded", "false");
+}
+
+// Buttons
+if (filterToggleBtn) {
+  filterToggleBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (isFilterPanelOpen()) closeFilterPanel();
+    else openFilterPanel();
+  });
+}
+
+if (searchToggleBtn) {
+  searchToggleBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (isSearchPanelOpen()) closeSearchPanel();
+    else openSearchPanel();
+  });
+}
+
+// Stop click bubbling inside panels
+if (filterPanelEl) {
+  filterPanelEl.addEventListener("click", (e) => e.stopPropagation());
+}
+if (searchPanelEl) {
+  searchPanelEl.addEventListener("click", (e) => e.stopPropagation());
+}
+
+// Click outside closes both
 document.addEventListener("click", () => {
   if (isFilterPanelOpen()) closeFilterPanel();
+  if (isSearchPanelOpen()) closeSearchPanel();
 });
 
-// checkbox-change (bubbler til container)
+// Filtre change
 habitattypeFilterEl.addEventListener("change", onFilterChange);
 familieFilterEl.addEventListener("change", onFilterChange);
 
+// Search behavior (kun almindelig mode; auto-luk efter match)
+function clearSearchState() {
+  searchQuery = "";
+  if (searchInputEl) searchInputEl.value = "";
+}
+
+function runSearchNow(autoClose = true) {
+  if (isRoundMode()) return;
+  const q = searchQuery.trim();
+  if (!q) return;
+
+  // Søg kun indenfor filtreret liste (og respekter base mode-regler)
+  const list = getEligibleListForCurrentMode();
+  const best = getBestMatchCard(list, q);
+
+  if (!best) return;
+
+  showLookupCard(best);
+
+  if (autoClose) {
+    closeSearchPanel();
+    clearSearchState();
+  }
+}
+
 if (searchInputEl) {
+  // disable hvis vi er i round mode ved load
+  const round = isRoundMode();
+  searchInputEl.disabled = round;
+  if (searchToggleBtn) searchToggleBtn.disabled = round;
+
   searchInputEl.addEventListener("input", () => {
-    if (isRoundMode()) return;       // ignorér søgning i 20-mode
+    if (isRoundMode()) return;
+
     searchQuery = searchInputEl.value || "";
-    onFilterChange();
+
+    // debounce, så man kan nå at skrive uden at den lukker for tidligt
+    if (searchDebounceId !== null) clearTimeout(searchDebounceId);
+
+    searchDebounceId = setTimeout(() => {
+      searchDebounceId = null;
+
+      // kræv lidt “substans”, så den ikke lukker på 1 bogstav
+      const q = searchQuery.trim();
+      if (q.length < 2) return;
+
+      runSearchNow(true); // autoClose
+    }, 350);
   });
 
+  // Enter = søg med det samme
+  searchInputEl.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (searchDebounceId !== null) {
+        clearTimeout(searchDebounceId);
+        searchDebounceId = null;
+      }
+      runSearchNow(true);
+    }
+  });
 }
 
 if (gameTypeFilterEl) {
@@ -758,18 +880,19 @@ if (gameTypeFilterEl) {
     cancelRoundTransition();
     gameType = gameTypeFilterEl.value || "arter";
 
+    // Søg skal være “separat værktøj” => slå fra i 20-mode
     if (searchInputEl) {
-  const round = isRoundMode();
-  searchInputEl.disabled = round;
-  if (round) {
-    searchInputEl.value = "";
-    searchQuery = "";
-  }
-}
+      const round = isRoundMode();
+      searchInputEl.disabled = round;
+      if (searchToggleBtn) searchToggleBtn.disabled = round;
 
-    if (isRoundMode()) {
-      rebuildRoundPool();
+      if (round) {
+        clearSearchState();
+        closeSearchPanel();
+      }
     }
+
+    if (isRoundMode()) rebuildRoundPool();
 
     updateScoreUI();
     onFilterChange();
@@ -779,15 +902,12 @@ if (gameTypeFilterEl) {
 clearFiltersBtn.addEventListener("click", () => {
   cancelRoundTransition();
 
-  // Nulstil KUN Habitattype/Familie (ikke spiltype)
   clearChecked(habitattypeFilterEl);
   clearChecked(familieFilterEl);
 
   applyFilters();
 
-  if (isRoundMode()) {
-    rebuildRoundPool();
-  }
+  if (isRoundMode()) rebuildRoundPool();
 
   updateScoreUI();
   pickRandomCard();
