@@ -1,0 +1,172 @@
+{
+  "våd": [
+    "sumpet",
+    "vandlidende",
+    "drivvåd"
+  ],
+  "vand": [
+    "vandet",
+    "i vand",
+    "sø",
+    "dam"
+  ],
+  "fugtig": [
+    "vådt",
+    "vådbund",
+    "fugtbund"
+  ],
+  "tør": [
+    "tørbund",
+    "udtørret"
+  ],
+  "lille": [
+    "lav",
+    "kort"
+  ],
+  "stor": [
+    "høj"
+  ],
+  "meget_stor": [
+    "kæmpe",
+    "kæmpestor"
+  ],
+  "rosa": [
+    "lyserød",
+    "pink"
+  ],
+  "lilla": [
+    "lila",
+    "violet",
+    "purpur"
+  ],
+  "lancetformede": [
+    "lancetformet",
+    "lansetformet"
+  ],
+  "ægformede": [
+    "ægformet",
+    "ovalt"
+  ],
+  "linjeformede": [
+    "linjeformet",
+    "smal",
+    "lineær"
+  ],
+  "hjerteformede": [
+    "hjerteformet"
+  ],
+  "rendeformet": [
+    "rendeformede",
+    "v-formet"
+  ],
+  "trekantet": [
+    "tre-kantet",
+    "trikant",
+    "trekant"
+  ],
+  "firkantet": [
+    "fire-kantet",
+    "kvadratisk"
+  ],
+  "rund": [
+    "cylindrisk",
+    "trind"
+  ],
+  "duftende": [
+    "duft",
+    "lugter godt"
+  ],
+  "aromatisk": [
+    "krydret"
+  ],
+  "stinkende": [
+    "lugter dårligt",
+    "ubehagelig lugt"
+  ],
+  "natduftende": [
+    "dufter om aftenen"
+  ],
+  "tornet": [
+    "torne",
+    "pigget"
+  ],
+  "tvebo": [
+    "særkønnet"
+  ],
+  "sukkulent": [
+    "tyk",
+    "kødfuld",
+    "saftig"
+  ],
+  "kødfuld": [
+    "sukkulent",
+    "tyk"
+  ],
+  "håret": [
+    "behåret",
+    "lodden",
+    "dunet"
+  ],
+  "kirtelhåret": [
+    "klæbrig",
+    "klæbende"
+  ],
+  "klæbrig": [
+    "klistret",
+    "klæbende",
+    "kirtelhåret"
+  ],
+  "halvgræs": [
+    "halv-græs",
+    "carex",
+    "star"
+  ],
+  "siv": [
+    "junkus"
+  ],
+  "vandplante": [
+    "vand-plante",
+    "akvatisk"
+  ],
+  "tuedannende": [
+    "tueformet",
+    "i tuer",
+    "tue"
+  ],
+  "krybende": [
+    "nedliggende",
+    "lav"
+  ],
+  "udløberdannende": [
+    "udløbere",
+    "med udløbere"
+  ],
+  "rosetplante": [
+    "rosetformet",
+    "i roset"
+  ],
+  "mose": [
+    "sumpområde",
+    "kær"
+  ],
+  "kær": [
+    "mose",
+    "sumpkær"
+  ],
+  "skov": [
+    "skovområde",
+    "skovbund"
+  ],
+  "eng": [
+    "græseng",
+    "engareal"
+  ],
+  "strandeng": [
+    "strand-eng",
+    "saltvandseng"
+  ],
+  "klit": [
+    "sandklit",
+    "klitområde"
+  ]
+}

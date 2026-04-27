@@ -1,0 +1,4110 @@
+{
+  "plantegruppe": [
+    {
+      "value": "urt",
+      "count": 285
+    },
+    {
+      "value": "græs",
+      "count": 71
+    },
+    {
+      "value": "halvgræs",
+      "count": 69
+    },
+    {
+      "value": "vandplante",
+      "count": 66
+    },
+    {
+      "value": "vedplante",
+      "count": 60
+    },
+    {
+      "value": "siv",
+      "count": 18
+    },
+    {
+      "value": "mos",
+      "count": 18
+    },
+    {
+      "value": "bregne",
+      "count": 11
+    },
+    {
+      "value": "padderok",
+      "count": 7
+    },
+    {
+      "value": "lyngagtig",
+      "count": 7
+    },
+    {
+      "value": "sumpplante",
+      "count": 2
+    }
+  ],
+  "vækstform": [
+    {
+      "value": "oprets",
+      "count": 202
+    },
+    {
+      "value": "tuedannende",
+      "count": 102
+    },
+    {
+      "value": "krybende",
+      "count": 98
+    },
+    {
+      "value": "udløberdannende",
+      "count": 81
+    },
+    {
+      "value": "forgrenet",
+      "count": 74
+    },
+    {
+      "value": "rosetplante",
+      "count": 60
+    },
+    {
+      "value": "nedliggende",
+      "count": 49
+    },
+    {
+      "value": "opstigende",
+      "count": 43
+    },
+    {
+      "value": "rodfæstet",
+      "count": 40
+    },
+    {
+      "value": "måttedannende",
+      "count": 28
+    },
+    {
+      "value": "flydeplante",
+      "count": 25
+    },
+    {
+      "value": "bestanddannende",
+      "count": 15
+    },
+    {
+      "value": "klatrende",
+      "count": 11
+    },
+    {
+      "value": "snoende",
+      "count": 5
+    },
+    {
+      "value": "rodslående",
+      "count": 5
+    },
+    {
+      "value": "flerstammet",
+      "count": 3
+    },
+    {
+      "value": "opret",
+      "count": 3
+    },
+    {
+      "value": "spinkel",
+      "count": 3
+    },
+    {
+      "value": "buskagtig",
+      "count": 2
+    },
+    {
+      "value": "spredt",
+      "count": 2
+    },
+    {
+      "value": "knæbøjede",
+      "count": 2
+    },
+    {
+      "value": "udliggende",
+      "count": 1
+    },
+    {
+      "value": "bestandsdannende",
+      "count": 1
+    },
+    {
+      "value": "enligt",
+      "count": 1
+    },
+    {
+      "value": "løst tuedannende",
+      "count": 1
+    },
+    {
+      "value": "tæppeformet",
+      "count": 1
+    },
+    {
+      "value": "dværgbusk",
+      "count": 1
+    },
+    {
+      "value": "tætgrenet",
+      "count": 1
+    },
+    {
+      "value": "pudeformet",
+      "count": 1
+    },
+    {
+      "value": "lav",
+      "count": 1
+    },
+    {
+      "value": "krat",
+      "count": 1
+    },
+    {
+      "value": "fjergrenet",
+      "count": 1
+    },
+    {
+      "value": "knæbøjet",
+      "count": 1
+    },
+    {
+      "value": "busket",
+      "count": 1
+    },
+    {
+      "value": "tætte bevoksninger",
+      "count": 1
+    }
+  ],
+  "højde": [
+    {
+      "value": "lille",
+      "count": 155
+    },
+    {
+      "value": "mellem",
+      "count": 155
+    },
+    {
+      "value": "stor",
+      "count": 151
+    },
+    {
+      "value": "meget_stor",
+      "count": 50
+    },
+    {
+      "value": "meget_lille",
+      "count": 48
+    }
+  ],
+  "stængel_overflade": [
+    {
+      "value": "glat",
+      "count": 107
+    },
+    {
+      "value": "håret",
+      "count": 84
+    },
+    {
+      "value": "ru",
+      "count": 21
+    },
+    {
+      "value": "hul",
+      "count": 17
+    },
+    {
+      "value": "furet",
+      "count": 14
+    },
+    {
+      "value": "filtet",
+      "count": 14
+    },
+    {
+      "value": "kirtelhåret",
+      "count": 12
+    },
+    {
+      "value": "dunhåret",
+      "count": 11
+    },
+    {
+      "value": "korthåret",
+      "count": 7
+    },
+    {
+      "value": "klæbrig",
+      "count": 7
+    },
+    {
+      "value": "stivhåret",
+      "count": 6
+    },
+    {
+      "value": "stiv",
+      "count": 4
+    },
+    {
+      "value": "tornet",
+      "count": 3
+    },
+    {
+      "value": "hårfri",
+      "count": 3
+    },
+    {
+      "value": "bladløs",
+      "count": 2
+    },
+    {
+      "value": "spindelvævhåret",
+      "count": 2
+    },
+    {
+      "value": "stribet",
+      "count": 2
+    },
+    {
+      "value": "blåduggede",
+      "count": 2
+    },
+    {
+      "value": "rødlig",
+      "count": 2
+    },
+    {
+      "value": "rank",
+      "count": 1
+    },
+    {
+      "value": "silkehåret",
+      "count": 1
+    },
+    {
+      "value": "lodne",
+      "count": 1
+    },
+    {
+      "value": "blank",
+      "count": 1
+    },
+    {
+      "value": "knæbøjede",
+      "count": 1
+    },
+    {
+      "value": "spindelvævshåret",
+      "count": 1
+    },
+    {
+      "value": "rødplettet",
+      "count": 1
+    },
+    {
+      "value": "groft håret",
+      "count": 1
+    },
+    {
+      "value": "dunet",
+      "count": 1
+    },
+    {
+      "value": "oppustet",
+      "count": 1
+    },
+    {
+      "value": "rødbrun",
+      "count": 1
+    },
+    {
+      "value": "skællet",
+      "count": 1
+    },
+    {
+      "value": "lodden",
+      "count": 1
+    },
+    {
+      "value": "vinget",
+      "count": 1
+    },
+    {
+      "value": "knudret",
+      "count": 1
+    },
+    {
+      "value": "ujævn",
+      "count": 1
+    },
+    {
+      "value": "blødhåret",
+      "count": 1
+    },
+    {
+      "value": "bløde",
+      "count": 1
+    },
+    {
+      "value": "filtrede",
+      "count": 1
+    },
+    {
+      "value": "gråfiltet-lodden",
+      "count": 1
+    },
+    {
+      "value": "blødt",
+      "count": 1
+    },
+    {
+      "value": "saftig",
+      "count": 1
+    },
+    {
+      "value": "gråfiltet",
+      "count": 1
+    },
+    {
+      "value": "kødfuld",
+      "count": 1
+    }
+  ],
+  "bladform": [
+    {
+      "value": "linjeformede",
+      "count": 108
+    },
+    {
+      "value": "lancetformede",
+      "count": 83
+    },
+    {
+      "value": "ægformede",
+      "count": 61
+    },
+    {
+      "value": "fjersnitdelt",
+      "count": 52
+    },
+    {
+      "value": "hjerteformede",
+      "count": 35
+    },
+    {
+      "value": "elliptisk",
+      "count": 21
+    },
+    {
+      "value": "ovale",
+      "count": 18
+    },
+    {
+      "value": "runde",
+      "count": 14
+    },
+    {
+      "value": "flade",
+      "count": 13
+    },
+    {
+      "value": "nyreformede",
+      "count": 13
+    },
+    {
+      "value": "rendeformet",
+      "count": 13
+    },
+    {
+      "value": "håndlappet",
+      "count": 12
+    },
+    {
+      "value": "æg-lancetformede",
+      "count": 11
+    },
+    {
+      "value": "trådformede",
+      "count": 10
+    },
+    {
+      "value": "trekantede",
+      "count": 8
+    },
+    {
+      "value": "nåleformede",
+      "count": 8
+    },
+    {
+      "value": "fliget",
+      "count": 8
+    },
+    {
+      "value": "pilformede",
+      "count": 8
+    },
+    {
+      "value": "spydformede",
+      "count": 6
+    },
+    {
+      "value": "lappet",
+      "count": 5
+    },
+    {
+      "value": "trekoblet",
+      "count": 5
+    },
+    {
+      "value": "båndformede",
+      "count": 4
+    },
+    {
+      "value": "spidse",
+      "count": 4
+    },
+    {
+      "value": "omvendt ægformede",
+      "count": 4
+    },
+    {
+      "value": "spatelformede",
+      "count": 4
+    },
+    {
+      "value": "børsteformede",
+      "count": 3
+    },
+    {
+      "value": "kølede",
+      "count": 3
+    },
+    {
+      "value": "aflange",
+      "count": 3
+    },
+    {
+      "value": "smalle",
+      "count": 3
+    },
+    {
+      "value": "rørformede",
+      "count": 2
+    },
+    {
+      "value": "tungeformede",
+      "count": 2
+    },
+    {
+      "value": "halvtrinde",
+      "count": 2
+    },
+    {
+      "value": "tilspidsede",
+      "count": 1
+    },
+    {
+      "value": "cylindriske",
+      "count": 1
+    },
+    {
+      "value": "aflangt ægformede",
+      "count": 1
+    },
+    {
+      "value": "kredsformede",
+      "count": 1
+    },
+    {
+      "value": "længdefoldede",
+      "count": 1
+    },
+    {
+      "value": "skælformede",
+      "count": 1
+    },
+    {
+      "value": "dybt-delt",
+      "count": 1
+    },
+    {
+      "value": "bådformet",
+      "count": 1
+    },
+    {
+      "value": "trådformet",
+      "count": 1
+    },
+    {
+      "value": "håndfligede",
+      "count": 1
+    },
+    {
+      "value": "ovalt",
+      "count": 1
+    },
+    {
+      "value": "indrullede",
+      "count": 1
+    },
+    {
+      "value": "sværdformede",
+      "count": 1
+    },
+    {
+      "value": "båndformet",
+      "count": 1
+    },
+    {
+      "value": "skjoldformede",
+      "count": 1
+    },
+    {
+      "value": "kileformet",
+      "count": 1
+    },
+    {
+      "value": "aflangt-lancetformede",
+      "count": 1
+    },
+    {
+      "value": "brede",
+      "count": 1
+    },
+    {
+      "value": "rundede",
+      "count": 1
+    },
+    {
+      "value": "hånddelte",
+      "count": 1
+    },
+    {
+      "value": "aflangbladet",
+      "count": 1
+    },
+    {
+      "value": "vedbenlignende",
+      "count": 1
+    },
+    {
+      "value": "fingret",
+      "count": 1
+    },
+    {
+      "value": "rundagtige",
+      "count": 1
+    },
+    {
+      "value": "rørformet",
+      "count": 1
+    },
+    {
+      "value": "rudeformede",
+      "count": 1
+    },
+    {
+      "value": "græslignende",
+      "count": 1
+    },
+    {
+      "value": "krusede",
+      "count": 1
+    },
+    {
+      "value": "trekantet",
+      "count": 1
+    },
+    {
+      "value": "trinde",
+      "count": 1
+    },
+    {
+      "value": "butte",
+      "count": 1
+    },
+    {
+      "value": "sylformede",
+      "count": 1
+    },
+    {
+      "value": "trådtynde",
+      "count": 1
+    },
+    {
+      "value": "furede",
+      "count": 1
+    },
+    {
+      "value": "kredsrunde",
+      "count": 1
+    },
+    {
+      "value": "rombiske",
+      "count": 1
+    },
+    {
+      "value": "rudeformet",
+      "count": 1
+    },
+    {
+      "value": "rhombiske",
+      "count": 1
+    }
+  ],
+  "bladtype": [
+    {
+      "value": "enkelt",
+      "count": 354
+    },
+    {
+      "value": "sammensat",
+      "count": 87
+    },
+    {
+      "value": "fjersnitdelt",
+      "count": 22
+    },
+    {
+      "value": "trekoblet",
+      "count": 18
+    },
+    {
+      "value": "fjergrenet",
+      "count": 12
+    },
+    {
+      "value": "parfinnet",
+      "count": 12
+    },
+    {
+      "value": "fingret",
+      "count": 4
+    },
+    {
+      "value": "uligefinnede",
+      "count": 4
+    },
+    {
+      "value": "uligefinnet",
+      "count": 2
+    },
+    {
+      "value": "håndsnitdelt",
+      "count": 1
+    },
+    {
+      "value": "2-3 gange fjersnitdelt",
+      "count": 1
+    },
+    {
+      "value": "todelt",
+      "count": 1
+    },
+    {
+      "value": "gaffeldelt",
+      "count": 1
+    },
+    {
+      "value": "håndlappet",
+      "count": 1
+    },
+    {
+      "value": "hånddelt",
+      "count": 1
+    },
+    {
+      "value": "gaffeldelte",
+      "count": 1
+    }
+  ],
+  "blomsterfarve": [
+    {
+      "value": "hvid",
+      "count": 117
+    },
+    {
+      "value": "gul",
+      "count": 100
+    },
+    {
+      "value": "rosa",
+      "count": 56
+    },
+    {
+      "value": "grøn",
+      "count": 50
+    },
+    {
+      "value": "rød",
+      "count": 42
+    },
+    {
+      "value": "brun",
+      "count": 37
+    },
+    {
+      "value": "violet",
+      "count": 37
+    },
+    {
+      "value": "lilla",
+      "count": 28
+    },
+    {
+      "value": "blå",
+      "count": 28
+    },
+    {
+      "value": "rødviolet",
+      "count": 16
+    },
+    {
+      "value": "ubetydelige",
+      "count": 9
+    },
+    {
+      "value": "gulgrøn",
+      "count": 7
+    },
+    {
+      "value": "rødbrune",
+      "count": 6
+    },
+    {
+      "value": "blåviolet",
+      "count": 6
+    },
+    {
+      "value": "rødlige",
+      "count": 4
+    },
+    {
+      "value": "gulbrun",
+      "count": 4
+    },
+    {
+      "value": "guldgule",
+      "count": 3
+    },
+    {
+      "value": "purpur",
+      "count": 3
+    },
+    {
+      "value": "purpurrød",
+      "count": 2
+    },
+    {
+      "value": "rødlig",
+      "count": 2
+    },
+    {
+      "value": "gullighvide",
+      "count": 2
+    },
+    {
+      "value": "orange",
+      "count": 2
+    },
+    {
+      "value": "rosenrøde",
+      "count": 2
+    },
+    {
+      "value": "brunviolet",
+      "count": 2
+    },
+    {
+      "value": "rødligt",
+      "count": 1
+    },
+    {
+      "value": "blege",
+      "count": 1
+    },
+    {
+      "value": "gulgrønne",
+      "count": 1
+    },
+    {
+      "value": "sølvagtig",
+      "count": 1
+    },
+    {
+      "value": "lysegul",
+      "count": 1
+    },
+    {
+      "value": "violetrøde",
+      "count": 1
+    },
+    {
+      "value": "mørkerøde",
+      "count": 1
+    },
+    {
+      "value": "sortbrun",
+      "count": 1
+    },
+    {
+      "value": "brungul",
+      "count": 1
+    },
+    {
+      "value": "violetrød",
+      "count": 1
+    },
+    {
+      "value": "flerfarvet",
+      "count": 1
+    },
+    {
+      "value": "rødprikkede",
+      "count": 1
+    },
+    {
+      "value": "blegrøde",
+      "count": 1
+    },
+    {
+      "value": "purpurbrogede",
+      "count": 1
+    },
+    {
+      "value": "gulgrønt",
+      "count": 1
+    },
+    {
+      "value": "gulbrunt",
+      "count": 1
+    },
+    {
+      "value": "cremefarvede",
+      "count": 1
+    },
+    {
+      "value": "purpurrøde",
+      "count": 1
+    },
+    {
+      "value": "purpurviolet",
+      "count": 1
+    },
+    {
+      "value": "hvidgule",
+      "count": 1
+    },
+    {
+      "value": "lysviolet",
+      "count": 1
+    }
+  ],
+  "næring": [
+    {
+      "value": "næringsrig",
+      "count": 225
+    },
+    {
+      "value": "næringsfattig",
+      "count": 123
+    },
+    {
+      "value": "næringsrich",
+      "count": 2
+    }
+  ],
+  "lys": [
+    {
+      "value": "lysåben",
+      "count": 293
+    },
+    {
+      "value": "halvskygge",
+      "count": 54
+    },
+    {
+      "value": "skygge",
+      "count": 43
+    }
+  ],
+  "særtræk": [
+    {
+      "value": "stedsegrøn",
+      "count": 37
+    },
+    {
+      "value": "tvebo",
+      "count": 21
+    },
+    {
+      "value": "løvfældende",
+      "count": 19
+    },
+    {
+      "value": "tornet",
+      "count": 19
+    },
+    {
+      "value": "giftig",
+      "count": 14
+    },
+    {
+      "value": "spiselig",
+      "count": 11
+    },
+    {
+      "value": "mælkesaft",
+      "count": 7
+    },
+    {
+      "value": "sambo",
+      "count": 4
+    },
+    {
+      "value": "særbo",
+      "count": 3
+    },
+    {
+      "value": "enbo",
+      "count": 2
+    },
+    {
+      "value": "halvparasitisk",
+      "count": 2
+    },
+    {
+      "value": "salttolerant",
+      "count": 1
+    },
+    {
+      "value": "bestanddannende",
+      "count": 1
+    },
+    {
+      "value": "insektfangende",
+      "count": 1
+    },
+    {
+      "value": "blådugget",
+      "count": 1
+    },
+    {
+      "value": "forvedet",
+      "count": 1
+    },
+    {
+      "value": "pælerod",
+      "count": 1
+    },
+    {
+      "value": "fangstblærer",
+      "count": 1
+    },
+    {
+      "value": "sukkulent",
+      "count": 1
+    },
+    {
+      "value": "forveddet",
+      "count": 1
+    },
+    {
+      "value": "halvparasit",
+      "count": 1
+    },
+    {
+      "value": "selvsteril",
+      "count": 1
+    }
+  ],
+  "lugt": [
+    {
+      "value": "aromatisk",
+      "count": 32
+    },
+    {
+      "value": "duftende",
+      "count": 31
+    },
+    {
+      "value": "krydret",
+      "count": 13
+    },
+    {
+      "value": "vellugtende",
+      "count": 11
+    },
+    {
+      "value": "stinkende",
+      "count": 9
+    },
+    {
+      "value": "harsk",
+      "count": 6
+    },
+    {
+      "value": "sød",
+      "count": 4
+    },
+    {
+      "value": "karakteristisk",
+      "count": 3
+    },
+    {
+      "value": "natduftende",
+      "count": 2
+    },
+    {
+      "value": "ram",
+      "count": 2
+    },
+    {
+      "value": "hvidløg",
+      "count": 2
+    },
+    {
+      "value": "klor",
+      "count": 1
+    },
+    {
+      "value": "bitter",
+      "count": 1
+    },
+    {
+      "value": "ildelugtende",
+      "count": 1
+    },
+    {
+      "value": "gulerod",
+      "count": 1
+    },
+    {
+      "value": "æble",
+      "count": 1
+    },
+    {
+      "value": "ubehageligt",
+      "count": 1
+    },
+    {
+      "value": "nellikeduftende",
+      "count": 1
+    },
+    {
+      "value": "anis",
+      "count": 1
+    },
+    {
+      "value": "velduftende",
+      "count": 1
+    },
+    {
+      "value": "ubehagelig",
+      "count": 1
+    },
+    {
+      "value": "gulerodslugt",
+      "count": 1
+    },
+    {
+      "value": "syrligt-krydret",
+      "count": 1
+    },
+    {
+      "value": "sødtduftende",
+      "count": 1
+    },
+    {
+      "value": "bittermandelolie",
+      "count": 1
+    },
+    {
+      "value": "citronagtig",
+      "count": 1
+    },
+    {
+      "value": "røllikelugt",
+      "count": 1
+    },
+    {
+      "value": "citron",
+      "count": 1
+    },
+    {
+      "value": "duftløse",
+      "count": 1
+    },
+    {
+      "value": "lugtløs",
+      "count": 1
+    },
+    {
+      "value": "stærkt aromatisk",
+      "count": 1
+    }
+  ],
+  "habitat": [
+    {
+      "value": "eng",
+      "count": 273
+    },
+    {
+      "value": "mose",
+      "count": 199
+    },
+    {
+      "value": "strandeng",
+      "count": 190
+    },
+    {
+      "value": "overdrev",
+      "count": 170
+    },
+    {
+      "value": "skov",
+      "count": 165
+    },
+    {
+      "value": "klit",
+      "count": 148
+    },
+    {
+      "value": "vejkant",
+      "count": 136
+    },
+    {
+      "value": "hede",
+      "count": 117
+    },
+    {
+      "value": "sø",
+      "count": 95
+    },
+    {
+      "value": "grøft",
+      "count": 94
+    },
+    {
+      "value": "skovbryn",
+      "count": 89
+    },
+    {
+      "value": "ruderat",
+      "count": 87
+    },
+    {
+      "value": "vandløb",
+      "count": 74
+    },
+    {
+      "value": "mark",
+      "count": 73
+    },
+    {
+      "value": "søbred",
+      "count": 71
+    },
+    {
+      "value": "kær",
+      "count": 63
+    },
+    {
+      "value": "krat",
+      "count": 57
+    },
+    {
+      "value": "skrænt",
+      "count": 48
+    },
+    {
+      "value": "have",
+      "count": 47
+    },
+    {
+      "value": "dam",
+      "count": 43
+    },
+    {
+      "value": "hegn",
+      "count": 33
+    },
+    {
+      "value": "skovsump",
+      "count": 29
+    },
+    {
+      "value": "strandbred",
+      "count": 29
+    },
+    {
+      "value": "å",
+      "count": 28
+    },
+    {
+      "value": "park",
+      "count": 26
+    },
+    {
+      "value": "brakmark",
+      "count": 25
+    },
+    {
+      "value": "klitlavning",
+      "count": 18
+    },
+    {
+      "value": "sump",
+      "count": 17
+    },
+    {
+      "value": "hedemose",
+      "count": 17
+    },
+    {
+      "value": "kanal",
+      "count": 17
+    },
+    {
+      "value": "baneterræn",
+      "count": 15
+    },
+    {
+      "value": "rørsump",
+      "count": 13
+    },
+    {
+      "value": "tørveeng",
+      "count": 9
+    },
+    {
+      "value": "vældeng",
+      "count": 7
+    },
+    {
+      "value": "hængesæk",
+      "count": 6
+    },
+    {
+      "value": "højmose",
+      "count": 5
+    },
+    {
+      "value": "strandoverdrev",
+      "count": 4
+    },
+    {
+      "value": "væld",
+      "count": 4
+    },
+    {
+      "value": "rigkær",
+      "count": 4
+    },
+    {
+      "value": "kystskrænt",
+      "count": 3
+    },
+    {
+      "value": "fattigkær",
+      "count": 3
+    },
+    {
+      "value": "kilde",
+      "count": 3
+    },
+    {
+      "value": "strandvold",
+      "count": 3
+    },
+    {
+      "value": "vældpåvirkning",
+      "count": 2
+    },
+    {
+      "value": "kyst",
+      "count": 2
+    },
+    {
+      "value": "tørvemose",
+      "count": 2
+    },
+    {
+      "value": "bæk",
+      "count": 2
+    },
+    {
+      "value": "kliteng",
+      "count": 1
+    },
+    {
+      "value": "ådal",
+      "count": 1
+    },
+    {
+      "value": "forstrand",
+      "count": 1
+    },
+    {
+      "value": "dige",
+      "count": 1
+    },
+    {
+      "value": "overgangsfattigkær",
+      "count": 1
+    },
+    {
+      "value": "saltmarsk",
+      "count": 1
+    },
+    {
+      "value": "sphagnummoser",
+      "count": 1
+    },
+    {
+      "value": "laggzone",
+      "count": 1
+    },
+    {
+      "value": "askeskov",
+      "count": 1
+    },
+    {
+      "value": "skovlysninger",
+      "count": 1
+    },
+    {
+      "value": "hedekær",
+      "count": 1
+    },
+    {
+      "value": "tangvold",
+      "count": 1
+    },
+    {
+      "value": "kyststrækninger",
+      "count": 1
+    },
+    {
+      "value": "åmose",
+      "count": 1
+    },
+    {
+      "value": "bøgeskov",
+      "count": 1
+    },
+    {
+      "value": "stendige",
+      "count": 1
+    },
+    {
+      "value": "strandrørsump",
+      "count": 1
+    },
+    {
+      "value": "græsmarker",
+      "count": 1
+    },
+    {
+      "value": "strandkrat",
+      "count": 1
+    },
+    {
+      "value": "hedesø",
+      "count": 1
+    },
+    {
+      "value": "tørvegrave",
+      "count": 1
+    },
+    {
+      "value": "skrånt",
+      "count": 1
+    },
+    {
+      "value": "græshede",
+      "count": 1
+    },
+    {
+      "value": "gråklit",
+      "count": 1
+    },
+    {
+      "value": "grønklit",
+      "count": 1
+    },
+    {
+      "value": "buskog",
+      "count": 1
+    },
+    {
+      "value": "plantage",
+      "count": 1
+    },
+    {
+      "value": "kystnær",
+      "count": 1
+    },
+    {
+      "value": "grusgrav",
+      "count": 1
+    },
+    {
+      "value": "grønsværklit",
+      "count": 1
+    },
+    {
+      "value": "fjord",
+      "count": 1
+    },
+    {
+      "value": "bakke",
+      "count": 1
+    },
+    {
+      "value": "skovmose",
+      "count": 1
+    },
+    {
+      "value": "græsrabat",
+      "count": 1
+    },
+    {
+      "value": "kalkgrave",
+      "count": 1
+    },
+    {
+      "value": "klithede",
+      "count": 1
+    },
+    {
+      "value": "græsplæne",
+      "count": 1
+    },
+    {
+      "value": "rørskov",
+      "count": 1
+    },
+    {
+      "value": "klipper",
+      "count": 1
+    },
+    {
+      "value": "mosekanter",
+      "count": 1
+    },
+    {
+      "value": "fyrreskove",
+      "count": 1
+    },
+    {
+      "value": "højmoser",
+      "count": 1
+    }
+  ],
+  "blomstring": [
+    {
+      "value": "jul",
+      "count": 377
+    },
+    {
+      "value": "jun",
+      "count": 354
+    },
+    {
+      "value": "aug",
+      "count": 299
+    },
+    {
+      "value": "maj",
+      "count": 189
+    },
+    {
+      "value": "sep",
+      "count": 164
+    },
+    {
+      "value": "apr",
+      "count": 58
+    },
+    {
+      "value": "okt",
+      "count": 41
+    },
+    {
+      "value": "mar",
+      "count": 23
+    },
+    {
+      "value": "nov",
+      "count": 14
+    },
+    {
+      "value": "jan",
+      "count": 13
+    },
+    {
+      "value": "feb",
+      "count": 13
+    },
+    {
+      "value": "dec",
+      "count": 12
+    }
+  ],
+  "livscyklus": [
+    {
+      "value": "flerårig",
+      "count": 415
+    },
+    {
+      "value": "enårig",
+      "count": 47
+    },
+    {
+      "value": "overvintrende",
+      "count": 28
+    },
+    {
+      "value": "toårig",
+      "count": 15
+    }
+  ],
+  "bladrand": [
+    {
+      "value": "tandet",
+      "count": 58
+    },
+    {
+      "value": "savtakket",
+      "count": 48
+    },
+    {
+      "value": "helrandet",
+      "count": 47
+    },
+    {
+      "value": "fliget",
+      "count": 27
+    },
+    {
+      "value": "dybt-delt",
+      "count": 16
+    },
+    {
+      "value": "lappet",
+      "count": 14
+    },
+    {
+      "value": "tornet",
+      "count": 12
+    },
+    {
+      "value": "skarptakket",
+      "count": 11
+    },
+    {
+      "value": "ru",
+      "count": 10
+    },
+    {
+      "value": "rundtakket",
+      "count": 7
+    },
+    {
+      "value": "grovtakket",
+      "count": 6
+    },
+    {
+      "value": "groft tandede",
+      "count": 4
+    },
+    {
+      "value": "indrullet",
+      "count": 4
+    },
+    {
+      "value": "krusede",
+      "count": 3
+    },
+    {
+      "value": "fintakket",
+      "count": 3
+    },
+    {
+      "value": "takkede",
+      "count": 3
+    },
+    {
+      "value": "bølget",
+      "count": 3
+    },
+    {
+      "value": "bølgede",
+      "count": 2
+    },
+    {
+      "value": "tilbagerullet",
+      "count": 2
+    },
+    {
+      "value": "dobbelt savtakket",
+      "count": 2
+    },
+    {
+      "value": "bugtet-tandet",
+      "count": 2
+    },
+    {
+      "value": "takket",
+      "count": 2
+    },
+    {
+      "value": "groft takkede",
+      "count": 2
+    },
+    {
+      "value": "fjersnitdelt",
+      "count": 2
+    },
+    {
+      "value": "svagt tandet",
+      "count": 2
+    },
+    {
+      "value": "udrandede",
+      "count": 2
+    },
+    {
+      "value": "kirtelhåret",
+      "count": 1
+    },
+    {
+      "value": "afrundede lapper",
+      "count": 1
+    },
+    {
+      "value": "bugtet",
+      "count": 1
+    },
+    {
+      "value": "bugtet-tandede",
+      "count": 1
+    },
+    {
+      "value": "skarpe",
+      "count": 1
+    },
+    {
+      "value": "blødtornet",
+      "count": 1
+    },
+    {
+      "value": "tilbagrullet",
+      "count": 1
+    },
+    {
+      "value": "groft-takket",
+      "count": 1
+    },
+    {
+      "value": "groft tandet",
+      "count": 1
+    },
+    {
+      "value": "groft-tandet",
+      "count": 1
+    },
+    {
+      "value": "trefligede",
+      "count": 1
+    },
+    {
+      "value": "svagt takkede",
+      "count": 1
+    },
+    {
+      "value": "randhårede",
+      "count": 1
+    },
+    {
+      "value": "svagt indskåret",
+      "count": 1
+    },
+    {
+      "value": "bøjet",
+      "count": 1
+    },
+    {
+      "value": "fint tandet",
+      "count": 1
+    },
+    {
+      "value": "fint-tandet",
+      "count": 1
+    },
+    {
+      "value": "grovetakket",
+      "count": 1
+    },
+    {
+      "value": "skarp",
+      "count": 1
+    },
+    {
+      "value": "rundlappet",
+      "count": 1
+    },
+    {
+      "value": "nedbøjet",
+      "count": 1
+    },
+    {
+      "value": "frynsede",
+      "count": 1
+    },
+    {
+      "value": "uregelmæssigt tandede",
+      "count": 1
+    },
+    {
+      "value": "børster",
+      "count": 1
+    },
+    {
+      "value": "spidstakket",
+      "count": 1
+    }
+  ],
+  "blad_overflade": [
+    {
+      "value": "glat",
+      "count": 87
+    },
+    {
+      "value": "håret",
+      "count": 71
+    },
+    {
+      "value": "blank",
+      "count": 28
+    },
+    {
+      "value": "ru",
+      "count": 25
+    },
+    {
+      "value": "kødfuld",
+      "count": 18
+    },
+    {
+      "value": "sukkulent",
+      "count": 16
+    },
+    {
+      "value": "filtet",
+      "count": 13
+    },
+    {
+      "value": "læderagtig",
+      "count": 9
+    },
+    {
+      "value": "dunhåret",
+      "count": 8
+    },
+    {
+      "value": "kirtelhåret",
+      "count": 8
+    },
+    {
+      "value": "korthåret",
+      "count": 6
+    },
+    {
+      "value": "bløde",
+      "count": 5
+    },
+    {
+      "value": "klæbrig",
+      "count": 4
+    },
+    {
+      "value": "hårfri",
+      "count": 4
+    },
+    {
+      "value": "silkehåret",
+      "count": 3
+    },
+    {
+      "value": "stivhåret",
+      "count": 2
+    },
+    {
+      "value": "kirtelprikkede",
+      "count": 2
+    },
+    {
+      "value": "grågrønne",
+      "count": 2
+    },
+    {
+      "value": "rynkede",
+      "count": 2
+    },
+    {
+      "value": "stive",
+      "count": 2
+    },
+    {
+      "value": "stikkende",
+      "count": 2
+    },
+    {
+      "value": "gråduggede",
+      "count": 2
+    },
+    {
+      "value": "hvælvet",
+      "count": 1
+    },
+    {
+      "value": "blødhårede",
+      "count": 1
+    },
+    {
+      "value": "grågrøn",
+      "count": 1
+    },
+    {
+      "value": "krushåret",
+      "count": 1
+    },
+    {
+      "value": "tværbølget",
+      "count": 1
+    },
+    {
+      "value": "uldhåret",
+      "count": 1
+    },
+    {
+      "value": "netmønstret",
+      "count": 1
+    },
+    {
+      "value": "sølvglinsende",
+      "count": 1
+    },
+    {
+      "value": "slappe",
+      "count": 1
+    },
+    {
+      "value": "tornet",
+      "count": 1
+    },
+    {
+      "value": "gråhåret",
+      "count": 1
+    },
+    {
+      "value": "blågrøn",
+      "count": 1
+    },
+    {
+      "value": "blød",
+      "count": 1
+    },
+    {
+      "value": "snoede",
+      "count": 1
+    },
+    {
+      "value": "blågrønne",
+      "count": 1
+    },
+    {
+      "value": "stiv",
+      "count": 1
+    },
+    {
+      "value": "brunprikkede",
+      "count": 1
+    },
+    {
+      "value": "krusede",
+      "count": 1
+    },
+    {
+      "value": "plettet",
+      "count": 1
+    },
+    {
+      "value": "mørkegrønne",
+      "count": 1
+    },
+    {
+      "value": "gråfiltet",
+      "count": 1
+    }
+  ],
+  "blomster_form": [
+    {
+      "value": "aks",
+      "count": 113
+    },
+    {
+      "value": "top",
+      "count": 53
+    },
+    {
+      "value": "kurv",
+      "count": 52
+    },
+    {
+      "value": "klase",
+      "count": 45
+    },
+    {
+      "value": "skærm",
+      "count": 40
+    },
+    {
+      "value": "enkeltsiddende",
+      "count": 28
+    },
+    {
+      "value": "hoved",
+      "count": 28
+    },
+    {
+      "value": "halvskærm",
+      "count": 17
+    },
+    {
+      "value": "småaks",
+      "count": 13
+    },
+    {
+      "value": "krans",
+      "count": 11
+    },
+    {
+      "value": "kvast",
+      "count": 11
+    },
+    {
+      "value": "kolbe",
+      "count": 4
+    },
+    {
+      "value": "svikkel",
+      "count": 3
+    },
+    {
+      "value": "småskærm",
+      "count": 2
+    },
+    {
+      "value": "dobbeltskærm",
+      "count": 2
+    },
+    {
+      "value": "rakler",
+      "count": 2
+    },
+    {
+      "value": "dusk",
+      "count": 2
+    },
+    {
+      "value": "hængende",
+      "count": 2
+    },
+    {
+      "value": "tragtformede",
+      "count": 1
+    },
+    {
+      "value": "rakle",
+      "count": 1
+    },
+    {
+      "value": "klynger",
+      "count": 1
+    },
+    {
+      "value": "svøb",
+      "count": 1
+    },
+    {
+      "value": "dobbelskærm",
+      "count": 1
+    },
+    {
+      "value": "kogler",
+      "count": 1
+    },
+    {
+      "value": "kogle",
+      "count": 1
+    },
+    {
+      "value": "klokkeformet",
+      "count": 1
+    },
+    {
+      "value": "kolbeagtig",
+      "count": 1
+    },
+    {
+      "value": "stjerneformet",
+      "count": 1
+    },
+    {
+      "value": "knipper",
+      "count": 1
+    },
+    {
+      "value": "duske",
+      "count": 1
+    },
+    {
+      "value": "nøgler",
+      "count": 1
+    }
+  ],
+  "fugtighed": [
+    {
+      "value": "fugtig",
+      "count": 244
+    },
+    {
+      "value": "våd",
+      "count": 144
+    },
+    {
+      "value": "tør",
+      "count": 99
+    },
+    {
+      "value": "vand",
+      "count": 92
+    },
+    {
+      "value": "frisk",
+      "count": 82
+    },
+    {
+      "value": "halvfugtig",
+      "count": 1
+    }
+  ],
+  "frugttype": [
+    {
+      "value": "nød",
+      "count": 93
+    },
+    {
+      "value": "kapsel",
+      "count": 49
+    },
+    {
+      "value": "bær",
+      "count": 31
+    },
+    {
+      "value": "bælg",
+      "count": 21
+    },
+    {
+      "value": "spaltefrugt",
+      "count": 19
+    },
+    {
+      "value": "skulpe",
+      "count": 11
+    },
+    {
+      "value": "småaks",
+      "count": 9
+    },
+    {
+      "value": "kogle",
+      "count": 8
+    },
+    {
+      "value": "kernefrugt",
+      "count": 1
+    },
+    {
+      "value": "stenfrugt",
+      "count": 1
+    },
+    {
+      "value": "bælgkapsel",
+      "count": 1
+    },
+    {
+      "value": "sporehuse",
+      "count": 1
+    }
+  ],
+  "jord": [
+    {
+      "value": "sandet",
+      "count": 91
+    },
+    {
+      "value": "kalk",
+      "count": 86
+    },
+    {
+      "value": "sur",
+      "count": 64
+    },
+    {
+      "value": "tørv",
+      "count": 41
+    },
+    {
+      "value": "leret",
+      "count": 30
+    },
+    {
+      "value": "humus",
+      "count": 27
+    },
+    {
+      "value": "kalkfattig",
+      "count": 4
+    },
+    {
+      "value": "dyndet",
+      "count": 3
+    },
+    {
+      "value": "grus",
+      "count": 3
+    },
+    {
+      "value": "stenet",
+      "count": 2
+    },
+    {
+      "value": "dyndede",
+      "count": 2
+    },
+    {
+      "value": "mager",
+      "count": 2
+    },
+    {
+      "value": "veldrænet",
+      "count": 2
+    },
+    {
+      "value": "organisk",
+      "count": 1
+    },
+    {
+      "value": "morbund",
+      "count": 1
+    },
+    {
+      "value": "dyndbund",
+      "count": 1
+    },
+    {
+      "value": "saltpåvirket",
+      "count": 1
+    },
+    {
+      "value": "gruset",
+      "count": 1
+    }
+  ],
+  "anvendelse": [
+    {
+      "value": "dyrket",
+      "count": 17
+    },
+    {
+      "value": "hegn",
+      "count": 14
+    },
+    {
+      "value": "park",
+      "count": 13
+    },
+    {
+      "value": "have",
+      "count": 13
+    },
+    {
+      "value": "skov",
+      "count": 10
+    },
+    {
+      "value": "kulturplante",
+      "count": 3
+    },
+    {
+      "value": "fodergræs",
+      "count": 1
+    },
+    {
+      "value": "plænegræs",
+      "count": 1
+    },
+    {
+      "value": "rodzoneanlæg",
+      "count": 1
+    },
+    {
+      "value": "klitplantage",
+      "count": 1
+    },
+    {
+      "value": "prydplante",
+      "count": 1
+    },
+    {
+      "value": "spiselig",
+      "count": 1
+    },
+    {
+      "value": "læhegn",
+      "count": 1
+    }
+  ],
+  "bladstilling": [
+    {
+      "value": "grundstillede",
+      "count": 63
+    },
+    {
+      "value": "rosetstillede",
+      "count": 51
+    },
+    {
+      "value": "modsat",
+      "count": 49
+    },
+    {
+      "value": "kransstillet",
+      "count": 27
+    },
+    {
+      "value": "spredt",
+      "count": 25
+    },
+    {
+      "value": "stængelomfattende",
+      "count": 1
+    },
+    {
+      "value": "to-radede",
+      "count": 1
+    },
+    {
+      "value": "toradet",
+      "count": 1
+    },
+    {
+      "value": "enkeltvis",
+      "count": 1
+    },
+    {
+      "value": "siddende",
+      "count": 1
+    }
+  ],
+  "stængel_form": [
+    {
+      "value": "rund",
+      "count": 37
+    },
+    {
+      "value": "trekantet",
+      "count": 26
+    },
+    {
+      "value": "firkantet",
+      "count": 21
+    },
+    {
+      "value": "kantet",
+      "count": 14
+    },
+    {
+      "value": "sammentrykt",
+      "count": 3
+    },
+    {
+      "value": "fladtrykt",
+      "count": 3
+    },
+    {
+      "value": "furet",
+      "count": 3
+    },
+    {
+      "value": "vinget",
+      "count": 3
+    },
+    {
+      "value": "trind",
+      "count": 1
+    },
+    {
+      "value": "femkantet",
+      "count": 1
+    },
+    {
+      "value": "flad",
+      "count": 1
+    },
+    {
+      "value": "fladt",
+      "count": 1
+    },
+    {
+      "value": "tveægget",
+      "count": 1
+    },
+    {
+      "value": "oval-fladtrykt",
+      "count": 1
+    }
+  ],
+  "stængelmarv": [
+    {
+      "value": "hul",
+      "count": 28
+    },
+    {
+      "value": "marvfyldt",
+      "count": 6
+    },
+    {
+      "value": "kamret",
+      "count": 3
+    },
+    {
+      "value": "ubrudt",
+      "count": 1
+    },
+    {
+      "value": "sammenhængende",
+      "count": 1
+    },
+    {
+      "value": "saftig",
+      "count": 1
+    }
+  ],
+  "familie": [
+    {
+      "value": "Græsfamilien",
+      "count": 66
+    },
+    {
+      "value": "Halvgræsfamilien",
+      "count": 65
+    },
+    {
+      "value": "Kurvblomstfamilien",
+      "count": 50
+    },
+    {
+      "value": "Skærmplantefamilien",
+      "count": 23
+    },
+    {
+      "value": "Rosenfamilien",
+      "count": 21
+    },
+    {
+      "value": "Ærteblomstfamilien",
+      "count": 20
+    },
+    {
+      "value": "Nellikefamilien",
+      "count": 17
+    },
+    {
+      "value": "Ranunkelfamilien",
+      "count": 15
+    },
+    {
+      "value": "Korsblomstfamilien",
+      "count": 14
+    },
+    {
+      "value": "Sivfamilien",
+      "count": 14
+    },
+    {
+      "value": "Læbeblomstfamilien",
+      "count": 13
+    },
+    {
+      "value": "Pilefamilien",
+      "count": 9
+    },
+    {
+      "value": "Vandaksfamilien",
+      "count": 8
+    },
+    {
+      "value": "Syrefamilien",
+      "count": 7
+    },
+    {
+      "value": "Padderokfamilien",
+      "count": 7
+    },
+    {
+      "value": "Lyngfamilien",
+      "count": 7
+    },
+    {
+      "value": "Krapfamilien",
+      "count": 7
+    },
+    {
+      "value": "Salturtfamilien",
+      "count": 7
+    },
+    {
+      "value": "Birkefamilien",
+      "count": 6
+    },
+    {
+      "value": "Natlysfamilien",
+      "count": 6
+    },
+    {
+      "value": "Rubladfamilien",
+      "count": 6
+    },
+    {
+      "value": "Dunhammerfamilien",
+      "count": 5
+    },
+    {
+      "value": "Vejbredfamilien",
+      "count": 5
+    },
+    {
+      "value": "Gyvelkvælerfamilien",
+      "count": 5
+    },
+    {
+      "value": "Andemadfamilien",
+      "count": 4
+    },
+    {
+      "value": "Maskeblomstfamilien",
+      "count": 3
+    },
+    {
+      "value": "Bøgefamilien",
+      "count": 3
+    },
+    {
+      "value": "Mangeløvfamilien",
+      "count": 3
+    },
+    {
+      "value": "Granfamilien",
+      "count": 3
+    },
+    {
+      "value": "Hornbladfamilien",
+      "count": 3
+    },
+    {
+      "value": "Storkenæbfamilien",
+      "count": 3
+    },
+    {
+      "value": "Orkidéfamilien",
+      "count": 3
+    },
+    {
+      "value": "Violfamilien",
+      "count": 3
+    },
+    {
+      "value": "Kodriverfamilien",
+      "count": 3
+    },
+    {
+      "value": "Bregnefamilien",
+      "count": 3
+    },
+    {
+      "value": "Baldrianfamilien",
+      "count": 3
+    },
+    {
+      "value": "Hindebægerfamilien",
+      "count": 3
+    },
+    {
+      "value": "Stenbrækfamilien",
+      "count": 3
+    },
+    {
+      "value": "Primulafamilien",
+      "count": 3
+    },
+    {
+      "value": "Ensianfamilien",
+      "count": 3
+    },
+    {
+      "value": "Pileurtfamilien",
+      "count": 2
+    },
+    {
+      "value": "Snerlefamilien",
+      "count": 2
+    },
+    {
+      "value": "Trehagefamilien",
+      "count": 2
+    },
+    {
+      "value": "Fyrefamilien",
+      "count": 2
+    },
+    {
+      "value": "Kornarvefamilien",
+      "count": 2
+    },
+    {
+      "value": "Fredløsfamilien",
+      "count": 2
+    },
+    {
+      "value": "Frøbidfamilien",
+      "count": 2
+    },
+    {
+      "value": "Ribsfamilien",
+      "count": 2
+    },
+    {
+      "value": "Gedebladfamilien",
+      "count": 2
+    },
+    {
+      "value": "Natskyggefamilien",
+      "count": 2
+    },
+    {
+      "value": "Klokkefamilien",
+      "count": 2
+    },
+    {
+      "value": "Lønfamilien",
+      "count": 2
+    },
+    {
+      "value": "Åkandefamilien",
+      "count": 2
+    },
+    {
+      "value": "Skarbøllefamilien",
+      "count": 2
+    },
+    {
+      "value": "Blærerodfamilien",
+      "count": 2
+    },
+    {
+      "value": "Aspargesfamilien",
+      "count": 2
+    },
+    {
+      "value": "Balsaminfamilien",
+      "count": 2
+    },
+    {
+      "value": "Skebladfamilien",
+      "count": 2
+    },
+    {
+      "value": "Vandranunkelfamilien",
+      "count": 1
+    },
+    {
+      "value": "Porsfamilien",
+      "count": 1
+    },
+    {
+      "value": "Kartebollefamilien",
+      "count": 1
+    },
+    {
+      "value": "Lindefamilien",
+      "count": 1
+    },
+    {
+      "value": "Vortemælkfamilien",
+      "count": 1
+    },
+    {
+      "value": "Månerudefamilien",
+      "count": 1
+    },
+    {
+      "value": "Olivenfamilien",
+      "count": 1
+    },
+    {
+      "value": "Benbrækfamilien",
+      "count": 1
+    },
+    {
+      "value": "Benvedfamilien",
+      "count": 1
+    },
+    {
+      "value": "Bukkebladfamilien",
+      "count": 1
+    },
+    {
+      "value": "Liljefamilien",
+      "count": 1
+    },
+    {
+      "value": "Levermosser",
+      "count": 1
+    },
+    {
+      "value": "Elæagnusfamilien",
+      "count": 1
+    },
+    {
+      "value": "Vandspirfamilien",
+      "count": 1
+    },
+    {
+      "value": "Skovsyrefamilien",
+      "count": 1
+    },
+    {
+      "value": "Vedbendfamilien",
+      "count": 1
+    },
+    {
+      "value": "Irisfamilien",
+      "count": 1
+    },
+    {
+      "value": "Kattehalefamilien",
+      "count": 1
+    },
+    {
+      "value": "Skabiosefamilien",
+      "count": 1
+    },
+    {
+      "value": "Engelsødfamilien",
+      "count": 1
+    },
+    {
+      "value": "Skedeknæfamilien",
+      "count": 1
+    },
+    {
+      "value": "Kalmusfamilien",
+      "count": 1
+    },
+    {
+      "value": "Aulacomniaceae",
+      "count": 1
+    },
+    {
+      "value": "Tusindbladfamilien",
+      "count": 1
+    },
+    {
+      "value": "Sødgræsfamilien",
+      "count": 1
+    },
+    {
+      "value": "Hampfamilien",
+      "count": 1
+    },
+    {
+      "value": "Perikonfamilien",
+      "count": 1
+    },
+    {
+      "value": "Fontinalaceae",
+      "count": 1
+    },
+    {
+      "value": "Mælkeurtsfamilien",
+      "count": 1
+    },
+    {
+      "value": "Brudelysfamilien",
+      "count": 1
+    },
+    {
+      "value": "Desmerurtfamilien",
+      "count": 1
+    },
+    {
+      "value": "Dicranaceae",
+      "count": 1
+    },
+    {
+      "value": "Cypresfamilien",
+      "count": 1
+    },
+    {
+      "value": "Ophioglossaceae",
+      "count": 1
+    },
+    {
+      "value": "Vandstjernefamilien",
+      "count": 1
+    },
+    {
+      "value": "Brachytheciaceae",
+      "count": 1
+    },
+    {
+      "value": "Kornelfamilien",
+      "count": 1
+    },
+    {
+      "value": "Kærmyssefamilien",
+      "count": 1
+    },
+    {
+      "value": "Leverurtfamilien",
+      "count": 1
+    },
+    {
+      "value": "Jordrøgfamilien",
+      "count": 1
+    },
+    {
+      "value": "Gøgefamilien",
+      "count": 1
+    },
+    {
+      "value": "Soldugfamilien",
+      "count": 1
+    },
+    {
+      "value": "Elmfamilien",
+      "count": 1
+    },
+    {
+      "value": "Kransnålalger",
+      "count": 1
+    },
+    {
+      "value": "Nældefamilien",
+      "count": 1
+    },
+    {
+      "value": "Vrietornfamilien",
+      "count": 1
+    },
+    {
+      "value": "Bladmosser",
+      "count": 1
+    }
+  ],
+  "slægt": [
+    {
+      "value": "Star",
+      "count": 47
+    },
+    {
+      "value": "Siv",
+      "count": 13
+    },
+    {
+      "value": "Vandaks",
+      "count": 11
+    },
+    {
+      "value": "Pil",
+      "count": 10
+    },
+    {
+      "value": "Kløver",
+      "count": 8
+    },
+    {
+      "value": "Kogleaks",
+      "count": 7
+    },
+    {
+      "value": "Svingel",
+      "count": 7
+    },
+    {
+      "value": "Ranunkel",
+      "count": 7
+    },
+    {
+      "value": "Dueurt",
+      "count": 7
+    },
+    {
+      "value": "Hvene",
+      "count": 6
+    },
+    {
+      "value": "Vandranunkel",
+      "count": 6
+    },
+    {
+      "value": "Padderok",
+      "count": 6
+    },
+    {
+      "value": "Tidsel",
+      "count": 6
+    },
+    {
+      "value": "Snerre",
+      "count": 6
+    },
+    {
+      "value": "Brandbæger",
+      "count": 5
+    },
+    {
+      "value": "Pindsvineknop",
+      "count": 5
+    },
+    {
+      "value": "Rapgræs",
+      "count": 5
+    },
+    {
+      "value": "Skræppe",
+      "count": 5
+    },
+    {
+      "value": "Vikke",
+      "count": 5
+    },
+    {
+      "value": "Sumpstrå",
+      "count": 5
+    },
+    {
+      "value": "Fladstjerne",
+      "count": 5
+    },
+    {
+      "value": "Tørvemos",
+      "count": 5
+    },
+    {
+      "value": "Pileurt",
+      "count": 4
+    },
+    {
+      "value": "Andemad",
+      "count": 4
+    },
+    {
+      "value": "Tusindblad",
+      "count": 4
+    },
+    {
+      "value": "Rose",
+      "count": 4
+    },
+    {
+      "value": "Vejbred",
+      "count": 4
+    },
+    {
+      "value": "Rottehale",
+      "count": 4
+    },
+    {
+      "value": "Svinemælk",
+      "count": 4
+    },
+    {
+      "value": "Mangeløv",
+      "count": 4
+    },
+    {
+      "value": "Ærenpris",
+      "count": 4
+    },
+    {
+      "value": "Kongepen",
+      "count": 4
+    },
+    {
+      "value": "Bunke",
+      "count": 4
+    },
+    {
+      "value": "Kamille",
+      "count": 4
+    },
+    {
+      "value": "Kællingetand",
+      "count": 4
+    },
+    {
+      "value": "Bjørneklo",
+      "count": 3
+    },
+    {
+      "value": "Rørhvene",
+      "count": 3
+    },
+    {
+      "value": "Rævehale",
+      "count": 3
+    },
+    {
+      "value": "Hejre",
+      "count": 3
+    },
+    {
+      "value": "Fyr",
+      "count": 3
+    },
+    {
+      "value": "Frytle",
+      "count": 3
+    },
+    {
+      "value": "Kvik",
+      "count": 3
+    },
+    {
+      "value": "Hanekro",
+      "count": 3
+    },
+    {
+      "value": "Kæruld",
+      "count": 3
+    },
+    {
+      "value": "Fredløs",
+      "count": 3
+    },
+    {
+      "value": "Sødgræs",
+      "count": 3
+    },
+    {
+      "value": "Blærerod",
+      "count": 3
+    },
+    {
+      "value": "Kokleare",
+      "count": 3
+    },
+    {
+      "value": "Forglemmigej",
+      "count": 3
+    },
+    {
+      "value": "Baldrian",
+      "count": 3
+    },
+    {
+      "value": "Mælde",
+      "count": 3
+    },
+    {
+      "value": "Pragtstjerne",
+      "count": 2
+    },
+    {
+      "value": "Klaseskærm",
+      "count": 2
+    },
+    {
+      "value": "Snerle",
+      "count": 2
+    },
+    {
+      "value": "Trehage",
+      "count": 2
+    },
+    {
+      "value": "Hæg",
+      "count": 2
+    },
+    {
+      "value": "Kørvel",
+      "count": 2
+    },
+    {
+      "value": "Dunhammer",
+      "count": 2
+    },
+    {
+      "value": "Galtetand",
+      "count": 2
+    },
+    {
+      "value": "Brøndsel",
+      "count": 2
+    },
+    {
+      "value": "Potentil",
+      "count": 2
+    },
+    {
+      "value": "Eg",
+      "count": 2
+    },
+    {
+      "value": "Rajgræs",
+      "count": 2
+    },
+    {
+      "value": "Birk",
+      "count": 2
+    },
+    {
+      "value": "Nellikerod",
+      "count": 2
+    },
+    {
+      "value": "Mærke",
+      "count": 2
+    },
+    {
+      "value": "Storkenæb",
+      "count": 2
+    },
+    {
+      "value": "Næbfrø",
+      "count": 2
+    },
+    {
+      "value": "Agermåne",
+      "count": 2
+    },
+    {
+      "value": "Svovlrod",
+      "count": 2
+    },
+    {
+      "value": "El",
+      "count": 2
+    },
+    {
+      "value": "Fladbælg",
+      "count": 2
+    },
+    {
+      "value": "Hvidtjørn",
+      "count": 2
+    },
+    {
+      "value": "Karse",
+      "count": 2
+    },
+    {
+      "value": "Hestegræs",
+      "count": 2
+    },
+    {
+      "value": "Havre",
+      "count": 2
+    },
+    {
+      "value": "Månerude",
+      "count": 2
+    },
+    {
+      "value": "Røllike",
+      "count": 2
+    },
+    {
+      "value": "Hornblad",
+      "count": 2
+    },
+    {
+      "value": "Viol",
+      "count": 2
+    },
+    {
+      "value": "Gåsefod",
+      "count": 2
+    },
+    {
+      "value": "Hundegræs",
+      "count": 2
+    },
+    {
+      "value": "Gedeskæg",
+      "count": 2
+    },
+    {
+      "value": "Høgeurt",
+      "count": 2
+    },
+    {
+      "value": "Hønsetarm",
+      "count": 2
+    },
+    {
+      "value": "Bynke",
+      "count": 2
+    },
+    {
+      "value": "Troldurt",
+      "count": 2
+    },
+    {
+      "value": "Evighedsblomst",
+      "count": 2
+    },
+    {
+      "value": "Hindebæger",
+      "count": 2
+    },
+    {
+      "value": "Gran",
+      "count": 2
+    },
+    {
+      "value": "Annelgræs",
+      "count": 2
+    },
+    {
+      "value": "Arve",
+      "count": 2
+    },
+    {
+      "value": "Milturt",
+      "count": 2
+    },
+    {
+      "value": "Engelskgræs",
+      "count": 2
+    },
+    {
+      "value": "Tuekogleaks",
+      "count": 2
+    },
+    {
+      "value": "Hindeknæ",
+      "count": 2
+    },
+    {
+      "value": "Tusindgylden",
+      "count": 2
+    },
+    {
+      "value": "Balsamin",
+      "count": 2
+    },
+    {
+      "value": "Anemone",
+      "count": 1
+    },
+    {
+      "value": "Limurt",
+      "count": 1
+    },
+    {
+      "value": "Firling",
+      "count": 1
+    },
+    {
+      "value": "Frytler",
+      "count": 1
+    },
+    {
+      "value": "Vandkarse",
+      "count": 1
+    },
+    {
+      "value": "Hundepersille",
+      "count": 1
+    },
+    {
+      "value": "Sanikel",
+      "count": 1
+    },
+    {
+      "value": "Randfrø",
+      "count": 1
+    },
+    {
+      "value": "Hulsvøb",
+      "count": 1
+    },
+    {
+      "value": "Gifttyde",
+      "count": 1
+    },
+    {
+      "value": "Syre",
+      "count": 1
+    },
+    {
+      "value": "Gulerod",
+      "count": 1
+    },
+    {
+      "value": "Brunrod",
+      "count": 1
+    },
+    {
+      "value": "Røn",
+      "count": 1
+    },
+    {
+      "value": "Mynte",
+      "count": 1
+    },
+    {
+      "value": "Gyldenris",
+      "count": 1
+    },
+    {
+      "value": "Gåseurt",
+      "count": 1
+    },
+    {
+      "value": "Pors",
+      "count": 1
+    },
+    {
+      "value": "Katteskæg",
+      "count": 1
+    },
+    {
+      "value": "Djævelsbid",
+      "count": 1
+    },
+    {
+      "value": "Kommen",
+      "count": 1
+    },
+    {
+      "value": "Skov-Hejre",
+      "count": 1
+    },
+    {
+      "value": "Persille",
+      "count": 1
+    },
+    {
+      "value": "Dild",
+      "count": 1
+    },
+    {
+      "value": "Sneglebælg",
+      "count": 1
+    },
+    {
+      "value": "Lind",
+      "count": 1
+    },
+    {
+      "value": "Vadegræs",
+      "count": 1
+    },
+    {
+      "value": "Tandbælg",
+      "count": 1
+    },
+    {
+      "value": "Blåtop",
+      "count": 1
+    },
+    {
+      "value": "Bingelurt",
+      "count": 1
+    },
+    {
+      "value": "Brunelle",
+      "count": 1
+    },
+    {
+      "value": "Guldnælde",
+      "count": 1
+    },
+    {
+      "value": "Lungeurt",
+      "count": 1
+    },
+    {
+      "value": "Mjødurt",
+      "count": 1
+    },
+    {
+      "value": "Torskemund",
+      "count": 1
+    },
+    {
+      "value": "Ask",
+      "count": 1
+    },
+    {
+      "value": "Benbræk",
+      "count": 1
+    },
+    {
+      "value": "Benved",
+      "count": 1
+    },
+    {
+      "value": "Bukkeblad",
+      "count": 1
+    },
+    {
+      "value": "Asp",
+      "count": 1
+    },
+    {
+      "value": "Engblomme",
+      "count": 1
+    },
+    {
+      "value": "Kabbeleje",
+      "count": 1
+    },
+    {
+      "value": "Firblad",
+      "count": 1
+    },
+    {
+      "value": "Stjerneløv",
+      "count": 1
+    },
+    {
+      "value": "Fruesko",
+      "count": 1
+    },
+    {
+      "value": "Frøbid",
+      "count": 1
+    },
+    {
+      "value": "Gederams",
+      "count": 1
+    },
+    {
+      "value": "Havtorn",
+      "count": 1
+    },
+    {
+      "value": "Lyng",
+      "count": 1
+    },
+    {
+      "value": "Hestehale",
+      "count": 1
+    },
+    {
+      "value": "Hjortetrøst",
+      "count": 1
+    },
+    {
+      "value": "Rosmarinlyng",
+      "count": 1
+    },
+    {
+      "value": "Skovbyg",
+      "count": 1
+    },
+    {
+      "value": "Skovsyre",
+      "count": 1
+    },
+    {
+      "value": "Fliglæbe",
+      "count": 1
+    },
+    {
+      "value": "Vibefedt",
+      "count": 1
+    },
+    {
+      "value": "Vorterod",
+      "count": 1
+    },
+    {
+      "value": "Kragefod",
+      "count": 1
+    },
+    {
+      "value": "Mandstro",
+      "count": 1
+    },
+    {
+      "value": "Vandnavle",
+      "count": 1
+    },
+    {
+      "value": "Klokkelyng",
+      "count": 1
+    },
+    {
+      "value": "Tusindfryd",
+      "count": 1
+    },
+    {
+      "value": "Iris",
+      "count": 1
+    },
+    {
+      "value": "Kattehale",
+      "count": 1
+    },
+    {
+      "value": "Læbeløs",
+      "count": 1
+    },
+    {
+      "value": "Vandrøllike",
+      "count": 1
+    },
+    {
+      "value": "Blåbær",
+      "count": 1
+    },
+    {
+      "value": "Brøndkarse",
+      "count": 1
+    },
+    {
+      "value": "Skarntyde",
+      "count": 1
+    },
+    {
+      "value": "Skvalderkål",
+      "count": 1
+    },
+    {
+      "value": "Sødskærm",
+      "count": 1
+    },
+    {
+      "value": "Draphavre",
+      "count": 1
+    },
+    {
+      "value": "Haremad",
+      "count": 1
+    },
+    {
+      "value": "Blåhat",
+      "count": 1
+    },
+    {
+      "value": "Gulaks",
+      "count": 1
+    },
+    {
+      "value": "Rejnfan",
+      "count": 1
+    },
+    {
+      "value": "Angelik",
+      "count": 1
+    },
+    {
+      "value": "Skovmærke",
+      "count": 1
+    },
+    {
+      "value": "Solbær",
+      "count": 1
+    },
+    {
+      "value": "Engelsød",
+      "count": 1
+    },
+    {
+      "value": "Korsknap",
+      "count": 1
+    },
+    {
+      "value": "Kvan",
+      "count": 1
+    },
+    {
+      "value": "Knopurt",
+      "count": 1
+    },
+    {
+      "value": "Høgeskæg",
+      "count": 1
+    },
+    {
+      "value": "Kalmus",
+      "count": 1
+    },
+    {
+      "value": "Gedeblad",
+      "count": 1
+    },
+    {
+      "value": "Marehalm",
+      "count": 1
+    },
+    {
+      "value": "Filtmos",
+      "count": 1
+    },
+    {
+      "value": "Sværtevæld",
+      "count": 1
+    },
+    {
+      "value": "Pastinak",
+      "count": 1
+    },
+    {
+      "value": "Natskygge",
+      "count": 1
+    },
+    {
+      "value": "Pimpinelle",
+      "count": 1
+    },
+    {
+      "value": "Stjerneskærm",
+      "count": 1
+    },
+    {
+      "value": "Rørgræs",
+      "count": 1
+    },
+    {
+      "value": "Sumpskærm",
+      "count": 1
+    },
+    {
+      "value": "Seline",
+      "count": 1
+    },
+    {
+      "value": "Dværgbunke",
+      "count": 1
+    },
+    {
+      "value": "Borst",
+      "count": 1
+    },
+    {
+      "value": "Hjertegræs",
+      "count": 1
+    },
+    {
+      "value": "Tormentil",
+      "count": 1
+    },
+    {
+      "value": "Hyrdetaske",
+      "count": 1
+    },
+    {
+      "value": "Fløjlsgræs",
+      "count": 1
+    },
+    {
+      "value": "Bøg",
+      "count": 1
+    },
+    {
+      "value": "Avnbøg",
+      "count": 1
+    },
+    {
+      "value": "Ris",
+      "count": 1
+    },
+    {
+      "value": "Fjerbregne",
+      "count": 1
+    },
+    {
+      "value": "Flitteraks",
+      "count": 1
+    },
+    {
+      "value": "Fennikel",
+      "count": 1
+    },
+    {
+      "value": "Vandkrans",
+      "count": 1
+    },
+    {
+      "value": "Humle",
+      "count": 1
+    },
+    {
+      "value": "Tæppegræs",
+      "count": 1
+    },
+    {
+      "value": "Klokke",
+      "count": 1
+    },
+    {
+      "value": "Ahorn",
+      "count": 1
+    },
+    {
+      "value": "Skavgræs",
+      "count": 1
+    },
+    {
+      "value": "Følfod",
+      "count": 1
+    },
+    {
+      "value": "Hestehov",
+      "count": 1
+    },
+    {
+      "value": "Perikon",
+      "count": 1
+    },
+    {
+      "value": "Kildemos",
+      "count": 1
+    },
+    {
+      "value": "Nøkkerose",
+      "count": 1
+    },
+    {
+      "value": "Mælkeurt",
+      "count": 1
+    },
+    {
+      "value": "Jomfruhår",
+      "count": 1
+    },
+    {
+      "value": "Ørnebregne",
+      "count": 1
+    },
+    {
+      "value": "Tagrør",
+      "count": 1
+    },
+    {
+      "value": "Kamgræs",
+      "count": 1
+    },
+    {
+      "value": "Brudelys",
+      "count": 1
+    },
+    {
+      "value": "Pilblad",
+      "count": 1
+    },
+    {
+      "value": "Sandskæg",
+      "count": 1
+    },
+    {
+      "value": "Kirsebær",
+      "count": 1
+    },
+    {
+      "value": "Fuglegræs",
+      "count": 1
+    },
+    {
+      "value": "Åkande",
+      "count": 1
+    },
+    {
+      "value": "Trævlekrone",
+      "count": 1
+    },
+    {
+      "value": "Kål",
+      "count": 1
+    },
+    {
+      "value": "Gåsemad",
+      "count": 1
+    },
+    {
+      "value": "Hyld",
+      "count": 1
+    },
+    {
+      "value": "Kløvtand",
+      "count": 1
+    },
+    {
+      "value": "Kortkapsel",
+      "count": 1
+    },
+    {
+      "value": "Salturt",
+      "count": 1
+    },
+    {
+      "value": "Skjolddrager",
+      "count": 1
+    },
+    {
+      "value": "Stenurt",
+      "count": 1
+    },
+    {
+      "value": "Bakkestjerne",
+      "count": 1
+    },
+    {
+      "value": "Seglmos",
+      "count": 1
+    },
+    {
+      "value": "Smælde",
+      "count": 1
+    },
+    {
+      "value": "Blåmunke",
+      "count": 1
+    },
+    {
+      "value": "Brombær",
+      "count": 1
+    },
+    {
+      "value": "Bukketorn",
+      "count": 1
+    },
+    {
+      "value": "Arum",
+      "count": 1
+    },
+    {
+      "value": "Ene",
+      "count": 1
+    },
+    {
+      "value": "Vandstjerne",
+      "count": 1
+    },
+    {
+      "value": "Kodriver",
+      "count": 1
+    },
+    {
+      "value": "Hunde-Rose",
+      "count": 1
+    },
+    {
+      "value": "Buxbaumia",
+      "count": 1
+    },
+    {
+      "value": "Stenbræk",
+      "count": 1
+    },
+    {
+      "value": "Gulurt",
+      "count": 1
+    },
+    {
+      "value": "Harril",
+      "count": 1
+    },
+    {
+      "value": "Hassel",
+      "count": 1
+    },
+    {
+      "value": "Hejrenæb",
+      "count": 1
+    },
+    {
+      "value": "Hindbær",
+      "count": 1
+    },
+    {
+      "value": "Fedtmos",
+      "count": 1
+    },
+    {
+      "value": "Kiddike",
+      "count": 1
+    },
+    {
+      "value": "Kambunke",
+      "count": 1
+    },
+    {
+      "value": "Stedmoderblomst",
+      "count": 1
+    },
+    {
+      "value": "Ensian",
+      "count": 1
+    },
+    {
+      "value": "Korbær",
+      "count": 1
+    },
+    {
+      "value": "Kornblomst",
+      "count": 1
+    },
+    {
+      "value": "Kortstråle",
+      "count": 1
+    },
+    {
+      "value": "Krumhals",
+      "count": 1
+    },
+    {
+      "value": "Kvalkved",
+      "count": 1
+    },
+    {
+      "value": "Guldkarse",
+      "count": 1
+    },
+    {
+      "value": "Kærmysse",
+      "count": 1
+    },
+    {
+      "value": "Leverurt",
+      "count": 1
+    },
+    {
+      "value": "Najade",
+      "count": 1
+    },
+    {
+      "value": "Skjaller",
+      "count": 1
+    },
+    {
+      "value": "Jordrøg",
+      "count": 1
+    },
+    {
+      "value": "Løgkarse",
+      "count": 1
+    },
+    {
+      "value": "Majblomst",
+      "count": 1
+    },
+    {
+      "value": "Gøgeurt",
+      "count": 1
+    },
+    {
+      "value": "Miliegræs",
+      "count": 1
+    },
+    {
+      "value": "Bølle",
+      "count": 1
+    },
+    {
+      "value": "Mygblomst",
+      "count": 1
+    },
+    {
+      "value": "Kransemos",
+      "count": 1
+    },
+    {
+      "value": "Revling",
+      "count": 1
+    },
+    {
+      "value": "Soldug",
+      "count": 1
+    },
+    {
+      "value": "Rødknæ",
+      "count": 1
+    },
+    {
+      "value": "Frøstjerne",
+      "count": 1
+    },
+    {
+      "value": "Sandkryb",
+      "count": 1
+    },
+    {
+      "value": "Burre",
+      "count": 1
+    },
+    {
+      "value": "Elm",
+      "count": 1
+    },
+    {
+      "value": "Salat",
+      "count": 1
+    },
+    {
+      "value": "Skovstjerne",
+      "count": 1
+    },
+    {
+      "value": "Kransnål",
+      "count": 1
+    },
+    {
+      "value": "Slåen",
+      "count": 1
+    },
+    {
+      "value": "Hareøre",
+      "count": 1
+    },
+    {
+      "value": "Timian",
+      "count": 1
+    },
+    {
+      "value": "Alant",
+      "count": 1
+    },
+    {
+      "value": "Løn",
+      "count": 1
+    },
+    {
+      "value": "Spydmos",
+      "count": 1
+    },
+    {
+      "value": "Spidshale",
+      "count": 1
+    },
+    {
+      "value": "Kilebæger",
+      "count": 1
+    },
+    {
+      "value": "Konval",
+      "count": 1
+    },
+    {
+      "value": "Nælde",
+      "count": 1
+    },
+    {
+      "value": "Bede",
+      "count": 1
+    },
+    {
+      "value": "Krageklo",
+      "count": 1
+    },
+    {
+      "value": "Strandasters",
+      "count": 1
+    },
+    {
+      "value": "Strandkål",
+      "count": 1
+    },
+    {
+      "value": "Malurt",
+      "count": 1
+    },
+    {
+      "value": "Rødtop",
+      "count": 1
+    },
+    {
+      "value": "Tyttebær",
+      "count": 1
+    },
+    {
+      "value": "Tørst",
+      "count": 1
+    },
+    {
+      "value": "Vandranke",
+      "count": 1
+    },
+    {
+      "value": "Skeblad",
+      "count": 1
+    },
+    {
+      "value": "Strandsennep",
+      "count": 1
+    },
+    {
+      "value": "Ribs",
+      "count": 1
+    },
+    {
+      "value": "Skebladmos",
+      "count": 1
+    },
+    {
+      "value": "Bladmos",
+      "count": 1
+    },
+    {
+      "value": "Kærbregne",
+      "count": 1
+    },
+    {
+      "value": "Vejmælkebøtte",
+      "count": 1
+    },
+    {
+      "value": "Vandarve",
+      "count": 1
+    },
+    {
+      "value": "Vandpeberrod",
+      "count": 1
+    }
+  ]
+}
