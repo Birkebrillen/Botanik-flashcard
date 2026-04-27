@@ -1,0 +1,25 @@
+{
+  "name": "Botanik",
+  "short_name": "Botanik",
+  "description": "Felt-opslag og træning af planter",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f5f1e8",
+  "theme_color": "#6b4423",
+  "orientation": "any",
+  "lang": "da",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
