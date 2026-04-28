@@ -1,105 +1,18 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="da">
 <head>
   <meta charset="utf-8" />
-  <title>Botanik Flashcards</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="style.css" />
+  <title>Botanik</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#6b4423" />
+  <meta name="description" content="Botanik — felt-opslag og træning" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="css/main.css" />
 </head>
 <body>
-  <div class="app">
-    <header class="app-header">
-      <div class="header-row">
-        <h1>Botanik</h1>
+  <div id="app"></div>
 
-        <div class="header-status">
-          <span class="card-label" id="field-label"></span>
-        </div>
-
-        <div class="header-actions">
-
-          <!-- NY: Søg-knap -->
-          <button id="searchToggleBtn" class="btn-ghost small header-filter" type="button" aria-haspopup="true" aria-expanded="false">
-            Søg
-          </button>
-
-          <!-- NY: Søg dropdown (ankret under knappen) -->
-          <div id="searchPanel" class="filter-panel hidden" role="dialog" aria-label="Søg">
-            <div class="filter-panel-inner">
-              <div class="filters">
-                <div class="filter-group">
-                  <label for="searchInput">Søg art</label>
-                  <input id="searchInput" type="text" placeholder="fx: sk krans" autocomplete="off" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Filter-knap -->
-          <button id="filterToggleBtn" class="btn-ghost small header-filter" type="button" aria-haspopup="true" aria-expanded="false">
-            Filter
-          </button>
-
-          <!-- Filter dropdown (ankret under knappen) -->
-          <div id="filterPanel" class="filter-panel hidden" role="dialog" aria-label="Filtre">
-            <div class="filter-panel-inner">
-              <div class="filters">
-
-                <!-- Spiltype -->
-                <div class="filter-group">
-                  <label for="gameTypeFilter">Spiltype</label>
-                  <select id="gameTypeFilter">
-                    <option value="arter">Arter</option>
-                    <option value="feltkendetegn">Feltkendetegn</option>
-                    <option value="husk_feltkendetegn">Husk feltkendetegn</option>
-
-                    <!-- 20-pulje varianter -->
-                    <option value="arter_20">20 arter (Arter)</option>
-                    <option value="feltkendetegn_20">20 arter (Feltkendetegn)</option>
-                    <option value="husk_feltkendetegn_20">20 arter (Husk feltkendetegn)</option>
-                  </select>
-                </div>
-
-                <!-- Checkbox-liste -->
-                <div class="filter-group">
-                  <label>Habitattype (vælg flere)</label>
-                  <div id="habitattypeFilter" class="checkbox-list" aria-label="Habitattype filtre"></div>
-                </div>
-
-                <!-- Checkbox-liste -->
-                <div class="filter-group">
-                  <label>Familie (vælg flere)</label>
-                  <div id="familieFilter" class="checkbox-list" aria-label="Familie filtre"></div>
-                </div>
-
-                <button id="clearFiltersBtn" class="btn-ghost small" type="button">Nulstil</button>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </header>
-
-    <main class="app-main">
-      <div id="card" class="card">
-        <div id="scoreBadge" class="score-badge score-neutral">0/0</div>
-
-        <div class="card-content" id="field-content">
-          <p>Swipe op (eller klik på kortet) for at starte.</p>
-        </div>
-      </div>
-    </main>
-
-    <!-- Svar-overlay -->
-    <div id="answerModal" class="modal hidden">
-      <div class="modal-content">
-        <h2 id="answerTitle"></h2>
-        <p id="answerFamily" class="answer-family hidden"></p>
-      </div>
-    </div>
-  </div>
-
-  <script src="app.js"></script>
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>
