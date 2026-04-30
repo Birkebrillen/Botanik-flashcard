@@ -1,4 +1,26 @@
+# Store filer / binærer
 images/
 rclone.exe
 data/Botanikliste_FINAL.xlsx
-rclone.exe
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Logfiler fra scraper-scripts
+*.log
+
+# Backup-mapper
+scraper/backup/
+
+# Lokale .env og hemmeligheder
+.env
+*.env
+
+# VS Code
+.vscode/
+
+# OS-filer
+Thumbs.db
+.DS_Store
