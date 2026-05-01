@@ -14579,7 +14579,7 @@
     "Bog_Forvekslingsmuligheder": null,
     "Naturbasen_Forvekslingsmuligheder": null,
     "Forvekslingsmuligheder": null,
-    "niveau": "art",
+    "niveau": "gruppe",
     "slægt": "Star",
     "familie": null,
     "tags": {
@@ -42207,9 +42207,9 @@
   {
     "Title": "By-skræppe",
     "Bog_Artsnavn": "er tastet ind manuel",
-    "Artsnavn_Naturbasen": "er tastet ind manuel",
-    "Naturbasen_Slug": "er tastet ind manuel",
-    "Naturbasen_TaxaID": null,
+    "Artsnavn_Naturbasen": "By-Skræppe",
+    "Naturbasen_Slug": "by-skraeppe",
+    "Naturbasen_TaxaID": "5290",
     "Billede": null,
     "Feltkendetegn": "Store, runde blosterblade helt uden bruskkorn",
     "Feltkendetegn_tjek": null,
@@ -44612,7 +44612,7 @@
     "Bog_Forvekslingsmuligheder": null,
     "Naturbasen_Forvekslingsmuligheder": null,
     "Forvekslingsmuligheder": null,
-    "niveau": "art",
+    "niveau": "gruppe",
     "slægt": null,
     "familie": null,
     "tags": {
@@ -62250,9 +62250,9 @@
   {
     "Title": "Almindelig Skebladmos",
     "Bog_Artsnavn": null,
-    "Artsnavn_Naturbasen": null,
-    "Naturbasen_Slug": null,
-    "Naturbasen_TaxaID": null,
+    "Artsnavn_Naturbasen": "Almindelig Skebladmos",
+    "Naturbasen_Slug": "almindelig-skebladsmos",
+    "Naturbasen_TaxaID": "8363",
     "Billede": null,
     "Feltkendetegn": null,
     "Feltkendetegn_tjek": null,
