@@ -1,13 +1,17 @@
 /**
  * lookup.js — Opslagsvisning med to undermodes:
  *   - 'name'   → søg på artsnavn (live søgning, fuzzy)
- *   - 'traits' → søg på kendetegn (vægtet hybrid)
+ *   - 'traits' → søg på kendetegn (fritekst-felt parser nøgleord som hårde filtre)
+ *
+ * Ny version: ingen dropdowns. Alt styres af hvad brugeren skriver +
+ * en segmenteret kontrol til at skifte mellem Arter og Grupper.
  */
 
 import { getData, loadWeights, getImageUrls } from "../data.js";
 import {
   searchByName,
   searchByCharacteristics,
+  parseQueryFilters,
   DEFAULT_WEIGHTS,
 } from "../search.js";
 
@@ -16,13 +20,7 @@ import {
 const state = {
   nameQuery: "",
   traitsQuery: "",
-  hardFilters: {
-    niveau: null,
-    plantegruppe: [],
-    familie: [],
-    slægt: [],
-  },
-  softPrefs: {},
+  scope: "arter",  // 'arter' eller 'grupper'
 };
 
 
@@ -101,11 +99,28 @@ function runNameSearch() {
 
 
 // =============================================================================
-// MODE 2: Søg på kendetegn
+// MODE 2: Søg på kendetegn — fritekst med automatiske filtre
 // =============================================================================
 
 function renderTraitsSearch(container) {
   container.innerHTML = `
+    <div class="scope-toggle" role="tablist" aria-label="Vis arter eller grupper">
+      <button type="button"
+              class="scope-btn ${state.scope === "arter" ? "scope-btn-active" : ""}"
+              data-scope="arter"
+              role="tab"
+              aria-selected="${state.scope === "arter"}">
+        Arter
+      </button>
+      <button type="button"
+              class="scope-btn ${state.scope === "grupper" ? "scope-btn-active" : ""}"
+              data-scope="grupper"
+              role="tab"
+              aria-selected="${state.scope === "grupper"}">
+        Kendetegn for grupper
+      </button>
+    </div>
+
     <div class="search-box">
       <input
         id="traitsInput"
@@ -116,25 +131,12 @@ function renderTraitsSearch(container) {
       />
     </div>
 
-    <details class="filter-section" id="hardFilterSection">
-      <summary>Hårde filtre <span class="hint">(ekskluderer)</span></summary>
-      <div class="filter-grid" id="hardFilters"></div>
-    </details>
-
-    <details class="filter-section" id="softFilterSection">
-      <summary>Vægtede præferencer <span class="hint">(giver bonus)</span></summary>
-      <div class="filter-grid" id="softFilters"></div>
-    </details>
-
     <div class="results-header">
       <span id="resultsCount" class="results-count"></span>
-      <button id="clearFiltersBtn" class="btn-link">Nulstil filtre</button>
+      <button id="clearFiltersBtn" class="btn-link">Nulstil</button>
     </div>
     <div id="traitsResults" class="results"></div>
   `;
-
-  buildHardFilters();
-  buildSoftFilters();
 
   const input = document.getElementById("traitsInput");
   input.addEventListener("input", () => {
@@ -142,13 +144,21 @@ function renderTraitsSearch(container) {
     runTraitsSearch();
   });
 
+  // Scope-toggle (Arter / Grupper)
+  for (const btn of document.querySelectorAll(".scope-btn")) {
+    btn.addEventListener("click", () => {
+      const newScope = btn.dataset.scope;
+      if (newScope !== state.scope) {
+        state.scope = newScope;
+        // Re-render hele traits-view så knapperne opdateres
+        renderTraitsSearch(container);
+      }
+    });
+  }
+
   document.getElementById("clearFiltersBtn").addEventListener("click", () => {
-    state.hardFilters = { niveau: null, plantegruppe: [], familie: [], slægt: [] };
-    state.softPrefs = {};
     state.traitsQuery = "";
     document.getElementById("traitsInput").value = "";
-    buildHardFilters();
-    buildSoftFilters();
     runTraitsSearch();
   });
 
@@ -156,133 +166,56 @@ function renderTraitsSearch(container) {
 }
 
 
-function buildHardFilters() {
-  const { vocabulary } = getData();
-  const fields = [
-    {
-      key: "niveau",
-      label: "Niveau",
-      options: ["art", "slægt"],
-      single: true,
-    },
-    {
-      key: "plantegruppe",
-      label: "Plantegruppe",
-      options: (vocabulary.plantegruppe || []).map(x => x.value),
-    },
-    {
-      key: "familie",
-      label: "Familie",
-      options: (vocabulary.familie || []).map(x => x.value).sort(),
-    },
-    {
-      key: "slægt",
-      label: "Slægt",
-      options: (vocabulary.slægt || []).map(x => x.value).sort(),
-    },
-  ];
-
-  const container = document.getElementById("hardFilters");
-  container.innerHTML = fields.map(f => `
-    <div class="filter-group">
-      <label for="hard-${f.key}">${f.label}</label>
-      <select id="hard-${f.key}">
-        <option value="">— alle —</option>
-        ${f.options.map(o => {
-          const sel = f.single
-            ? state.hardFilters[f.key] === o
-            : (state.hardFilters[f.key] || []).includes(o);
-          return `<option value="${escapeAttr(o)}" ${sel ? "selected" : ""}>${o}</option>`;
-        }).join("")}
-      </select>
-    </div>
-  `).join("");
-
-  for (const f of fields) {
-    const sel = document.getElementById(`hard-${f.key}`);
-    sel.addEventListener("change", () => {
-      const val = sel.value;
-      if (f.single) {
-        state.hardFilters[f.key] = val || null;
-      } else {
-        state.hardFilters[f.key] = val ? [val] : [];
-      }
-      runTraitsSearch();
-    });
-  }
-}
-
-
-function buildSoftFilters() {
-  const { vocabulary } = getData();
-  const SOFT_FIELDS = [
-    "habitat", "blomsterfarve", "vækstform", "frugttype",
-    "stængel_form", "fugtighed", "bladform", "lugt", "særtræk", "lys",
-  ];
-
-  const fields = SOFT_FIELDS
-    .filter(k => vocabulary[k] && vocabulary[k].length)
-    .map(k => ({
-      key: k,
-      label: prettyLabel(k),
-      options: vocabulary[k].map(x => x.value).slice(0, 30),
-    }));
-
-  const container = document.getElementById("softFilters");
-  container.innerHTML = fields.map(f => `
-    <div class="filter-group">
-      <label for="soft-${f.key}">${f.label}</label>
-      <select id="soft-${f.key}">
-        <option value="">— ingen præference —</option>
-        ${f.options.map(o => {
-          const sel = (state.softPrefs[f.key] || []).includes(o);
-          return `<option value="${escapeAttr(o)}" ${sel ? "selected" : ""}>${o}</option>`;
-        }).join("")}
-      </select>
-    </div>
-  `).join("");
-
-  for (const f of fields) {
-    const sel = document.getElementById(`soft-${f.key}`);
-    sel.addEventListener("change", () => {
-      const val = sel.value;
-      if (val) state.softPrefs[f.key] = [val];
-      else delete state.softPrefs[f.key];
-      runTraitsSearch();
-    });
-  }
-}
-
-
 function runTraitsSearch() {
   const data = getData();
   const weights = loadWeights(DEFAULT_WEIGHTS);
 
+  // Filtrér data efter scope (arter vs grupper)
+  let scoped;
+  if (state.scope === "arter") {
+    scoped = data.arter.filter(a => a.niveau === "art");
+  } else {
+    scoped = data.arter.filter(a =>
+      a.niveau === "slægt" || a.niveau === "gruppe"
+    );
+  }
+
+  // Parse fritekst-feltet til hårde filtre + søgeord
+  const parsed = parseQueryFilters(state.traitsQuery, data.vocabulary);
+
   const filters = {
-    niveau: state.hardFilters.niveau,
-    plantegruppe: state.hardFilters.plantegruppe,
-    familie: state.hardFilters.familie,
-    slægt: state.hardFilters.slægt,
-    preferences: state.softPrefs,
+    plantegruppe: parsed.plantegruppe,
+    familie: parsed.familie,
+    slægt: parsed.slægt,
+    preferences: {},
   };
 
   const results = searchByCharacteristics(
-    state.traitsQuery,
+    parsed.freeText,
     filters,
-    data.arter,
+    scoped,
     data.synonymLookup,
     {
       weights,
       fieldIndex: data.fieldIndex,
-      limit: 10,
+      limit: 30,
     }
   );
+
+  // Sortering:
+  //  - Hvis ingen søgeord (kun hårde filtre eller helt tomt): alfabetisk
+  //  - Hvis søgeord findes: efter score (search.js gør det allerede)
+  if (!parsed.freeText.trim()) {
+    results.sort((a, b) =>
+      (a.art.Title || "").localeCompare(b.art.Title || "", "da")
+    );
+  }
 
   const list = document.getElementById("traitsResults");
   const counter = document.getElementById("resultsCount");
 
   if (results.length === 0) {
-    list.innerHTML = `<p class="empty">Ingen arter matcher.</p>`;
+    list.innerHTML = `<p class="empty">Ingen ${state.scope === "arter" ? "arter" : "grupper/slægter"} matcher.</p>`;
     counter.textContent = "0 resultater";
     return;
   }
@@ -298,8 +231,14 @@ function runTraitsSearch() {
 
 function renderResultRow(art, scored = null) {
   const tags = art.tags || {};
-  const niveauBadge = art.niveau === "slægt"
-    ? `<span class="badge badge-slaegt">Slægt</span>` : "";
+
+  // Badge for niveau
+  let niveauBadge = "";
+  if (art.niveau === "slægt") {
+    niveauBadge = `<span class="badge badge-slaegt">Slægt</span>`;
+  } else if (art.niveau === "gruppe") {
+    niveauBadge = `<span class="badge badge-gruppe">Gruppe</span>`;
+  }
 
   const summary = buildSummary(tags);
 
@@ -348,11 +287,4 @@ function escapeAttr(s) {
     .replace(/&/g, "&amp;")
     .replace(/"/g, "&quot;")
     .replace(/</g, "&lt;");
-}
-
-
-function prettyLabel(key) {
-  return key
-    .replace(/_/g, " ")
-    .replace(/^./, c => c.toUpperCase());
 }

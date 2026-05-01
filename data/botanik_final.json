@@ -6959,7 +6959,7 @@
     "Bog_Forvekslingsmuligheder": null,
     "Naturbasen_Forvekslingsmuligheder": null,
     "Forvekslingsmuligheder": null,
-    "niveau": "art",
+    "niveau": "gruppe",
     "slægt": "Vikke",
     "familie": "Ærteblomstfamilien",
     "tags": {
@@ -7879,7 +7879,7 @@
     "Bog_Forvekslingsmuligheder": null,
     "Naturbasen_Forvekslingsmuligheder": null,
     "Forvekslingsmuligheder": null,
-    "niveau": "art",
+    "niveau": "gruppe",
     "slægt": "Gyldenris",
     "familie": null,
     "tags": {
@@ -9801,7 +9801,7 @@
     "Bog_Forvekslingsmuligheder": null,
     "Naturbasen_Forvekslingsmuligheder": null,
     "Forvekslingsmuligheder": null,
-    "niveau": "slægt",
+    "niveau": "gruppe",
     "slægt": "Kongepen",
     "familie": null,
     "tags": {
@@ -13077,7 +13077,7 @@
     "Bog_Forvekslingsmuligheder": null,
     "Naturbasen_Forvekslingsmuligheder": "Enkelt Pindsvineknop er en spinklere plante, som har ugrenet blomsterstand. Alle andre arter af Pindsvineknop har alle hanaks siddende på hovedaksen og ikke på sidegrene.",
     "Forvekslingsmuligheder": "Variation: Der er et antal forholdsvis veldefinerede underarter, der dog kan være svære at adskille, og hvor bestemmelse ofte kræver modne frugter: Frugter mørkebrune og omvendt kegleformede med næsten vandret overside og tydeligt afsat griffel. Frugt ca. 6-8 mm lang og 4-6 mm. bred fraregnet griflen: ssp. erectum. Lysebrune frugter med en overside, der skråner svagt fra griflen og udefter og med en mere eller mindre tydelig indsnøring på midten. Frugt 6-7 mm. lang og 2, 5-4, 5 mm. bred Ssp. microcarpum – Småfrugtet Pindsvineknop. Frugt lysebrun og 7-9 mm. lang og 2-4, 5 mm. bred fraregnet griflen og jævnt udløbende i griflen: ssp. neglectrum – Ten-PIndsvineknop.\n\nForveksling: Enkelt Pindsvineknop er en spinklere plante, som har ugrenet blomsterstand. Alle andre arter af Pindsvineknop har alle hanaks siddende på hovedaksen og ikke på sidegrene.",
-    "niveau": "art",
+    "niveau": "gruppe",
     "slægt": "Pindsvineknop",
     "familie": "Dunhammerfamilien",
     "tags": {
@@ -22247,7 +22247,7 @@
     "Bog_Forvekslingsmuligheder": null,
     "Naturbasen_Forvekslingsmuligheder": null,
     "Forvekslingsmuligheder": null,
-    "niveau": "slægt",
+    "niveau": "gruppe",
     "slægt": "Blærerod",
     "familie": null,
     "tags": {
@@ -28057,7 +28057,7 @@
     "Bog_Forvekslingsmuligheder": null,
     "Naturbasen_Forvekslingsmuligheder": null,
     "Forvekslingsmuligheder": null,
-    "niveau": "art",
+    "niveau": "gruppe",
     "slægt": "Kongepen",
     "familie": null,
     "tags": {
@@ -38460,7 +38460,7 @@
     "Bog_Forvekslingsmuligheder": null,
     "Naturbasen_Forvekslingsmuligheder": null,
     "Forvekslingsmuligheder": null,
-    "niveau": "slægt",
+    "niveau": "gruppe",
     "slægt": "Sumpstrå",
     "familie": null,
     "tags": {
@@ -44319,7 +44319,7 @@
     "Bog_Forvekslingsmuligheder": null,
     "Naturbasen_Forvekslingsmuligheder": null,
     "Forvekslingsmuligheder": null,
-    "niveau": "art",
+    "niveau": "gruppe",
     "slægt": "Pindsvineknop",
     "familie": null,
     "tags": {
@@ -44984,7 +44984,7 @@
     "Bog_Forvekslingsmuligheder": null,
     "Naturbasen_Forvekslingsmuligheder": null,
     "Forvekslingsmuligheder": null,
-    "niveau": "art",
+    "niveau": "gruppe",
     "slægt": "Kællingetand",
     "familie": null,
     "tags": {

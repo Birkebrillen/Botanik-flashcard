@@ -1,5 +1,5 @@
 /**
- * search.js — Søgemotor til botanik-appen (v2 med vægtning)
+ * search.js — Søgemotor til botanik-appen (v2 med vægtning + query-parsing)
  */
 
 
@@ -183,7 +183,98 @@ export function buildFieldIndex(vocabulary) {
 
 
 // =============================================================================
-// 5. SØG PÅ ARTSNAVN
+// 5. PARSE QUERY → HÅRDE FILTRE + FRITEKST
+// =============================================================================
+
+/**
+ * Splitter brugerens fritekst-input op:
+ *   - Ord der matcher en plantegruppe-værdi (urt, græs, halvgræs...) → hårdt filter
+ *   - Ord der matcher en familie i datasættet → hårdt filter
+ *   - Ord der matcher en slægt i datasættet → hårdt filter
+ *   - Resten → fri søgetekst
+ *
+ * Returnerer:
+ *   { plantegruppe: [...], familie: [...], slægt: [...], freeText: "..." }
+ *
+ * Regler:
+ *   - Et ord kan kun blive ÉT hårdt filter (første match vinder, prioritet:
+ *     plantegruppe > familie > slægt)
+ *   - Match er case-insensitiv og tolerant overfor "familien"/"slægten"-suffix
+ *   - Multi-ord-værdier (fx "halvgræs" eller "Carex pulicaris") matches
+ *     først; så enkelt-ord
+ */
+export function parseQueryFilters(query, vocabulary) {
+  const result = {
+    plantegruppe: [],
+    familie: [],
+    slægt: [],
+    freeText: "",
+  };
+
+  if (!query || !query.trim()) return result;
+
+  // Saml lookup-sæt fra vocabulary
+  const plantegruppeSet = new Set(
+    (vocabulary.plantegruppe || []).map(x =>
+      normalize(typeof x === "string" ? x : x.value)
+    ).filter(Boolean)
+  );
+  const familieSet = new Set(
+    (vocabulary.familie || []).map(x =>
+      normalize(typeof x === "string" ? x : x.value)
+    ).filter(Boolean)
+  );
+  const slaegtSet = new Set(
+    (vocabulary.slægt || []).map(x =>
+      normalize(typeof x === "string" ? x : x.value)
+    ).filter(Boolean)
+  );
+
+  // Token-baseret matching
+  // Vi splitter på whitespace, og for hvert token tjekker vi i prioritets-rækkefølge
+  const tokens = query.trim().split(/\s+/);
+  const remainingTokens = [];
+
+  for (const token of tokens) {
+    const norm = normalize(token);
+    if (!norm) continue;
+
+    // Plantegruppe (hårdt filter)
+    if (plantegruppeSet.has(norm)) {
+      if (!result.plantegruppe.includes(norm)) {
+        result.plantegruppe.push(norm);
+      }
+      continue;
+    }
+
+    // Familie (hårdt filter)
+    // Brugeren kan både skrive "rosenfamilien" og "rose"
+    if (familieSet.has(norm)) {
+      if (!result.familie.includes(norm)) {
+        result.familie.push(norm);
+      }
+      continue;
+    }
+
+    // Slægt (hårdt filter)
+    if (slaegtSet.has(norm)) {
+      if (!result.slægt.includes(norm)) {
+        result.slægt.push(norm);
+      }
+      continue;
+    }
+
+    // Ingen match → behold som søgeord
+    remainingTokens.push(token);
+  }
+
+  result.freeText = remainingTokens.join(" ").trim();
+  return result;
+}
+
+
+// =============================================================================
+// 6. SØG PÅ ARTSNAVN
 // =============================================================================
 
 export function searchByName(query, data, limit = 20) {
@@ -233,7 +324,7 @@ export function searchByName(query, data, limit = 20) {
 
 
 // =============================================================================
-// 6. SØG PÅ KENDETEGN — vægtet hybrid
+// 7. SØG PÅ KENDETEGN — vægtet hybrid
 // =============================================================================
 
 function tokenize(query) {
@@ -429,6 +520,9 @@ export function searchByCharacteristics(
     } else if (tokens.length === 0 && !hasAnyPref && hasAnyFilter) {
       // Ingen scoring, kun hårde filtre — alle der overlevede inkluderes
       results.push({ art, score: 1, breakdown });
+    } else if (tokens.length === 0 && !hasAnyPref && !hasAnyFilter) {
+      // Helt tomt query (ingen filtre og ingen tokens) — vis alt
+      results.push({ art, score: 1, breakdown });
     }
   }
 
@@ -442,7 +536,7 @@ export function searchByCharacteristics(
 
 
 // =============================================================================
-// 7. EKSPORT
+// 8. EKSPORT
 // =============================================================================
 
 export const _testHelpers = {

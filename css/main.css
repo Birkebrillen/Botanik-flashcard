@@ -1073,3 +1073,63 @@ a { color: inherit; }
   width: 100%;
   max-width: 360px;
 }
+
+/* =============================================================================
+   TILFØJELSE TIL main.css — kopiér ind nederst i css/main.css
+   ============================================================================= */
+
+/* Scope-toggle: Arter / Grupper segmenteret kontrol */
+.scope-toggle {
+  display: flex;
+  gap: 0;
+  margin: 0.75rem 0 1rem;
+  border: 1px solid #b8a989;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #f5efe2;
+}
+
+.scope-btn {
+  flex: 1;
+  padding: 0.55rem 0.75rem;
+  background: transparent;
+  border: none;
+  border-right: 1px solid #d6c8a8;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: #5a4a30;
+  transition: background 0.15s, color 0.15s;
+}
+
+.scope-btn:last-child {
+  border-right: none;
+}
+
+.scope-btn:hover {
+  background: #ede4cf;
+}
+
+.scope-btn-active {
+  background: #6b4423;
+  color: #f5efe2;
+  font-weight: 600;
+}
+
+.scope-btn-active:hover {
+  background: #6b4423;
+}
+
+
+/* Badge for gruppe (parallelt til badge-slaegt) */
+.badge-gruppe {
+  display: inline-block;
+  padding: 0.1rem 0.45rem;
+  margin-right: 0.4rem;
+  background: #8a6d3b;
+  color: #f5efe2;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  vertical-align: middle;
+}
