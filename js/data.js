@@ -16,16 +16,35 @@ export const IMAGES_BASE_URL = "https://pub-9b629f8090a54a769ad120596348dde3.r2.
 
 // Internt state
 const state = {
-  arter: [],          // alle arter (botanik_final.json)
-  vocabulary: {},     // vocabulary.json
-  synonyms: {},       // rå synonyms.json
-  synonymLookup: {},  // bygget fra synonyms
-  fieldIndex: {},     // bygget fra vocabulary
-  imageIndex: {},     // image_manifest.json
-  byTitle: {},        // hurtig lookup: title → art
+  arter: [],            // alle arter (botanik_final.json)
+  vocabulary: {},       // vocabulary.json
+  synonyms: {},         // rå synonyms.json
+  synonymLookup: {},    // bygget fra synonyms
+  fieldIndex: {},       // bygget fra vocabulary
+  imageIndex: {},       // image_manifest.json (rå keys)
+  imageIndexNorm: {},   // normaliseret key → filenames (for robust lookup)
+  byTitle: {},          // hurtig lookup: title → art
   loaded: false,
   loadPromise: null,
 };
+
+
+/**
+ * Normaliser en title/key så de kan matches på tværs af stavevarianter.
+ * Manifestet bygges fra filnavne (underscore), JSON bruger mellemrum.
+ *
+ * "Almindelig Hundegræs" → "almindelighundegraes"
+ * "Almindelig_Hundegræs" → "almindelighundegraes"
+ * "Vej-Pileurt" → "vejpileurt"
+ * "Vej Pileurt" → "vejpileurt"
+ */
+function normalizeKey(s) {
+  if (!s) return "";
+  let n = String(s).toLowerCase().trim();
+  n = n.replace(/[\s\-_]+/g, "");
+  n = n.replace(/æ/g, "ae").replace(/ø/g, "oe").replace(/å/g, "aa");
+  return n;
+}
 
 
 /** Indlæs alle datafiler. Kalder kun fetch én gang. */
@@ -46,6 +65,13 @@ export function loadData() {
     state.imageIndex = imageIndex;
     state.synonymLookup = buildSynonymLookup(synonyms);
     state.fieldIndex = buildFieldIndex(vocabulary);
+
+    // Byg normaliseret image-index for robust lookup
+    state.imageIndexNorm = {};
+    for (const [key, files] of Object.entries(imageIndex)) {
+      const normKey = normalizeKey(key);
+      if (normKey) state.imageIndexNorm[normKey] = files;
+    }
 
     // Byg title → art lookup
     state.byTitle = {};
@@ -73,11 +99,21 @@ export function findArt(title) {
 }
 
 
-/** Hent billede-URLs for en art (eller tom liste). */
+/** Hent billede-URLs for en art (eller tom liste).
+ *  Bruger normaliseret lookup så Title med mellemrum matcher manifest-keys
+ *  med underscore. */
 export function getImageUrls(art) {
   if (!art || !art.Title) return [];
-  const key = art.Title;
-  const filenames = state.imageIndex[key] || [];
+
+  // Først: prøv direkte lookup (hurtigst, hvis keys matcher præcist)
+  let filenames = state.imageIndex[art.Title];
+
+  // Fallback: prøv normaliseret lookup
+  if (!filenames || !filenames.length) {
+    const normKey = normalizeKey(art.Title);
+    filenames = state.imageIndexNorm[normKey] || [];
+  }
+
   return filenames.map(fn => `${IMAGES_BASE_URL}/${encodeURIComponent(fn)}`);
 }
 
